@@ -68,10 +68,6 @@ configurations {
     deployerJars
 }
 
-dependencies {
-    testCompile 'junit:junit:4.11'
-}
-
 artifacts {
     archives jar
     archives javadocJar
