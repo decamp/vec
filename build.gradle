@@ -7,7 +7,7 @@ buildscript {
 group = 'com.github.decamp'
 buildDir = "$projectDir/build"
 description = '3D Vector Math Library'
-version = '0.0.1'
+version = '0.0.2'
 
 repositories {
     jcenter()
@@ -59,10 +59,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 task sourcesJar( type: Jar ) {
-    from sourceSets.main.allJava
-}
-
-jar {
+    classifier = 'sources'
     from sourceSets.main.allJava
 }
 
