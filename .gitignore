@@ -1,0 +1,10 @@
+.*
+!.gitignore
+
+*~
+*.iml
+
+/build/
+/scratch/
+/ext/
+/local.properties
