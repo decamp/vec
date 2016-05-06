@@ -92,24 +92,24 @@ public class TestTrans3 {
             Mat4 mat = new Mat4();
             Trans.transToMat( trans, mat );
 
-            Vec4 test = new Vec4( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), rand.nextFloat() );
+            Vec4 vin = new Vec4( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), rand.nextFloat() );
             Vec4 va   = new Vec4();
             Vec4 vb   = new Vec4();
-            Trans.mult( trans, test, va );
-            Mat.mult( mat, test, vb );
+            Trans.mult( trans, vin, va );
+            Mat.mult( mat, vin, vb );
 
             Tests.assertNear( va, vb );
 
             Trans3 inv = new Trans3();
             Trans.invert( trans, inv );
-            Vec4 vc = new Vec4();
 
-            Trans3 thingy = new Trans3();
-            Trans.mult( inv, trans, thingy );
+            Trans3 eye = new Trans3();
+            Trans.mult( inv, trans, eye );
 
-            System.out.println( thingy );
-
-            Tests.assertNear( test, vc );
+            Vec.put( 0, 0, 0, pos );
+            Tests.assertNear( eye.mPos, pos );
+            Mat.identity( rot );
+            Tests.assertNear( eye.mRot, rot );
         }
     }
 
