@@ -87,10 +87,10 @@ public final class Quat {
         float cos = (float)Math.cos( rads * 0.5 );
         float len = (float)Math.sqrt( x * x + y * y + z * z );
         float sin = (float)Math.sin( rads * 0.5 ) / len;
-        out.x = cos;
-        out.y = sin * x;
-        out.z = sin * y;
-        out.w = sin * z;
+        out.x = sin * x;
+        out.y = sin * y;
+        out.z = sin * z;
+        out.w = cos;
     }
 
     /**
