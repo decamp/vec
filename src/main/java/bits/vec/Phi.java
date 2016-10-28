@@ -10,9 +10,9 @@ package bits.vec;
  * - Inverse Error Function <br>
  *
  * @author Sherali Karimov (sherali.karimov@proxima-tech.com)
- * 
+ *
  * The algorithm implemented in this class can be found here:
- * 
+ *
  * http://home.online.no/~pjacklam/notes/invnorm/
  *
  * (this file modified by Philip DeCamp)
@@ -22,27 +22,27 @@ public class Phi {
     /**
      * Normal distribution function with 0 mean ond unit standard dev.
      * Same as a gaussian function. Ofter designated with Greek lower case phi.
-     * 
+     *
      * @param x Difference from mean.
      * @return {@code (1/sqrt(2pi)) * e^(-1/2*x^2) }
      */
     public static double n( double x ) {
         return INV_SQRT2PI * Math.exp( -0.5 * x * x );
     }
-    
+
     /**
      * Standard normal cumulative distribution function. (probit function).
-     * 
+     *
      * @param x Any mVal
      * @return Integral of the standard normal distribution from -inf to x.
      */
     public static double ncdf( double x ) {
-        return 0.5 * ( 1.0 + erf( x / SQRT_2 ) );
+        return 0.5 * ( 1.0 + erf( x * INV_SQRT_2 ) );
     }
 
     /**
      * Inverse of the standard normal cumulative distribution function with refinement.
-     * 
+     *
      * @param y Value between 0 and 1.
      * @return x such that normalCdf( x ) == y. 
      */
@@ -50,10 +50,10 @@ public class Phi {
         double z = ncdfInvFast( y );
         return refineNcdfInv( z, y );
     }
-    
+
     /**
      * Inverse of the standard normal cumulative distribution function, without refinement.
-     * 
+     *
      * @param y Value between 0 and 1.
      * @return x such that normalCdf( x ) == y. 
      */
@@ -63,13 +63,13 @@ public class Phi {
                 // Rational approximation for central region:
                 double q = y - 0.5D;
                 double r = q * q;
-                return ( ( ( ( ( ICDF_A[0] * r + ICDF_A[1] ) * r + ICDF_A[2] ) * r + ICDF_A[3] ) * r + ICDF_A[4] ) * r + ICDF_A[5] ) * q / 
+                return ( ( ( ( ( ICDF_A[0] * r + ICDF_A[1] ) * r + ICDF_A[2] ) * r + ICDF_A[3] ) * r + ICDF_A[4] ) * r + ICDF_A[5] ) * q /
                        ( ( ( ( ( ICDF_B[0] * r + ICDF_B[1] ) * r + ICDF_B[2] ) * r + ICDF_B[3] ) * r + ICDF_B[4] ) * r + 1 );
             } else if( y < 1 ) {
                 // Rational approximation for upper region:
                 double q = Math.sqrt( -2 * Math.log( 1 - y ) );
-                return -( ( ( ( ( ICDF_C[0] * q + ICDF_C[1] ) * q + ICDF_C[2] ) * q + ICDF_C[3] ) * q + ICDF_C[4] ) * q + ICDF_C[5] ) / 
-                          ( ( ( ( ICDF_D[0] * q + ICDF_D[1] ) * q + ICDF_D[2] ) * q + ICDF_D[3] ) * q + 1 );
+                return -( ( ( ( ( ICDF_C[0] * q + ICDF_C[1] ) * q + ICDF_C[2] ) * q + ICDF_C[3] ) * q + ICDF_C[4] ) * q + ICDF_C[5] ) /
+                       ( ( ( ( ICDF_D[0] * q + ICDF_D[1] ) * q + ICDF_D[2] ) * q + ICDF_D[3] ) * q + 1 );
             } else if( y > 1 ) {
                 return Double.NaN;
             } else {
@@ -79,8 +79,8 @@ public class Phi {
         } else if( y > 0 ) {
             // Rational approximation for lower region:
             double q = Math.sqrt( -2 * Math.log( y ) );
-            return ( ( ( ( ( ICDF_C[0] * q + ICDF_C[1] ) * q + ICDF_C[2] ) * q + ICDF_C[3] ) * q + ICDF_C[4] ) * q + ICDF_C[5] ) / 
-                     ( ( ( ( ICDF_D[0] * q + ICDF_D[1] ) * q + ICDF_D[2] ) * q + ICDF_D[3] ) * q + 1 );
+            return ( ( ( ( ( ICDF_C[0] * q + ICDF_C[1] ) * q + ICDF_C[2] ) * q + ICDF_C[3] ) * q + ICDF_C[4] ) * q + ICDF_C[5] ) /
+                   ( ( ( ( ICDF_D[0] * q + ICDF_D[1] ) * q + ICDF_D[2] ) * q + ICDF_D[3] ) * q + 1 );
         } else if( y < 0 ) {
             return Double.NaN;
         } else {
@@ -88,58 +88,56 @@ public class Phi {
             return Double.NEGATIVE_INFINITY;
         }
     }
-    
+
     /**
      * Error function. 
-     * 
+     *
      * @param x Any mVal.
      * @return the integral of the Gaussian distribution function from 0 to x.
      */
-    public static double erf( double x ) { 
-        return calerf(x, 0); 
+    public static double erf( double x ) {
+        return calerf(x, 0);
     }
-    
+
     /**
      * Complementary error function.
-     * 
+     *
      * @param x Any mVal.
      * @return the integral of the Gaussian distribution function from x to inf, or 1.0 - erf( x ).
-     * 
+     *
      */
-    public static double erfc( double x ) { 
-        return calerf(x, 1); 
+    public static double erfc( double x ) {
+        return calerf(x, 1);
     }
-    
+
     /**
      * Scaled complementary error function.
-     * 
-     * @param x Input val
+     *
+     * @param x
      * @return e^(x*x) * erfc( x )
      */
-    public static double erfcx( double x ) { 
-        return calerf( x, 2 ); 
+    public static double erfcx( double x ) {
+        return calerf( x, 2 );
     }
-    
+
     /**
      * Inverse of the error function with refinement.
-     * 
-     * @param y Input val
+     *
+     * @param y
      * @return x such that erf( x ) == y.
      */
     public static double erfInvPrecise( double y ) {
-        double d = ncdfInv( 0.5 * ( y + 1.0 ) );
-        return d / SQRT_2;
+        return INV_SQRT_2 * ncdfInv( 0.5 * ( y + 1.0 ) );
     }
-    
+
     /**
      * Inverse of the error function.
-     * 
-     * @param y Input val
+     *
+     * @param y
      * @return x such that erf( x ) == y.
      */
     public static double erfInvFast( double y ) {
-        double d = ncdfInvFast( 0.5 * ( y + 1.0 ) );
-        return d / SQRT_2;
+        return INV_SQRT_2 * ncdfInvFast( 0.5 * ( y + 1.0 ) );
     }
     
     
@@ -152,65 +150,65 @@ public class Phi {
      *  Peter J. Acklam
      *  jacklam@math.uio.no
      * ****************************************** */
-    
-    private static final double SQRT_2      = Math.sqrt( 2.0 );
+
+    private static final double INV_SQRT_2  = 1.0 / Math.sqrt( 2.0 );
     private static final double SQRT_PI     = Math.sqrt( Math.PI );
     private static final double INV_SQRT2PI = 1.0 / Math.sqrt( Math.PI * 2.0 );
     private static final double P_LOW       = 0.02425;
     private static final double P_HIGH      = 1.0 - P_LOW;
-     
+
     private static final double THRESHOLD = 0.46875;
-    
+
     // Coefficients in rational approximations.
-    private static final double ICDF_A[] = { -3.969683028665376e+01,  
-                                              2.209460984245205e+02,
-                                             -2.759285104469687e+02,  
-                                              1.383577518672690e+02,
-                                             -3.066479806614716e+01,  
-                                              2.506628277459239e+00 };
+    private static final double ICDF_A[] = { -3.969683028665376e+01,
+                                             2.209460984245205e+02,
+                                             -2.759285104469687e+02,
+                                             1.383577518672690e+02,
+                                             -3.066479806614716e+01,
+                                             2.506628277459239e+00 };
 
     private static final double ICDF_B[] = { -5.447609879822406e+01,
-                                              1.615858368580409e+02,
-                                             -1.556989798598866e+02,  
-                                              6.680131188771972e+01,
+                                             1.615858368580409e+02,
+                                             -1.556989798598866e+02,
+                                             6.680131188771972e+01,
                                              -1.328068155288572e+01 };
 
-    private static final double ICDF_C[] = { -7.784894002430293e-03, 
+    private static final double ICDF_C[] = { -7.784894002430293e-03,
                                              -3.223964580411365e-01,
-                                             -2.400758277161838e+00, 
+                                             -2.400758277161838e+00,
                                              -2.549732539343734e+00,
-                                              4.374664141464968e+00,  
-                                              2.938163982698783e+00 };
+                                             4.374664141464968e+00,
+                                             2.938163982698783e+00 };
 
-    private static final double ICDF_D[] = { 7.784695709041462e-03,  
+    private static final double ICDF_D[] = { 7.784695709041462e-03,
                                              3.224671290700398e-01,
-                                             2.445134137142996e+00,  
+                                             2.445134137142996e+00,
                                              3.754408661907416e+00 };
-    
+
     //------------------------------------------------------------------
     //  Coefficients for approximation to  erf  in first interval
     //------------------------------------------------------------------
-    private static final double ERF_A[] = { 3.16112374387056560E00, 
+    private static final double ERF_A[] = { 3.16112374387056560E00,
                                             1.13864154151050156E02,
-                                            3.77485237685302021E02, 
+                                            3.77485237685302021E02,
                                             3.20937758913846947E03,
                                             1.85777706184603153E-1 };
 
-    private static final double ERF_B[] = { 2.36012909523441209E01, 
+    private static final double ERF_B[] = { 2.36012909523441209E01,
                                             2.44024637934444173E02,
-                                            1.28261652607737228E03, 
+                                            1.28261652607737228E03,
                                             2.84423683343917062E03 };
 
     //------------------------------------------------------------------
     //  Coefficients for approximation to  erfc  in second interval
     //------------------------------------------------------------------
-    private static final double ERF_C[] = { 5.64188496988670089E-1, 
+    private static final double ERF_C[] = { 5.64188496988670089E-1,
                                             8.88314979438837594E0,
-                                            6.61191906371416295E01, 
+                                            6.61191906371416295E01,
                                             2.98635138197400131E02,
-                                            8.81952221241769090E02, 
+                                            8.81952221241769090E02,
                                             1.71204761263407058E03,
-                                            2.05107837782607147E03, 
+                                            2.05107837782607147E03,
                                             1.23033935479799725E03,
                                             2.15311535474403846E-8 };
 
@@ -245,13 +243,13 @@ public class Phi {
      * - Pentium III 800 MHz
      * running Microsoft Windows 2000
      * ************************************* */
-    private static final double X_MIN   = Double.MIN_VALUE;
-    private static final double X_INF   = Double.MAX_VALUE;
+//    private static final double X_MIN   = Double.MIN_VALUE;
+//    private static final double X_INF   = Double.MAX_VALUE;
     private static final double X_NEG   = -9.38241396824444;
     private static final double X_SMALL = 1.110223024625156663E-16;
     private static final double X_BIG   = 9.194E0;
-    private static final double X_HUGE  = 1.0D / ( 2.0 * Math.sqrt( X_SMALL ) );
-    private static final double X_MAX   = Math.min( X_INF, ( 1 / ( SQRT_PI * X_MIN ) ) );
+    private static final double X_HUGE  = 1 / ( 2 * Math.sqrt( X_SMALL ) );
+    private static final double X_MAX   = 1 / ( SQRT_PI * Double.MIN_VALUE );
 
     /*******************************************
      * ORIGINAL FORTRAN version can be found at:
@@ -301,60 +299,60 @@ public class Phi {
      */
     private static double calerf( double x, int type ) {
         double result = 0;
-        double y = Math.abs( x );
-        double yy;
+        double mag = Math.abs( x );
+        double magMag;
         double xNum;
         double xDen;
 
-        if( y <= THRESHOLD ) {
-            yy = 0.0;
-            if( y > X_SMALL )
-                yy = y * y;
-            xNum = ERF_A[4] * yy;
-            xDen = yy;
+        if( mag <= THRESHOLD ) {
+            magMag = 0.0;
+            if( mag > X_SMALL )
+                magMag = mag * mag;
+            xNum = ERF_A[4] * magMag;
+            xDen = magMag;
             for( int i = 0; i < 3; i++ ) {
-                xNum = (xNum + ERF_A[i]) * yy;
-                xDen = (xDen + ERF_B[i]) * yy;
+                xNum = (xNum + ERF_A[i]) * magMag;
+                xDen = (xDen + ERF_B[i]) * magMag;
             }
             result = x * (xNum + ERF_A[3]) / (xDen + ERF_B[3]);
             if( type != 0 )
                 result = 1 - result;
             if( type == 2 )
-                result = Math.exp( yy ) * result;
+                result = Math.exp( magMag ) * result;
             return result;
-        } else if( y <= 4.0 ) {
-            xNum = ERF_C[8] * y;
-            xDen = y;
+        } else if( mag <= 4.0 ) {
+            xNum = ERF_C[8] * mag;
+            xDen = mag;
             for( int i = 0; i < 7; i++ ) {
-                xNum = (xNum + ERF_C[i]) * y;
-                xDen = (xDen + ERF_D[i]) * y;
+                xNum = (xNum + ERF_C[i]) * mag;
+                xDen = (xDen + ERF_D[i]) * mag;
             }
             result = ( xNum + ERF_C[7] ) / ( xDen + ERF_D[7] );
             if( type != 2 ) {
-                yy = Math.round( y * 16.0D ) / 16.0D;
-                double del = (y - yy) * (y + yy);
-                result = Math.exp( -yy * yy ) * Math.exp( -del ) * result;
+                magMag = Math.round( mag * 16.0D ) / 16.0D;
+                double del = (mag - magMag) * (mag + magMag);
+                result = Math.exp( -magMag * magMag ) * Math.exp( -del ) * result;
             }
         } else {
             result = 0.0;
-            if( y >= X_BIG && (type != 2 || y >= X_MAX) ) {
-                    
-            } else if( y >= X_BIG && y >= X_HUGE ) {
-                result = SQRT_PI / y;
+            if( mag >= X_BIG && (type != 2 || mag >= X_MAX) ) {
+
+            } else if( mag >= X_BIG && mag >= X_HUGE ) {
+                result = SQRT_PI / mag;
             } else {
-                yy = 1.0 / (y * y);
-                xNum = ERF_P[5] * yy;
-                xDen = yy;
+                magMag = 1.0 / (mag * mag);
+                xNum = ERF_P[5] * magMag;
+                xDen = magMag;
                 for( int i = 0; i < 4; i++ ) {
-                    xNum = (xNum + ERF_P[i]) * yy;
-                    xDen = (xDen + ERF_Q[i]) * yy;
+                    xNum = (xNum + ERF_P[i]) * magMag;
+                    xDen = (xDen + ERF_Q[i]) * magMag;
                 }
-                result = yy * ( xNum + ERF_P[4] ) / ( xDen + ERF_Q[4] );
-                result = ( SQRT_PI - result ) / y;
+                result = magMag * ( xNum + ERF_P[4] ) / ( xDen + ERF_Q[4] );
+                result = ( SQRT_PI - result ) / mag;
                 if( type != 2 ) {
-                    yy = Math.round( y * 16.0 ) / 16.0;
-                    double del = (y - yy) * (y + yy);
-                    result = Math.exp( -yy * yy ) * Math.exp( -del ) * result;
+                    magMag = Math.round( mag * 16.0 ) / 16.0;
+                    double del = (mag - magMag) * (mag + magMag);
+                    result = Math.exp( -magMag * magMag ) * Math.exp( -del ) * result;
                 }
             }
         }
@@ -370,19 +368,19 @@ public class Phi {
         } else {
             if( x < 0 ) {
                 if( x < X_NEG ) {
-                    result = X_INF;
+                    result = Double.POSITIVE_INFINITY;
                 } else {
-                    yy = Math.round( x * 16.0D ) / 16.0D;
-                    double del = (x - yy) * (x + yy);
-                    y = Math.exp( yy * yy ) * Math.exp( del );
-                    result = (y + y) - result;
+                    magMag = Math.round( x * 16.0D ) / 16.0D;
+                    double del = (x - magMag) * (x + magMag);
+                    mag = Math.exp( magMag * magMag ) * Math.exp( del );
+                    result = (mag + mag) - result;
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /*****************************************************
      * Refining algorythm is based on Halley rational method
      * for finding roots of equations as described at:
@@ -391,14 +389,14 @@ public class Phi {
      *  Peter J. Acklam
      *  jacklam@math.uio.no
      *************************************************** */
-    private static double refineNcdfInv( double x, double d ) {
-        if( d > 0 && d < 1) {
-            double e = 0.5D * erfc( -x / SQRT_2 ) - d;
-            double u = e * Math.sqrt( 2.0 * Math.PI ) * Math.exp( (x * x) / 2.0 );
-            x = x - u / ( 1.0 + x * u / 2.0 );
+    private static double refineNcdfInv( double result, double input ) {
+        if( input > 0 && input < 1) {
+            double err = ncdf( result ) - input;
+            double u = err * Math.sqrt( 2.0 * Math.PI ) * Math.exp( 0.5 * result * result );
+            result = result - u / ( 1.0 + result * u / 2.0 );
         }
-        
-        return x;
+
+        return result;
     }
-    
+
 }

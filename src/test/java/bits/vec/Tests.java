@@ -30,6 +30,30 @@ public class Tests {
     }
 
 
+    public static boolean eq( double a, double b ) {
+        if( Double.isNaN( a ) && Double.isNaN( b ) ) {
+            return true;
+        }
+
+        if( Tol.approxEqual( a, b, 0.001f, 1E-6f ) ) {
+            return true;
+        }
+
+        System.err.println( a + "  --  " + b );
+        return false;
+    }
+
+
+    public static void assertNear( float a, float b ) {
+        assertTrue( eq( a, b ) );
+    }
+
+
+    public static void assertNear( double a, double b ) {
+        assertTrue( eq( a, b ) );
+    }
+
+
     public static void assertNear( Vec3 a, Vec3 b ) {
         assertTrue( eq( a.x, b.x ) &&
                     eq( a.y, b.y ) &&
