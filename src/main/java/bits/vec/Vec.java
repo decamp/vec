@@ -214,7 +214,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeOrthoTo( Vec2 a, Vec2 ref ) {
+    public static void reject( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
         if( lenRef < FSQRT_ABS_ERR ) {
             return;
@@ -231,12 +231,12 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeParallelTo( Vec2 a, Vec2 ref ) {
+    public static void project( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
         if( lenRef < FSQRT_ABS_ERR ) {
             return;
         }
-        float parScale = dot( a, ref ) / ( lenRef * lenRef );
+        float parScale = dot( a, ref ) / lenRef;
         a.x = ref.x * parScale;
         a.y = ref.y * parScale;
     }
@@ -620,7 +620,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeOrthoTo( Vec3 a, Vec3 ref ) {
+    public static void reject( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
         if( lenRef < FSQRT_ABS_ERR ) {
             return;
@@ -638,12 +638,12 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeParallelTo( Vec3 a, Vec3 ref ) {
+    public static void project( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
         if( lenRef < FSQRT_ABS_ERR ) {
             return;
         }
-        float parScale = dot( a, ref ) / ( lenRef * lenRef );
+        float parScale = dot( a, ref ) / lenRef;
         a.x = ref.x * parScale;
         a.y = ref.y * parScale;
         a.z = ref.z * parScale;
@@ -1356,7 +1356,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeOrthoTo2( double[] a, double[] ref ) {
+    public static void reject2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_ERR ) {
             return;
@@ -1373,12 +1373,12 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeParallelTo2( double[] a, double[] ref ) {
+    public static void project2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_ERR ) {
             return;
         }
-        double parScale = dot2( a, ref ) / ( lenRef * lenRef );
+        double parScale = dot2( a, ref ) / lenRef;
         a[0] = ref[0] * parScale;
         a[1] = ref[1] * parScale;
     }
@@ -1710,7 +1710,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeOrthoTo3( double[] a, double[] ref ) {
+    public static void reject3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_ERR ) {
             return;
@@ -1728,12 +1728,12 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
-    public static void makeParallelTo3( double[] a, double[] ref ) {
+    public static void project3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_ERR ) {
             return;
         }
-        double parScale = dot3( a, ref ) / ( lenRef * lenRef );
+        double parScale = dot3( a, ref ) / lenRef;
         a[0] = ref[0] * parScale;
         a[1] = ref[1] * parScale;
         a[2] = ref[2] * parScale;
@@ -2207,5 +2207,124 @@ public final class Vec {
 
 
     private Vec() {}
+
+
+    /**
+     * @deprecated 
+     * Use {@link #reject(Vec2, Vec2)}
+     */
+    public static void makeOrthoTo( Vec2 a, Vec2 ref ) {
+        float lenRef = ref.x * ref.x + ref.y * ref.y;
+        if( lenRef < FSQRT_ABS_ERR ) {
+            return;
+        }
+        float parScale = dot( a, ref ) / lenRef;
+        a.x -= ref.x * parScale;
+        a.y -= ref.y * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #project(Vec2, Vec2)}
+     */
+    public static void makeParallelTo( Vec2 a, Vec2 ref ) {
+        float lenRef = ref.x * ref.x + ref.y * ref.y;
+        if( lenRef < FSQRT_ABS_ERR ) {
+            return;
+        }
+        float parScale = dot( a, ref ) / lenRef;
+        a.x = ref.x * parScale;
+        a.y = ref.y * parScale;
+    }
+
+
+    /**
+     * @deprecated
+     * Use {@link #reject(Vec3, Vec3)}
+     */
+    public static void makeOrthoTo( Vec3 a, Vec3 ref ) {
+        float lenRef = lenSquared( ref );
+        if( lenRef < FSQRT_ABS_ERR ) {
+            return;
+        }
+        float parScale = dot( a, ref ) / lenRef;
+        a.x -= ref.x * parScale;
+        a.y -= ref.y * parScale;
+        a.z -= ref.z * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #project(Vec3, Vec3)}
+     */
+    public static void makeParallelTo( Vec3 a, Vec3 ref ) {
+        float lenRef = lenSquared( ref );
+        if( lenRef < FSQRT_ABS_ERR ) {
+            return;
+        }
+        float parScale = dot( a, ref ) / lenRef;
+        a.x = ref.x * parScale;
+        a.y = ref.y * parScale;
+        a.z = ref.z * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #reject2(double[], double[])}
+     */
+    public static void makeOrthoTo2( double[] a, double[] ref ) {
+        double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
+        if( lenRef < SQRT_ABS_ERR ) {
+            return;
+        }
+        double parScale = dot2( a, ref ) / lenRef;
+        a[0] -= ref[0] * parScale;
+        a[1] -= ref[1] * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #project2(double[], double[])}
+     */
+    public static void makeParallelTo2( double[] a, double[] ref ) {
+        double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
+        if( lenRef < SQRT_ABS_ERR ) {
+            return;
+        }
+        double parScale = dot2( a, ref ) / lenRef;
+        a[0] = ref[0] * parScale;
+        a[1] = ref[1] * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #reject3(double[], double[])}
+     */
+    public static void makeOrthoTo3( double[] a, double[] ref ) {
+        double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
+        if( lenRef < SQRT_ABS_ERR ) {
+            return;
+        }
+        double parScale = dot3( a, ref ) / lenRef;
+        a[0] -= ref[0] * parScale;
+        a[1] -= ref[1] * parScale;
+        a[2] -= ref[2] * parScale;
+    }
+
+    /**
+     * @deprecated
+     * Use {@link #project3(double[], double[])}
+     */
+    public static void makeParallelTo3( double[] a, double[] ref ) {
+        double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
+        if( lenRef < SQRT_ABS_ERR ) {
+            return;
+        }
+        double parScale = dot3( a, ref ) / lenRef;
+        a[0] = ref[0] * parScale;
+        a[1] = ref[1] * parScale;
+        a[2] = ref[2] * parScale;
+    }
+
 
 }
