@@ -11,11 +11,13 @@ import static java.lang.Math.*;
  */
 public class Frac implements Comparable<Frac> {
 
-    public static final int ROUND_ZERO        = 0; ///< Round toward zero.
-    public static final int ROUND_INF         = 1; ///< Round away from zero.
-    public static final int ROUND_DOWN        = 2; ///< Round toward -infinity.
-    public static final int ROUND_UP          = 3; ///< Round toward +infinity.
-    public static final int ROUND_NEAR_INF    = 5; ///< Round to nearest and halfway cases away from zero.
+    public static final int ROUND_ZERO        = 0b0000;    ///< Round toward zero.
+    public static final int ROUND_INF         = 0b0011;    ///< Round away from zero.
+    public static final int ROUND_DOWN        = 0b0010;    ///< Round toward -infinity.
+    public static final int ROUND_UP          = 0b0001;    ///< Round toward +infinity.
+    public static final int ROUND_NEAR_INF    = 0b1000;    ///< Round to nearest and halfway cases away from zero.
+    
+    @Deprecated
     public static final int ROUND_PASS_MINMAX = 8192; ///< Flag to pass INT64_MIN/MAX through instead of rescaling, this avoids special cases for AV_NOPTS_VALUE
 
 
@@ -99,10 +101,6 @@ public class Frac implements Comparable<Frac> {
         }
 
         long maxLong = max;
-        long prevNum = 0;
-        long prevDen = 1;
-        long thisNum = 1;
-        long thisDen = 0;
         boolean exact = true;
 
         // Preserve mSign info and move to absolute values.
@@ -135,19 +133,30 @@ public class Frac implements Comparable<Frac> {
             out.mDen = (int)den;
             return exact;
         }
+        
+        long prevNum = 0;
+        long prevDen = 1;
+        long thisNum = 1;
+        long thisDen = 0;
 
         while( den != 0 ) {
-            long x        = num / den;
-            long next_den = num - den * x;
-            long nextNum  = x * thisNum + prevNum;
-            long nextDen  = x * thisDen + prevDen;
-
-            if (nextNum > maxLong || nextDen > maxLong) {
-                if( thisNum != 0 ) x =         ( maxLong - prevNum ) / thisNum  ;
-                if( thisDen != 0 ) x = min( x, (maxLong - prevDen) / thisDen );
-                if( den * (2 * x * thisDen + prevDen) > num * thisDen ) {
-                    thisNum = ( x * thisNum + prevNum );
-                    thisDen = ( x * thisDen + prevDen );
+            long quotient  = num / den;
+            long remainder = num - den * quotient;
+            long nextNum   = quotient * thisNum + prevNum;
+            long nextDen   = quotient * thisDen + prevDen;
+            
+            if( nextNum > maxLong || nextDen > maxLong ) {
+                if( thisNum != 0 ) {
+                    quotient = ( maxLong - prevNum ) / thisNum ;
+                }
+                
+                if( thisDen != 0 ) {
+                    quotient = min( quotient, (maxLong - prevDen) / thisDen );
+                }
+                
+                if( den * (2 * quotient * thisDen + prevDen) > num * thisDen ) {
+                    thisNum = ( quotient * thisNum + prevNum );
+                    thisDen = ( quotient * thisDen + prevDen );
                 }
                 break;
             }
@@ -157,7 +166,7 @@ public class Frac implements Comparable<Frac> {
             thisNum = nextNum;
             thisDen = nextDen;
             num = den;
-            den = next_den;
+            den = remainder;
         }
 
         out.mNum = (int)( negate ? -thisNum : thisNum );
@@ -212,96 +221,91 @@ public class Frac implements Comparable<Frac> {
     }
 
     /**
-     * TODO: This method works fairly well, but for very large numbers may not give the correct answer.
-     *
      * Rescale a 64-bit integer with rounding to nearest.
      * A simple a * b / c isn't possible as it can overflow.
      * @param val Value
      * @param num Numerator
      * @param den Denominator
-     * @param rnd Rounding method, from Rational.ROUND_*.
+     * @param round Rounding method, from Rational.ROUND_*.
      */
-    public static long multLong( long val, int num, int den, int rnd ) {
-        if( den == 0 ) {
-            if( val == 0 || num == 0 ) {
-                return 0;
-            }
-            return (val < 0) ^ (num < 0) ? Long.MIN_VALUE : Long.MAX_VALUE;
-        }
-
+    public static long multLong( long val, int num, int den, int round ) {
         if( val == 0 || num == 0 ) {
             return 0;
         }
 
-        if( ( rnd & ROUND_PASS_MINMAX) != 0 ) {
+        if( den == 0 ) {
+            return (val ^ num) < 0 ? Long.MIN_VALUE : Long.MAX_VALUE;
+        }
+        
+        if( ( round & ROUND_PASS_MINMAX) != 0 ) {
             if( val == Long.MIN_VALUE || val == Long.MAX_VALUE ) {
                 return val;
             }
-            rnd -= ROUND_PASS_MINMAX;
+            round -= ROUND_PASS_MINMAX;
         }
 
-        // Try to reduce numbers as much as possible.
-        long gcd = gcd( val, den );
-        val /= gcd;
-        den /= gcd;
-        gcd = gcd( num, den );
-        num /= gcd;
-        den /= gcd;
 
-        long numLong = abs((long)num);
-        long denLong = abs((long)den);
-        boolean negative = num < 0 ^ den < 0;
-
-        if( val < 0 ) {
-            negative = !negative;
-            val = val != Long.MIN_VALUE ? -val : Long.MAX_VALUE;
+        // Reduce numbers as much as possible.
+        {
+            long gcd = gcd( val, den );
+            val /= gcd;
+            den /= gcd;
+            gcd = gcd( num, den );
+            num /= gcd;
+            den /= gcd;
         }
+        
+        long absNum = Math.abs((long)num);
+        long absDen = Math.abs((long)den);
+        long sign   = (num ^ den ^ val) >> 63 | 1;
+        long result = 0;
+        long roundAdd = 0;
 
-        if( negative ) {
-            rnd ^= (rnd >> 1) & 1;
+        if( (round & 0b1100) != 0 ) {
+            roundAdd = absDen >> 1;
+        } else if( ( round >> (sign >>> 63) & 1 ) == 1 ) {
+            roundAdd = absDen - 1;
         }
-
-        long r = 0;
-        if( rnd == ROUND_NEAR_INF ) {
-            r = denLong / 2;
-        } else if( ( rnd & 1 ) != 0 ) {
-            r = denLong - 1;
-        }
-
-        long result;
-        if( numLong < Integer.MAX_VALUE && denLong < Integer.MAX_VALUE ) {
-            if( val < Integer.MAX_VALUE ) {
-                result = (val * numLong + r) / denLong;
-            } else {
-                result = val / denLong * numLong + (val % denLong * numLong + r) / denLong;
-            }
-        } else {
-            long a0  = val & 0xFFFFFFFFL;
-            long a1  = val >> 32;
-            long b0  = numLong & 0xFFFFFFFFL;
-            long b1  = numLong >>> 32;
-            long t1  = a0 * b1 + a1 * b0;
-            long t1a = t1 << 32;
-            int i;
-
-            a0 = a0 * b0 + t1a;
-            a1 = a1 * b1 +  ( t1 >>> 32 ) + ( a0 < t1a ? 1 : 0 );
-            a0 += r;
-            a1 += ( a0 < r ? 1 : 0 );
-
-            for( i = 63; i >= 0; i-- ) {
-                a1 += a1 + ((a0 >> i) & 1);
-                t1 += t1;
-                if (denLong <= a1) {
-                    a1 -= denLong;
-                    t1++;
+        
+        if( val != Long.MIN_VALUE ) {
+            val = Math.abs( val );
+            
+            if( absNum < 0xB504F331 && absDen < 0xB504F331  ) {
+                if( val < 0xB504F333 ) {
+                    return sign * ( (val * absNum + roundAdd) / absDen );
+                } else if( val < 0x0FFFFFFFFFFFFFFFL ) {
+                    return sign * ( val / absDen * absNum + ( val % absDen * absNum + roundAdd ) / absDen );
                 }
             }
-            result = t1;
         }
+                
+        long rem;
+        long pool;
+        long q;
+                
+        // Split value into chunks of 22, 22, and 20 bits.
+        rem  = (val >>> 42) * absNum;
+        pool = val & 0x3FFFFFFFFFFL;
+        
+        q = rem / absDen;
+        result += q;
+        rem = ((rem - q * absDen) << 22) + (pool >>> 20) * absNum;
 
-        return negative ? -result : result;
-
+        if( ( result & 0xFFFFFE0000000000L ) != 0 ) {
+            return sign == -1 ? Long.MIN_VALUE : Long.MAX_VALUE;
+        }
+        
+        result <<= 22;
+        q = rem / absDen;
+        result += q;
+        rem = ((rem - q * absDen) << 20) + (pool & 0xFFFFF) * absNum + roundAdd;
+        
+        if( ( result & 0xFFFFF80000000000L ) != 0 ) {
+            return sign == -1 ? Long.MIN_VALUE : Long.MAX_VALUE;
+        }
+        
+        result = ( result << 20 ) + rem / absDen;
+        return sign * result;
     }
 
     /**
@@ -389,7 +393,7 @@ public class Frac implements Comparable<Frac> {
         int exponent = max( Math.getExponent( d ), 0 );
         den = 1L << ( 61 - exponent );
         reduce( (long)floor( d * den + 0.5 ), den, max, out );
-        if( ( out.mNum == 0 || out.mDen == 0 ) && d != 0 && max > 0 && max < Integer.MIN_VALUE ) {
+        if( ( out.mNum == 0 || out.mDen == 0 ) && d != 0 && max > 0 ) {
             reduce( (long)floor( d * den + 0.5 ), den, Integer.MAX_VALUE, out );
         }
     }

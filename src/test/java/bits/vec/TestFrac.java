@@ -6,9 +6,9 @@
 
 package bits.vec;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.*;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -50,105 +50,85 @@ public class TestFrac {
     }
 
     @Test
-    public void testMultLong() {
-        assertEquals( 0, Frac.multLong( 0, 1, 1 ) );
-        assertEquals( 0, Frac.multLong( 1, 0, 1 ) );
-        assertEquals( 0, Frac.multLong( 0, 1, 0 ) );
-        assertEquals( Long.MAX_VALUE, Frac.multLong( 1, 1, 0 ) );
-        assertEquals( Long.MIN_VALUE, Frac.multLong( -1, 1, 0 ) );
-
-        int round = Frac.ROUND_NEAR_INF | Frac.ROUND_PASS_MINMAX;
-        assertEquals( Long.MIN_VALUE, Frac.multLong( Long.MIN_VALUE, 100, 100, round ) );
-        assertEquals( Long.MAX_VALUE, Frac.multLong( Long.MAX_VALUE, 100, 100, round ) );
-
-        round = Frac.ROUND_NEAR_INF;
-        Random rand = new Random( 15 );
-
+    public void testMultLong() throws FileNotFoundException {
+        Random rand = new Random( System.currentTimeMillis() );
+               
+        
+        long[] aSet = { 
+                Long.MIN_VALUE, 
+                Long.MIN_VALUE + 1,
+                Integer.MIN_VALUE,
+                -1, 
+                0, 
+                1,
+                0x0FFFFFFFFFFFFFFEL,
+                Integer.MAX_VALUE,
+                Long.MAX_VALUE - 1, 
+                Long.MAX_VALUE 
+        };
+        
+        int[] bSet = { 
+                Integer.MIN_VALUE, 
+                -1, 
+                0, 
+                1,
+                0xB504F330,
+                Integer.MAX_VALUE 
+        };
+        
+        int[] cSet = bSet;
+        
+        int[] roundSet = {
+                Frac.ROUND_DOWN,
+                Frac.ROUND_INF,
+                Frac.ROUND_NEAR_INF,
+                Frac.ROUND_UP,
+                Frac.ROUND_ZERO
+        };
+        
+        PrintWriter p = new PrintWriter(new File( "/tmp/t.txt"));
+        
         for( int i = 0; i < 10000; i++ ) {
-            long va;
-            int vb, vc;
-            switch( i % 3 ) {
-            default: va = rand.nextLong(); break;
+            int j = i;
+            long va = aSet[j % aSet.length];
+            j /= aSet.length;
+            int vb = bSet[j % bSet.length];
+            j /= bSet.length;
+            int vc = cSet[j % bSet.length];
+            j /= cSet.length;
+            int round = roundSet[j % roundSet.length];
+            j /= roundSet.length;
+            
+            if( j > 0 ) {
+                // Ran through all permutations.
+                va = rand.nextLong();   
+                vb = rand.nextInt();
+                vc = rand.nextInt();
+                round = roundSet[ rand.nextInt( roundSet.length ) ];
             }
 
-            switch( i / 3 % 3 ) {
-            case 0: vb = rand.nextInt() >> 16; break;
-            case 1: vb = Short.MIN_VALUE; break;
-            default: vb = Short.MAX_VALUE; break;
+//            va = 0xC52E13359C2131FAL;
+//            vb = 0x8BE3A300;
+//            vc = 0xE89C9468;
+//            round = 1;
+            
+            long actual = Frac.multLong( va, vb, vc, round );
+            long expected = bigMult( va, vb, vc, round );
+            long err = actual - expected;
+            
+            if( err != 0 ) {
+                System.out.format( "0x%016X * 0x%016X / 0x%016X (round: %d) =   0x%016X  (- 0x%016X = %X)\n",
+                        va, vb, vc, round, actual, expected, err );
+                System.out.flush();
             }
 
-            switch( i / 3 % 3 ) {
-            case 0: vc = rand.nextInt() >> 16; break;
-            case 1: vc = Short.MIN_VALUE; break;
-            default: vc = Short.MAX_VALUE; break;
-            }
-
-            round = randRound( rand );
-            long a0 = Frac.multLong( va, vb, vc, round );
-            BigInteger a1 = bigMult( va, vb, vc, round );
-
-            assertEquals( a1.longValue(), a0 );
+            p.format( "t(%d, %d, %d, %d, %d)\n", va, vb, vc, round, expected );
+            assertEquals( 0, err );
         }
+        
+        p.flush();
     }
-
-    @Ignore @Test
-    public void testMultLong2() {
-        assertEquals( 0, Frac.multLong( 0, 1, 1 ) );
-        assertEquals( 0, Frac.multLong( 1, 0, 1 ) );
-        assertEquals( 0, Frac.multLong( 0, 1, 0 ) );
-        assertEquals( Long.MAX_VALUE, Frac.multLong( 1, 1, 0 ) );
-        assertEquals( Long.MIN_VALUE, Frac.multLong( -1, 1, 0 ) );
-
-        int round = Frac.ROUND_NEAR_INF | Frac.ROUND_PASS_MINMAX;
-        assertEquals( Long.MIN_VALUE, Frac.multLong( Long.MIN_VALUE, 100, 100, round ) );
-        assertEquals( Long.MAX_VALUE, Frac.multLong( Long.MAX_VALUE, 100, 100, round ) );
-
-        round = Frac.ROUND_NEAR_INF;
-        Random rand = new Random( 15 );
-
-        for( int i = 0; i < 3 * 3 * 3; i++ ) {
-            long va;
-            int vb;
-            int vc;
-
-            switch( i % 3 ) {
-            case 0: va = rand.nextLong(); break;
-            case 1: va = Long.MIN_VALUE; break;
-            default: va = Long.MAX_VALUE; break;
-            }
-
-            switch( i / 3 % 3 ) {
-            case 0: vb = rand.nextInt(); break;
-            case 1: vb = Integer.MIN_VALUE; break;
-            default: vb = Integer.MAX_VALUE; break;
-            }
-
-            switch( i / 9 % 3 ) {
-            case 0: vc = rand.nextInt(); break;
-            case 1: vc = Integer.MIN_VALUE; break;
-            default: vc = Integer.MAX_VALUE; break;
-            }
-
-            //round = randRound( rand );
-            round = Frac.ROUND_DOWN;
-
-            long a0 = Frac.multLong( va, vb, vc, round );
-            BigInteger a1 = bigMult( va, vb, vc, round );
-
-            System.out.println( va + " * " + vb + " / " + vc + " = " + "\t" + ( a0 - a1.longValue() ) + "\t" + a0 + " ### " + a1.longValue() );
-
-//            if( a1.longValue() != a0 ) {
-//                System.out.println( a0 );
-//                System.out.println( a1.longValue() );
-//                System.out.println( a1 );
-//                System.out.println( round );
-//                a1 = bigMult( va, vb, vc, round );
-//                a0 = Rational.multLong( va, vb, vc, round );
-//            }
-//            assertEquals( a1.longValue(), a0 );
-        }
-    }
-
+    
     @Test
     public void testGcd() {
         assertEquals( 4, Frac.gcd( 4 * 7, 4 * 13 ) );
@@ -220,7 +200,6 @@ public class TestFrac {
 
     @Test
     public void testDoubleToRational() {
-        Random rand = new Random( 10 );
         Frac ra = new Frac();
 
         Frac.doubleToRational( Double.NEGATIVE_INFINITY, ra );
@@ -257,8 +236,24 @@ public class TestFrac {
     }
 
 
+    
+    static long bigMult( long a, long b, long c, int round ) {
+        if( a == 0 || b == 0 ) {
+            return 0;
+        }
+        
+        if( c == 0 ) {
+            return ( a ^ b ) < 0 ? Long.MIN_VALUE : Long.MAX_VALUE;
+        }
+        
+        BigInteger ret = bigMultRaw( a, b, c, round );
+        ret = ret.max( BigInteger.valueOf( Long.MIN_VALUE ) );
+        ret = ret.min( BigInteger.valueOf( Long.MAX_VALUE ) );
+        return ret.longValue();
+    }
+    
 
-    static BigInteger bigMult( long a, long b, long c, int round ) {
+    static BigInteger bigMultRaw( long a, long b, long c, int round ) {
         BigInteger ia = BigInteger.valueOf( a );
         BigInteger ib = BigInteger.valueOf( b );
         BigInteger ic = BigInteger.valueOf( c );
@@ -303,7 +298,6 @@ public class TestFrac {
 
 
     static int randRound( Random rand ) {
-        int v = rand.nextInt( 5 );
         switch( rand.nextInt( 5 ) ) {
         case 0:
             return Frac.ROUND_ZERO;
@@ -318,16 +312,5 @@ public class TestFrac {
             return Frac.ROUND_NEAR_INF;
         }
     }
-
-
-    static byte[] longToBytes( long v ) {
-        return new byte[]{ (byte)( v >>> 56 ),
-                           (byte)( v >>> 48 ),
-                           (byte)( v >>> 40 ),
-                           (byte)( v >>> 32 ),
-                           (byte)( v >>> 24 ),
-                           (byte)( v >>> 16 ),
-                           (byte)( v >>>  8 ),
-                           (byte)( v ) };
-    }
+   
 }
