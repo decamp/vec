@@ -55,7 +55,7 @@ public final class Box {
 
 
     public static float centY( Box2 box ) {
-        return 0.5f * ( box.x0 + box.x1 );
+        return 0.5f * ( box.y0 + box.y1 );
     }
 
 
@@ -964,10 +964,10 @@ public final class Box {
                 double x = ( ref[i] + ref[j] );
                 out[i] = 0.5 * ( x - d0 );
                 out[j] = 0.5 * ( x + d0 );
-            } else if( box[i] <= ref[i] ) {
+            } else if( box[i] < ref[i] ) {
                 out[i] = ref[i];
                 out[j] = ref[i] + d0;
-            } else if( box[j] >= ref[j] ) {
+            } else if( box[j] > ref[j] ) {
                 out[i] = ref[j] - d0;
                 out[j] = ref[j];
             } else {

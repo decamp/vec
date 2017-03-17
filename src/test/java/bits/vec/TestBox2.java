@@ -113,10 +113,10 @@ public class TestBox2 {
 
 
     private static boolean equiv( Box2 r, double[] b ) {
-        return Tol.approxEqual( r.x0, b[0] ) &&
-               Tol.approxEqual( r.y0, b[1] ) &&
-               Tol.approxEqual( r.x1, b[2] ) &&
-               Tol.approxEqual( r.y1, b[3] );
+        return Tests.eq( r.x0, b[0] ) &&
+               Tests.eq( r.y0, b[1] ) &&
+               Tests.eq( r.x1, b[2] ) &&
+               Tests.eq( r.y1, b[3] );
     }
     
     

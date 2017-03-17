@@ -21,7 +21,7 @@ public class Tests {
             return true;
         }
 
-        if( Tol.approxEqual( a, b, 0.001f, 1E-6f ) ) {
+        if( Tol.approxEqual( a, b, 0.001f, 1E-5f ) ) {
             return true;
         }
 
