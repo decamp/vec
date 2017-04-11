@@ -21,7 +21,7 @@ public class TestTrans3 {
         Random rand = new Random( 10 );
 
         for( int i = 0; i < 5; i++ ) {
-            Mat3 rot = Tests.randRotation( rand );
+            Mat3 rot = Tests.randRot3( rand );
             Vec3 pos = Tests.randPos( rand );
 
             Trans3 trans = new Trans3();
@@ -57,7 +57,7 @@ public class TestTrans3 {
         Random rand = new Random( 12 );
 
         for( int i = 0; i < 5; i++ ) {
-            Mat3 rot = Tests.randRotation( rand );
+            Mat3 rot = Tests.randRot3( rand );
             Vec3 pos = Tests.randPos( rand );
 
             Trans3 trans = new Trans3();
@@ -82,7 +82,7 @@ public class TestTrans3 {
         Random rand = new Random( 12 );
 
         for( int i = 0; i < 5; i++ ) {
-            Mat3 rot = Tests.randRotation( rand );
+            Mat3 rot = Tests.randRot3( rand );
             Vec3 pos = Tests.randPos( rand );
 
             Trans3 trans = new Trans3();
@@ -123,7 +123,7 @@ public class TestTrans3 {
         Mat4   invMat = new Mat4();
         Mat4   temp   = new Mat4();
 
-        Mat.put( Tests.randRotation( rand ), trans.mRot );
+        Mat.put( Tests.randRot3( rand ), trans.mRot );
         Vec.put( Tests.randPos( rand ), trans.mPos );
 
         Trans.invert( trans, inv );
@@ -155,7 +155,7 @@ public class TestTrans3 {
         Mat4   invMat = new Mat4();
         Mat4   temp   = new Mat4();
 
-        Mat.put( Tests.randRotation( rand ), trans.mRot );
+        Mat.put( Tests.randRot3( rand ), trans.mRot );
         Vec.put( Tests.randPos( rand ), trans.mPos );
 
         Trans.orthoInvert( trans, inv );

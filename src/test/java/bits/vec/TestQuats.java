@@ -11,33 +11,84 @@ import java.util.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
-
+import static bits.vec.Tests.*;
 
 public class TestQuats {
 
     @Test
-    public void testRandMatrixConversions() {
-        Random rand = new Random( 6 );
+    public void testIdentityToMat3() {
+        Vec4 q = new Vec4( 0, 0, 0, 1 );
+        Mat3 mat = new Mat3();
+        Quat.quatToMat( q, mat );
         
-        double[] rotIn  = new double[16];
-        double[] q      = new double[4];
+        Mat3 eye = new Mat3();
+        Mat.identity( eye );
+        assertNear( mat, eye );
+        
+        Quat.matToQuat( eye, q );
+        assertNear( q, new Vec4( 0, 0, 0, 1 ) );
+    }
+
+    @Test
+    public void testIdentityToMat4() {
+        Vec4 q = new Vec4( 0, 0, 0, 1 );
+        Mat4 mat = new Mat4();
+        Quat.quatToMat( q, mat );
+
+        Mat4 eye = new Mat4();
+        Mat.identity( eye );
+        assertNear( mat, eye );
+
+        Quat.matToQuat( eye, q );
+        assertNear( q, new Vec4( 0, 0, 0, 1 ) );
+    }
+    
+    @Test
+    public void testRandMatrixConversionsMat3() {
+        Random rand = new Random( 6 );
+        Vec4 q = new Vec4();
+        Mat3 rotOut = new Mat3();
+
+        for( int i = 0; i < 100; i++ ) {
+            Mat3 rotIn = Tests.randRot3( rand );
+            Quat.matToQuat( rotIn, q );
+            Quat.quatToMat( q, rotOut );
+            assertNear( rotIn, rotOut );
+        }
+    }
+
+    @Test
+    public void testRandMatrixConversionsMat4() {
+        Random rand = new Random( 6 );
+        Vec4 q = new Vec4();
+        Mat4 rotOut = new Mat4();
+
+        for( int i = 0; i < 100; i++ ) {
+            Mat4 rotIn = Tests.randRot4( rand );
+            Quat.matToQuat( rotIn, q );
+            Quat.quatToMat( q, rotOut );
+            assertNear( rotIn, rotOut );
+        }
+    }
+
+    @Test
+    public void testRandMatrixConversionsArr() {
+        Random rand = new Random( 6 );
+        double[] rotIn = new double[16];
+        double[] q = new double[4];
         double[] rotOut = new double[16];
         
-        for( int i = 0; i < 20000; i++ ) {
-            rotXyz( rand.nextDouble() * Math.PI,
-                    rand.nextDouble() * Math.PI,
-                    rand.nextDouble() * Math.PI,
-                    rotIn );
+        for( int i = 0; i < 100; i++ ) {
+            rotXyz( 
+                rand.nextDouble() * Math.PI,
+                rand.nextDouble() * Math.PI,
+                rand.nextDouble() * Math.PI,
+                rotIn 
+            );
             
             Quat.mat4ToQuat( rotIn, q );
             Quat.quatToMat4( q, rotOut );
-            
-            if( !matEquals( rotIn, rotOut ) ) {
-                System.out.println( Mat.format4( rotIn ) );
-                System.out.println( Vec.format4( q ) );
-                System.out.println( Mat.format4( rotOut ) );
-                assertTrue( "Conversion failed.", false );
-            }
+            assertNear( rotIn, rotOut );
         }
     }
 
@@ -55,18 +106,11 @@ public class TestQuats {
             rotXyz( rx, ry, rz, rotIn );
             Quat.mat4ToQuat( rotIn, q );
             Quat.quatToMat4( q, rotOut );
-
-            //System.out.println( Quats.format( q ) );
-            
-            if( !matEquals( rotIn, rotOut ) ) {
-                System.out.println( Mat.format4( rotIn ) );
-                System.out.println( Quat.format4( q ) );
-                System.out.println( Mat.format4( rotOut ) );
-                assertTrue( "Conversion failed.", false );
-            }
+            assertNear( rotIn, rotOut );
         }
     }
 
+    @Ignore
     @Test
     public void testMultSpeed() {
         double[] a  = new double[4];
@@ -109,12 +153,15 @@ public class TestQuats {
         double[] startVec = { 1, 0, 0 };
         double[] outVec   = new double[3];
         double[] quat     = new double[4];
-        double[][] testVecs = { {  1,  0,  0 },
-                               { -1,  0,  0 },
-                               {  0,  1,  0 },
-                               {  0, -1,  0 },
-                               {  0,  0,  1 },
-                               {  0,  0, -1 } };
+        double[][] testVecs = { 
+            {  1,  0,  0 },
+            { -1,  0,  0 },
+            {  0,  1,  0 },
+            {  0, -1,  0 },
+            {  0,  0,  1 },
+            {  0,  0, -1 } 
+        };
+        
         float[] testAngs = new float[testVecs.length];
 
         int trials = 100000;
@@ -144,12 +191,14 @@ public class TestQuats {
     @Ignore @Test
     public void testSphericalSamplingWithGaussians() {
         double[] outVec   = new double[3];
-        double[][] testVecs = { {  1,  0,  0 },
-                                { -1,  0,  0 },
-                                {  0,  1,  0 },
-                                {  0, -1,  0 },
-                                {  0,  0,  1 },
-                                {  0,  0, -1 } };
+        double[][] testVecs = { 
+            {  1,  0,  0 },
+            { -1,  0,  0 },
+            {  0,  1,  0 },
+            {  0, -1,  0 },
+            {  0,  0,  1 },
+            {  0,  0, -1 } 
+        };
         float[] testAngs = new float[testVecs.length];
 
         int trials = 100000;
@@ -178,11 +227,8 @@ public class TestQuats {
             assertTrue( "Gaussian sampling not uniform.",  err < 0.01 * Math.PI );
             //System.out.println( Vec3.format( testVecs[j] ) + " : " + err );
         }
-
-
     }
-
-
+    
 
     private static void uniformRandQuat( Random rand, double[] out ) {
         // Draw three uniform samples.

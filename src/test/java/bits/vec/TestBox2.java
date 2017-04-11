@@ -113,10 +113,10 @@ public class TestBox2 {
 
 
     private static boolean equiv( Box2 r, double[] b ) {
-        return Tests.eq( r.x0, b[0] ) &&
-               Tests.eq( r.y0, b[1] ) &&
-               Tests.eq( r.x1, b[2] ) &&
-               Tests.eq( r.y1, b[3] );
+        return Tests.isNear( r.x0, b[0] ) &&
+               Tests.isNear( r.y0, b[1] ) &&
+               Tests.isNear( r.x1, b[2] ) &&
+               Tests.isNear( r.y1, b[3] );
     }
     
     

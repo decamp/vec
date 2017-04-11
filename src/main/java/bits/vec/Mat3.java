@@ -25,10 +25,11 @@ public class Mat3 {
     public Mat3() {}
 
 
-    public Mat3( float m00, float m10, float m20,
-                 float m01, float m11, float m21,
-                 float m02, float m12, float m22 )
-    {
+    public Mat3( 
+        float m00, float m10, float m20,
+        float m01, float m11, float m21,
+        float m02, float m12, float m22 
+    ) {
         this.m00 = m00;
         this.m10 = m10;
         this.m20 = m20;

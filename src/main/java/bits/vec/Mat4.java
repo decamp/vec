@@ -25,11 +25,12 @@ public class Mat4 {
     public Mat4() {}
 
 
-    public Mat4( float m00, float m10, float m20, float m30,
-                 float m01, float m11, float m21, float m31,
-                 float m02, float m12, float m22, float m32,
-                 float m03, float m13, float m23, float m33 )
-    {
+    public Mat4( 
+        float m00, float m10, float m20, float m30,
+        float m01, float m11, float m21, float m31,
+        float m02, float m12, float m22, float m32,
+        float m03, float m13, float m23, float m33 
+    ) {
         this.m00 = m00;
         this.m01 = m01;
         this.m02 = m02;

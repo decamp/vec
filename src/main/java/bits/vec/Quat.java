@@ -17,7 +17,6 @@ import java.util.Random;
  */
 public final class Quat {
 
-
     public static void conjugate( Vec4 a, Vec4 out ) {
         out.x = -a.x;
         out.y = -a.y;
@@ -49,43 +48,83 @@ public final class Quat {
      * @param out Receives output quaternion
      */
     public static void matToQuat( Mat3 mat, Vec4 out ) {
-        final float r00 = mat.m00;
-        final float r11 = mat.m11;
-        final float r22 = mat.m22;
-
-        float q0 = (  r00 + r11 + r22 + 1 );
-        float q1 = (  r00 - r11 - r22 + 1 );
-        float q2 = ( -r00 + r11 - r22 + 1 );
-        float q3 = ( -r00 - r11 + r22 + 1 );
-
-        q0 = q0 < 0 ? 0 : (float)Math.sqrt( q0 );
-        q1 = q1 < 0 ? 0 : (float)Math.sqrt( q1 );
-        q2 = q2 < 0 ? 0 : (float)Math.sqrt( q2 );
-        q3 = q3 < 0 ? 0 : (float)Math.sqrt( q3 );
-
-        if( q0 >= q1 && q0 >= q2 && q0 >= q3 ) {
-            if( mat.m21 - mat.m12 < 0 ) q1 = -q1;
-            if( mat.m02 - mat.m20 < 0 ) q2 = -q2;
-            if( mat.m10 - mat.m01 < 0 ) q3 = -q3;
-        } else if( q1 >= q2 && q1 >= q3 ) {
-            if( mat.m21 - mat.m12 < 0 ) q0 = -q0;
-            if( mat.m10 + mat.m01 < 0 ) q2 = -q2;
-            if( mat.m02 + mat.m20 < 0 ) q3 = -q3;
-        } else if( q2 >= q3 ) {
-            if( mat.m02 - mat.m20 < 0 ) q0 = -q0;
-            if( mat.m10 + mat.m01 < 0 ) q1 = -q1;
-            if( mat.m21 + mat.m12 < 0 ) q3 = -q3;
+        final float m00 = mat.m00;
+        final float m11 = mat.m11;
+        final float m22 = mat.m22;
+        float tr = m00 + m11 + m22;
+                
+        if( tr > 0 ) {
+            float sc = (float)Math.sqrt( tr + 1.0 ) * 2; // S=4*qw 
+            out.x = (mat.m21 - mat.m12) / sc;
+            out.y = (mat.m02 - mat.m20) / sc;
+            out.z = (mat.m10 - mat.m01) / sc;
+            out.w = 0.25f * sc;
+        
+        } else if( (m00 > m11) & (m00 > m22) ) {
+            float sc = (float)Math.sqrt( 1.0 + m00 - m11 - m22 ) * 2; // S=4*qx 
+            out.x = 0.25f * sc;
+            out.y = (mat.m01 + mat.m10) / sc;
+            out.z = (mat.m02 + mat.m20) / sc;
+            out.w = (mat.m21 - mat.m12) / sc;
+        
+        } else if( m11 > m22 ) {
+            float sc = (float)Math.sqrt( 1.0 + m11 - m00 - m22 ) * 2; // S=4*qy
+            out.x = (mat.m01 + mat.m10) / sc;
+            out.y = 0.25f * sc;
+            out.z = (mat.m12 + mat.m21) / sc;
+            out.w = (mat.m02 - mat.m20) / sc;
+        
         } else {
-            if( mat.m10 - mat.m01 < 0 ) q0 = -q0;
-            if( mat.m20 + mat.m02 < 0 ) q1 = -q1;
-            if( mat.m21 + mat.m12 < 0 ) q2 = -q2;
+            float sc = (float)Math.sqrt( 1.0 + m22 - m00 - m11 ) * 2; // S=4*qz
+            out.x = (mat.m02 + mat.m20) / sc;
+            out.y = (mat.m12 + mat.m21) / sc;
+            out.z = 0.25f * sc;
+            out.w = (mat.m10 - mat.m01) / sc;
         }
+    }
 
-        float r = 1 / (float)Math.sqrt( q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3 );
-        out.x = q0 * r;
-        out.y = q1 * r;
-        out.z = q2 * r;
-        out.w = q3 * r;
+    /**
+     * Converts a rotation matrix to an equivalent quaternion.
+     * Non-rotation matrices will produce undefined results.
+     *
+     * @param mat Input matrix.
+     * @param out Receives output quaternion
+     */
+    public static void matToQuat( Mat4 mat, Vec4 out ) {
+        final float m00 = mat.m00;
+        final float m11 = mat.m11;
+        final float m22 = mat.m22;
+        float tr = m00 + m11 + m22;
+
+        if( tr > 0 ) {
+            float sc = (float)Math.sqrt( tr + 1.0 ) * 2; // S=4*qw 
+            out.x = (mat.m21 - mat.m12) / sc;
+            out.y = (mat.m02 - mat.m20) / sc;
+            out.z = (mat.m10 - mat.m01) / sc;
+            out.w = 0.25f * sc;
+
+        } else if( (m00 > m11) & (m00 > m22) ) {
+            float sc = (float)Math.sqrt( 1.0 + m00 - m11 - m22 ) * 2; // S=4*qx 
+            out.x = 0.25f * sc;
+            out.y = (mat.m01 + mat.m10) / sc;
+            out.z = (mat.m02 + mat.m20) / sc;
+            out.w = (mat.m21 - mat.m12) / sc;
+
+        } else if( m11 > m22 ) {
+            float sc = (float)Math.sqrt( 1.0 + m11 - m00 - m22 ) * 2; // S=4*qy
+            out.x = (mat.m01 + mat.m10) / sc;
+            out.y = 0.25f * sc;
+            out.z = (mat.m12 + mat.m21) / sc;
+            out.w = (mat.m02 - mat.m20) / sc;
+
+        } else {
+            float sc = (float)Math.sqrt( 1.0 + m22 - m00 - m11 ) * 2; // S=4*qz
+            out.x = (mat.m02 + mat.m20) / sc;
+            out.y = (mat.m12 + mat.m21) / sc;
+            out.z = 0.25f * sc;
+            out.w = (mat.m10 - mat.m01) / sc;
+        }
+    
     }
 
     /**
@@ -222,22 +261,20 @@ public final class Quat {
      * @param out  Receives output.
      */
     public static void quatToMat( Vec4 quat, Mat3 out ) {
-        final float q0 = quat.x;
-        final float q1 = quat.y;
-        final float q2 = quat.z;
-        final float q3 = quat.w;
+        final float x = quat.x;
+        final float y = quat.y;
+        final float z = quat.z;
+        final float w = quat.w;
 
-        out.m00 = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
-        out.m10 = 2 * ( q1 * q2 + q0 * q3 );
-        out.m20 = 2 * ( q1 * q3 - q0 * q2 );
-
-        out.m01 = 2 * ( q1 * q2 - q0 * q3 );
-        out.m11 = q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3;
-        out.m21 = 2 * ( q2 * q3 + q0 * q1 );
-
-        out.m02 = 2 * ( q1 * q3 + q0 * q2 );
-        out.m12 = 2 * ( q2 * q3 - q0 * q1 );
-        out.m22 = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+        out.m00 = 1 - 2 * ( y * y + z * z );
+        out.m10 =     2 * ( x * y + z * w );
+        out.m20 =     2 * ( x * z - y * w );
+        out.m01 =     2 * ( x * y - z * w );
+        out.m11 = 1 - 2 * ( x * x + z * z );
+        out.m21 =     2 * ( y * z + x * w );
+        out.m02 =     2 * ( x * z + y * w );
+        out.m12 =     2 * ( y * z - x * w );
+        out.m22 = 1 - 2 * ( x * x + y * y );
     }
 
     /**
@@ -247,26 +284,23 @@ public final class Quat {
      * @param out  Receives output.
      */
     public static void quatToMat( Vec4 quat, Mat4 out ) {
-        final float q0 = quat.x;
-        final float q1 = quat.y;
-        final float q2 = quat.z;
-        final float q3 = quat.w;
+        final float x = quat.x;
+        final float y = quat.y;
+        final float z = quat.z;
+        final float w = quat.w;
 
-        out.m00 = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
-        out.m10 = 2 * ( q1 * q2 + q0 * q3 );
-        out.m20 = 2 * ( q1 * q3 - q0 * q2 );
+        out.m00 = 1 - 2 * ( y * y + z * z );
+        out.m10 =     2 * ( x * y + z * w );
+        out.m20 =     2 * ( x * z - y * w );
         out.m30 = 0;
-
-        out.m01 = 2 * ( q1 * q2 - q0 * q3 );
-        out.m11 = q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3;
-        out.m21 = 2 * ( q2 * q3 + q0 * q1 );
+        out.m01 =     2 * ( x * y - z * w );
+        out.m11 = 1 - 2 * ( x * x + z * z );
+        out.m21 =     2 * ( y * z + x * w );
         out.m31 = 0;
-
-        out.m02 = 2 * ( q1 * q3 + q0 * q2 );
-        out.m12 = 2 * ( q2 * q3 - q0 * q1 );
-        out.m22 = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+        out.m02 =     2 * ( x * z + y * w );
+        out.m12 =     2 * ( y * z - x * w );
+        out.m22 = 1 - 2 * ( x * x + y * y );
         out.m32 = 0;
-        
         out.m03 = 0;
         out.m13 = 0;
         out.m23 = 0;
@@ -328,8 +362,7 @@ public final class Quat {
         out.w = ( qa.w * ratioA + qb.w * ratioB );
     }
 
-        
-
+    
     public static void conjugate( double[] a, double[] out ) {
         out[0] = -a[0];
         out[1] = -a[1];
@@ -361,47 +394,39 @@ public final class Quat {
      * @param out Length-4 array that holds equivalent quaternion on return.
      */
     public static void mat4ToQuat( double[] mat, double[] out ) {
-        final double r00 = mat[ 0];
-        final double r11 = mat[ 5];
-        final double r22 = mat[10];
+        final double m00 = mat[ 0];
+        final double m11 = mat[ 5];
+        final double m22 = mat[10];
+        double tr = m00 + m11 + m22;
 
-        double q0 = (  r00 + r11 + r22 + 1 );
-        double q1 = (  r00 - r11 - r22 + 1 );
-        double q2 = ( -r00 + r11 - r22 + 1 );
-        double q3 = ( -r00 - r11 + r22 + 1 );
+        if( tr > 0 ) {
+            double sc = Math.sqrt( tr + 1.0 ) * 2; // S=4*qw 
+            out[0] = (mat[ 6] - mat[ 9]) / sc;
+            out[1] = (mat[ 8] - mat[ 2]) / sc;
+            out[2] = (mat[ 1] - mat[ 4]) / sc;
+            out[3] = 0.25f * sc;
 
-        q0 = q0 < 0 ? 0 : Math.sqrt( q0 );
-        q1 = q1 < 0 ? 0 : Math.sqrt( q1 );
-        q2 = q2 < 0 ? 0 : Math.sqrt( q2 );
-        q3 = q3 < 0 ? 0 : Math.sqrt( q3 );
+        } else if( (m00 > m11) & (m00 > m22) ) {
+            double sc = Math.sqrt( 1.0 + m00 - m11 - m22 ) * 2; // S=4*qx 
+            out[0] = 0.25f * sc;
+            out[1] = (mat[ 4] + mat[ 1]) / sc;
+            out[2] = (mat[ 8] + mat[ 2]) / sc;
+            out[3] = (mat[ 6] - mat[ 9]) / sc;
 
-        if( q0 >= q1 && q0 >= q2 && q0 >= q3 ) {
-            //System.out.println( "#0" );
-            if( mat[6] - mat[9] < 0 ) q1 = -q1;
-            if( mat[8] - mat[2] < 0 ) q2 = -q2;
-            if( mat[1] - mat[4] < 0 ) q3 = -q3;
-        } else if( q1 >= q2 && q1 >= q3 ) {
-            //System.out.println( "#1" );
-            if( mat[6] - mat[9] < 0 ) q0 = -q0;
-            if( mat[1] + mat[4] < 0 ) q2 = -q2;
-            if( mat[8] + mat[2] < 0 ) q3 = -q3;
-        } else if( q2 >= q3 ) {
-            //System.out.println( "#2" );
-            if( mat[8] - mat[2] < 0 ) q0 = -q0;
-            if( mat[1] + mat[4] < 0 ) q1 = -q1;
-            if( mat[6] + mat[9] < 0 ) q3 = -q3;
+        } else if( m11 > m22 ) {
+            double sc = Math.sqrt( 1.0 + m11 - m00 - m22 ) * 2; // S=4*qy
+            out[0] = (mat[ 4] + mat[ 1]) / sc;
+            out[1] = 0.25f * sc;
+            out[2] = (mat[ 9] + mat[ 6]) / sc;
+            out[3] = (mat[ 8] - mat[ 2]) / sc;
+
         } else {
-            //System.out.println( "#3" );
-            if( mat[1] - mat[4] < 0 ) q0 = -q0;
-            if( mat[2] + mat[8] < 0 ) q1 = -q1;
-            if( mat[6] + mat[9] < 0 ) q2 = -q2;
+            double sc = Math.sqrt( 1.0 + m22 - m00 - m11 ) * 2; // S=4*qz
+            out[0] = (mat[ 8] + mat[ 2]) / sc;
+            out[1] = (mat[ 9] + mat[ 6]) / sc;
+            out[2] = 0.25f * sc;
+            out[3] = (mat[ 1] - mat[ 4]) / sc;
         }
-
-        double r = 1.0 / Math.sqrt( q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3 );
-        out[0] = q0 * r;
-        out[1] = q1 * r;
-        out[2] = q2 * r;
-        out[3] = q3 * r;
     }
 
     /**
@@ -530,26 +555,23 @@ public final class Quat {
      * @param out  Length-16 array that holds equivalent matrix on return.
      */
     public static void quatToMat4( double[] quat, double[] out ) {
-        final double q0 = quat[0];
-        final double q1 = quat[1];
-        final double q2 = quat[2];
-        final double q3 = quat[3];
+        final double x = quat[0];
+        final double y = quat[1];
+        final double z = quat[2];
+        final double w = quat[3];
 
-        out[ 0] = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
-        out[ 1] = 2 * ( q1 * q2 + q0 * q3 );
-        out[ 2] = 2 * ( q1 * q3 - q0 * q2 );
+        out[ 0] = 1 - 2 * ( y * y + z * z );
+        out[ 1] =     2 * ( x * y + z * w );
+        out[ 2] =     2 * ( x * z - y * w );
         out[ 3] = 0;
-
-        out[ 4] = 2 * ( q1 * q2 - q0 * q3 );
-        out[ 5] = q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3;
-        out[ 6] = 2 * ( q2 * q3 + q0 * q1 );
+        out[ 4] =     2 * ( x * y - z * w );
+        out[ 5] = 1 - 2 * ( x * x + z * z );
+        out[ 6] =     2 * ( y * z + x * w );
         out[ 7] = 0;
-
-        out[ 8] = 2 * ( q1 * q3 + q0 * q2 );
-        out[ 9] = 2 * ( q2 * q3 - q0 * q1 );
-        out[10] = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+        out[ 8] =     2 * ( x * z + y * w );
+        out[ 9] =     2 * ( y * z - x * w );
+        out[10] = 1 - 2 * ( x * x + y * y );
         out[11] = 0;
-
         out[12] = 0;
         out[13] = 0;
         out[14] = 0;

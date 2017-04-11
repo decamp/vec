@@ -26,12 +26,12 @@ public class TestPhi {
         for( int i = 0; i < 100; i++ ) {
             double v = rand.nextDouble() * 8 - 4;
             double gg = Phi.ncdf( v );
-            assertNear( v, Phi.ncdfInvFast( gg ) );
-            assertNear( v, Phi.ncdfInv( gg ) );
+            isNear( v, Phi.ncdfInvFast( gg ) );
+            isNear( v, Phi.ncdfInv( gg ) );
         }
 
-        assertNear( 0.0, Phi.ncdf( Double.NEGATIVE_INFINITY ) );
-        assertNear( 1.0, Phi.ncdf( Double.POSITIVE_INFINITY ) );
+        isNear( 0.0, Phi.ncdf( Double.NEGATIVE_INFINITY ) );
+        isNear( 1.0, Phi.ncdf( Double.POSITIVE_INFINITY ) );
         assertTrue( Double.NEGATIVE_INFINITY == Phi.ncdfInv( 0 ) );
         assertTrue( Double.POSITIVE_INFINITY == Phi.ncdfInv( 1.0 ) );
     }
