@@ -1071,10 +1071,10 @@ public final class Mat {
 
 
     public static void identity( Mat4 out ) {
-        out.m00 = 1;  out.m11 = 1;  out.m01 = 0;  out.m03 = 0;
-        out.m10 = 0;  out.m21 = 0;  out.m12 = 0;  out.m13 = 0;
-        out.m20 = 0;  out.m31 = 0;  out.m22 = 1;  out.m23 = 0;
-        out.m30 = 0;  out.m02 = 0;  out.m32 = 0;  out.m33 = 1;
+        out.m00 = 1;  out.m01 = 0;  out.m02 = 0;  out.m03 = 0;
+        out.m10 = 0;  out.m11 = 1;  out.m12 = 0;  out.m13 = 0;
+        out.m20 = 0;  out.m21 = 0;  out.m22 = 1;  out.m23 = 0;
+        out.m30 = 0;  out.m31 = 0;  out.m32 = 0;  out.m33 = 1;
     }
 
     /**
