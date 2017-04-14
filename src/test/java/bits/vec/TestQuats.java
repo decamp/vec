@@ -85,6 +85,54 @@ public class TestQuats {
     }
 
     @Test
+    public void testMultVec() {
+        Random rand = new Random( 8 );
+        Vec4 q = new Vec4();
+        Mat3 m = new Mat3();
+        Vec3 vq = new Vec3();
+        Vec3 vm = new Vec3();
+        
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), q );
+            Quat.quatToMat( q, m );
+            Vec3 v = new Vec3( 
+                10f * ( rand.nextFloat() - 0.5f ),
+                10f * ( rand.nextFloat() - 0.5f ),
+                10f * ( rand.nextFloat() - 0.5f )
+            );
+            
+            Quat.multVec( q, v, vq );
+            Mat.mult( m, v, vm );
+            
+            assertNear( vq, vm );
+        }
+    }
+
+    @Test
+    public void testMultVecArr() {
+        Random rand = new Random( 8 );
+        double[] q = new double[4];
+        double[] m = new double[16];
+        double[] vq = new double[3];
+        double[] vm = new double[3];
+
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), q );
+            Quat.quatToMat4( q, m );
+            double[] v = new double[] {
+                10.0 * ( rand.nextDouble() - 0.5 ),
+                10.0 * ( rand.nextDouble() - 0.5 ),
+                10.0 * ( rand.nextDouble() - 0.5 )
+            };
+
+            Quat.multVec3( q, v, vq );
+            Mat.mult4Vec3( m, v, vm );
+            
+            assertNear( vq, vm );
+        }
+    }
+    
+    @Test
     public void testPreRotate() {
         Random rand = new Random( 8 );
         Vec4 q = new Vec4();
@@ -236,6 +284,7 @@ public class TestQuats {
      * Make sure quaternion sampling is actually uniform.
      */
     @Test
+    @Ignore
     public void testSamplingUniformity() {
         double[] startVec = { 1, 0, 0 };
         double[] outVec   = new double[3];
@@ -266,7 +315,7 @@ public class TestQuats {
         for( int j = 0; j < testVecs.length; j++ ) {
             double err = Math.abs( testAngs[j] / trials - (float)( 0.5 * Math.PI ) );
             assertTrue( "Quaternion sampling not uniform.",  err < 0.01 * Math.PI );
-            //System.out.println( Vec.format3( testVecs[j] ) + " : " + err );
+            System.out.println( Vec.format3( testVecs[j] ) + " : " + err );
         }
     }
 

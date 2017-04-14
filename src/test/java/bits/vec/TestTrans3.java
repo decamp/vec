@@ -161,7 +161,7 @@ public class TestTrans3 {
         Trans.orthoInvert( trans, inv );
         Trans.orthoInvert( inv, inv );
 
-//        System.out.println( trans.mRot );
+//        1System.out.println( trans.mRot );
 //        System.out.println( inv.mRot );
         Tests.assertNear( trans.mPos, inv.mPos );
         Tests.assertNear( trans.mRot, inv.mRot );

@@ -158,25 +158,25 @@ public final class Quat {
      * @param out  Output vector. May be same as either input.
      */
     public static void multVec( Vec4 quat, Vec3 vec, Vec3 out ) {
-        final float q0 = quat.x;
-        final float q1 = quat.y;
-        final float q2 = quat.z;
-        final float q3 = quat.w;
+        final float qx = quat.x;
+        final float qy = quat.y;
+        final float qz = quat.z;
+        final float qw = quat.w;
         final float vx = vec.x;
         final float vy = vec.y;
         final float vz = vec.z;
 
-        out.x = ( q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3 ) * vx +
-                ( 2  * ( q1 * q2 - q0 * q3 ) )            * vy +
-                ( 2  * ( q1 * q3 + q0 * q2 ) )            * vz;
+        out.x = ( qw * qw + qx * qx - qy * qy - qz * qz ) * vx +
+                ( 2  * ( qx * qy - qw * qz ) )            * vy +
+                ( 2  * ( qx * qz + qw * qy ) )            * vz;
 
-        out.y = ( 2 * ( q1 * q2 + q0 * q3 ) )             * vx +
-                ( q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3 ) * vy +
-                ( 2 * ( q2 * q3 - q0 * q1 ) )             * vz;
+        out.y = ( 2 * ( qx * qy + qw * qz ) )             * vx +
+                ( qw * qw - qx * qx + qy * qy - qz * qz ) * vy +
+                ( 2 * ( qy * qz - qw * qx ) )             * vz;
 
-        out.z = ( 2 * ( q1 * q3 - q0 * q2 ) )             * vx +
-                ( 2 * ( q2 * q3 + q0 * q1 ) )             * vy +
-                ( q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3 ) * vz;
+        out.z = ( 2 * ( qx * qz - qw * qy ) )             * vx +
+                ( 2 * ( qy * qz + qw * qx ) )             * vy +
+                ( qw * qw - qx * qx - qy * qy + qz * qz ) * vz;
     }
 
     /**
@@ -513,25 +513,25 @@ public final class Quat {
     
 
     public static void multVec3( double[] quat, double[] vec, double[] out ) {
-        final double q0 = quat[0];
-        final double q1 = quat[1];
-        final double q2 = quat[2];
-        final double q3 = quat[3];
+        final double qx = quat[0];
+        final double qy = quat[1];
+        final double qz = quat[2];
+        final double qw = quat[3];
         final double vx = vec[0];
         final double vy = vec[1];
         final double vz = vec[2];
 
-        out[0] = ( q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3 ) * vx +
-                 ( 2  * ( q1 * q2 - q0 * q3 ) )            * vy +
-                 ( 2  * ( q1 * q3 + q0 * q2 ) )            * vz;
+        out[0] = ( qw * qw + qx * qx - qy * qy - qz * qz ) * vx +
+                 ( 2  * ( qx * qy - qw * qz ) )            * vy +
+                 ( 2  * ( qx * qz + qw * qy ) )            * vz;
 
-        out[1] = ( 2 * ( q1 * q2 + q0 * q3 ) )             * vx +
-                 ( q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3 ) * vy +
-                 ( 2 * ( q2 * q3 - q0 * q1 ) )             * vz;
+        out[1] = ( 2 * ( qx * qy + qw * qz ) )             * vx +
+                 ( qw * qw - qx * qx + qy * qy - qz * qz ) * vy +
+                 ( 2 * ( qy * qz - qw * qx ) )             * vz;
 
-        out[2] = ( 2 * ( q1 * q3 - q0 * q2 ) )             * vx +
-                 ( 2 * ( q2 * q3 + q0 * q1 ) )             * vy +
-                 ( q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3 ) * vz;
+        out[2] = ( 2 * ( qx * qz - qw * qy ) )             * vx +
+                 ( 2 * ( qy * qz + qw * qx ) )             * vy +
+                 ( qw * qw - qx * qx - qy * qy + qz * qz ) * vz;
     }
 
     /**
