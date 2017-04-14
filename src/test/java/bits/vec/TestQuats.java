@@ -42,6 +42,93 @@ public class TestQuats {
         Quat.matToQuat( eye, q );
         assertNear( q, new Vec4( 0, 0, 0, 1 ) );
     }
+
+    @Test
+    public void testMult() {
+        Random rand = new Random( 8 );
+        Vec4 qa = new Vec4();
+        Vec4 qb = new Vec4();
+        Mat3 ma = new Mat3();
+        Mat3 mb = new Mat3();
+        
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), qa );
+            Quat.randToQuat( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), qb );
+            Quat.quatToMat( qa, ma );
+            Quat.quatToMat( qb, mb );
+            
+            Quat.mult( qa, qb, qb );
+            Mat.mult( ma, mb, mb );
+            Quat.quatToMat( qb, ma );
+            assertNear( ma, mb );
+        }
+    }
+    
+    @Test
+    public void testMultArr() {
+        Random rand = new Random( 8 );
+        double[] qa = new double[4];
+        double[] qb = new double[4];
+        double[] ma = new double[16];
+        double[] mb = new double[16];
+        
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), qa );
+            Quat.randToQuat( rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), qb );
+            Quat.quatToMat4( qa, ma );
+            Quat.quatToMat4( qb, mb );
+            Quat.mult( qa, qb, qb );
+            Mat.mult4( ma, mb, mb );
+            Quat.quatToMat4( qb, ma );
+            assertNear( ma, mb );
+        }
+    }
+
+    @Test
+    public void testPreRotate() {
+        Random rand = new Random( 8 );
+        Vec4 q = new Vec4();
+        Mat3 m = new Mat3();
+        Mat3 result = new Mat3();
+
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), q );
+            Quat.quatToMat( q, m );
+            
+            float rads = (float)(2 * Math.PI) * rand.nextFloat();
+            Vec3 axis = new Vec3( rand.nextFloat(), rand.nextFloat(), rand.nextFloat() );
+            Vec.normalize( axis );
+            
+            Quat.preRotate( rads, axis.x, axis.y, axis.z, q, q );
+            Mat.preRotate( rads, axis.x, axis.y, axis.z, m, m );
+            
+            Quat.quatToMat( q, result );
+            assertNear( result, m );
+        }
+    }
+
+    @Test
+    public void testRotate() {
+        Random rand = new Random( 8 );
+        Vec4 q = new Vec4();
+        Mat3 m = new Mat3();
+        Mat3 result = new Mat3();
+
+        for( int i = 0; i < 6; i++ ) {
+            Quat.randToQuat( rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), q );
+            Quat.quatToMat( q, m );
+
+            float rads = (float)(2 * Math.PI) * rand.nextFloat();
+            Vec3 axis = new Vec3( rand.nextFloat(), rand.nextFloat(), rand.nextFloat() );
+            Vec.normalize( axis );
+
+            Quat.rotate( q, rads, axis.x, axis.y, axis.z, q );
+            Mat.rotate( m, rads, axis.x, axis.y, axis.z, m );
+
+            Quat.quatToMat( q, result );
+            assertNear( result, m );
+        }
+    }
     
     @Test
     public void testRandMatrixConversionsMat3() {
@@ -179,8 +266,7 @@ public class TestQuats {
         for( int j = 0; j < testVecs.length; j++ ) {
             double err = Math.abs( testAngs[j] / trials - (float)( 0.5 * Math.PI ) );
             assertTrue( "Quaternion sampling not uniform.",  err < 0.01 * Math.PI );
-
-            System.out.println( Vec.format3( testVecs[j] ) + " : " + err );
+            //System.out.println( Vec.format3( testVecs[j] ) + " : " + err );
         }
     }
 

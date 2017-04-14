@@ -333,9 +333,9 @@ public final class Mat {
     }
 
 
-    public static void getRotation( float radians, float x, float y, float z, Mat3 out ) {
-        float c = (float)Math.cos( radians );
-        float s = (float)Math.sin( radians );
+    public static void getRotation( float rads, float x, float y, float z, Mat3 out ) {
+        float c = (float)Math.cos( rads );
+        float s = (float)Math.sin( rads );
 
         float sum = 1f / (float)Math.sqrt( x*x + y*y + z*z );
         x *= sum;
@@ -356,18 +356,18 @@ public final class Mat {
     }
 
     /**
-     * Multiplies an arbitrary matrix with a getRotate4 matrix.
+     * Multiplies matrix with axis-rotation.
      *
-     * @param mat     Input matrix.
-     * @param radians Degree of getRotate4.
-     * @param x       X-Coord of getRotate4 axis.
-     * @param y       Y-Coord of getRotate4 axis.
-     * @param z       Z-Coord of getRotate4 axis.
-     * @param out     Length-16 array to hold output on return.
+     * @param mat  Input matrix.
+     * @param rads Degree of  rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param out  receives output
      */
-    public static void rotate( Mat3 mat, float radians, float x, float y, float z, Mat3 out ) {
-        final float c = (float)Math.cos( radians );
-        final float s = (float)Math.sin( radians );
+    public static void rotate( Mat3 mat, float rads, float x, float y, float z, Mat3 out ) {
+        final float c = (float)Math.cos( rads );
+        final float s = (float)Math.sin( rads );
         final float invSum = 1f / (float)Math.sqrt( x*x + y*y + z*z );
         x *= invSum;
         y *= invSum;
@@ -404,18 +404,18 @@ public final class Mat {
     }
 
     /**
-     * Multiplies a getRotate4 matrix with an arbitrary matrix.
+     * Multiplies axis-rotation with matrix.
      *
-     * @param radians Degree of getRotate4.
-     * @param x       X-Coord of getRotate4 axis.
-     * @param y       Y-Coord of getRotate4 axis.
-     * @param z       Z-Coord of getRotate4 axis.
-     * @param mat     Input matrix.
-     * @param out     Length-16 array to hold output on return.
+     * @param rads Degree of rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param mat  Input matrix.
+     * @param out  receives output
      */
-    public static void preRotate( float radians, float x, float y, float z, Mat3 mat, Mat3 out ) {
-        float c = (float)Math.cos( radians );
-        float s = (float)Math.sin( radians );
+    public static void preRotate( float rads, float x, float y, float z, Mat3 mat, Mat3 out ) {
+        float c = (float)Math.cos( rads );
+        float s = (float)Math.sin( rads );
         float sum = 1f / (float)Math.sqrt( x*x + y*y + z*z );
         x *= sum;
         y *= sum;

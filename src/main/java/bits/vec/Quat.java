@@ -135,18 +135,19 @@ public final class Quat {
      */
     public static void mult( Vec4 a, Vec4 b, Vec4 out ) {
         // These local copies had no effect in performance tests, but whatevs.
-        final float a0 = a.x;
-        final float a1 = a.y;
-        final float a2 = a.z;
-        final float a3 = a.w;
-        final float b0 = b.x;
-        final float b1 = b.y;
-        final float b2 = b.z;
-        final float b3 = b.w;
-        out.x = a0 * b0 - a1 * b1 - a2 * b2 - a3 * b3;
-        out.y = a0 * b1 + a1 * b0 + a2 * b3 - a3 * b2;
-        out.z = a0 * b2 - a1 * b3 + a2 * b0 + a3 * b1;
-        out.w = a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0;
+        final float ax = a.x;
+        final float ay = a.y;
+        final float az = a.z;
+        final float aw = a.w;
+        final float bx = b.x;
+        final float by = b.y;
+        final float bz = b.z;                          
+        final float bw = b.w;                          
+                                                       
+        out.x = aw * bx + ax * bw + ay * bz - az * by;
+        out.y = aw * by - ax * bz + ay * bw + az * bx;
+        out.z = aw * bz + ax * by - ay * bx + az * bw;
+        out.w = aw * bw - ax * bx - ay * by - az * bz;
     }
 
     /**
@@ -244,7 +245,7 @@ public final class Quat {
      * @param z    Z-coord of rotation axis
      * @param out  Length-4 array that holds rotation on return.
      */
-    public static void rotation( float rads, float x, float y, float z, Vec4 out ) {
+    public static void getRotation( float rads, float x, float y, float z, Vec4 out ) {
         float cos = (float)Math.cos( rads * 0.5 );
         float len = (float)Math.sqrt( x * x + y * y + z * z );
         float sin = (float)Math.sin( rads * 0.5 ) / len;
@@ -254,6 +255,66 @@ public final class Quat {
         out.w = cos;
     }
 
+    /**
+     * Multiplies quaternion with axis-rotation.
+     *
+     * @param q    Input quaternion.
+     * @param rads Degree of  rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param out  receives output
+     */
+    public static void rotate( Vec4 q, float rads, float x, float y, float z, Vec4 out ) {
+        final float ax = q.x;
+        final float ay = q.y;
+        final float az = q.z;
+        final float aw = q.w;
+        
+        float cos = (float)Math.cos( rads * 0.5 );
+        float len = (float)Math.sqrt( x * x + y * y + z * z );
+        float sin = (float)Math.sin( rads * 0.5 ) / len;
+        float bx = sin * x;
+        float by = sin * y;
+        float bz = sin * z;
+        float bw = cos;
+        
+        out.x = aw * bx + ax * bw + ay * bz - az * by;
+        out.y = aw * by - ax * bz + ay * bw + az * bx;
+        out.z = aw * bz + ax * by - ay * bx + az * bw;
+        out.w = aw * bw - ax * bx - ay * by - az * bz;
+    }
+
+    /**
+     * Multiplies axis-rotation with quaternion.
+     *
+     * @param rads Degree of rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param q    Input quaternion.
+     * @param out  receives output
+     */
+    public static void preRotate( float rads, float x, float y, float z, Vec4 q, Vec4 out ) {
+        final float cos = (float)Math.cos( rads * 0.5 );
+        final float len = (float)Math.sqrt( x * x + y * y + z * z );
+        final float sin = (float)Math.sin( rads * 0.5 ) / len;
+        final float ax = sin * x;
+        final float ay = sin * y;
+        final float az = sin * z;
+        final float aw = cos;
+        final float bx = q.x;
+        final float by = q.y;
+        final float bz = q.z;
+        final float bw = q.w;
+
+        out.x = aw * bx + ax * bw + ay * bz - az * by;
+        out.y = aw * by - ax * bz + ay * bw + az * bx;
+        out.z = aw * bz + ax * by - ay * bx + az * bw;
+        out.w = aw * bw - ax * bx - ay * by - az * bz;
+    }
+    
+    
     /**
      * Converts quaternion to dim4 rotation matrix.
      *
@@ -435,18 +496,19 @@ public final class Quat {
      */
     public static void mult( double[] a, double[] b, double[] out ) {
         // These local copies had no effect in performance tests, but whatevs.
-        final double a0 = a[0];
-        final double a1 = a[1];
-        final double a2 = a[2];
-        final double a3 = a[3];
-        final double b0 = b[0];
-        final double b1 = b[1];
-        final double b2 = b[2];
-        final double b3 = b[3];
-        out[0] = a0 * b0 - a1 * b1 - a2 * b2 - a3 * b3;
-        out[1] = a0 * b1 + a1 * b0 + a2 * b3 - a3 * b2;
-        out[2] = a0 * b2 - a1 * b3 + a2 * b0 + a3 * b1;
-        out[3] = a0 * b3 + a1 * b2 - a2 * b1 + a3 * b0;
+        final double ax = a[0];
+        final double ay = a[1];
+        final double az = a[2];
+        final double aw = a[3];
+        final double bx = b[0];
+        final double by = b[1];
+        final double bz = b[2];
+        final double bw = b[3];
+
+        out[0] = aw * bx + ax * bw + ay * bz - az * by;
+        out[1] = aw * by - ax * bz + ay * bw + az * bx;
+        out[2] = aw * bz + ax * by - ay * bx + az * bw;
+        out[3] = aw * bw - ax * bx - ay * by - az * bz;
     }
     
 
@@ -636,5 +698,10 @@ public final class Quat {
     
     private Quat() {}
 
+    
+    @Deprecated
+    public static void rotation( float rads, float x, float y, float z, Vec4 out ) {
+        getRotation( rads, x, y, z, out );
+    }
 
 }
