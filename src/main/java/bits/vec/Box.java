@@ -283,18 +283,21 @@ public final class Box {
     }
 
     /**
-     * Maps a point in model coordinates to box coordinates,
-     * where ( 0, 0 ) is the lower-left corner and ( 1, 1 ) is upper-right corner.
+     * Maps a box-absolute point into box-relative point.
+     * A box-absolute point is a point using same coordinate system as the box..
+     * A box-relative point is (0, 0) at lower-left corner of box and (1, 1) at upper-right of box.
      */
-    public static void modelToBox( float x, float y, Box2 box, Vec2 out ) {
+    public static void absoluteToRelative( float x, float y, Box2 box, Vec2 out ) {
         out.x = ( x - box.x0 ) / ( box.x1 - box.x0 );
         out.y = ( y - box.y0 ) / ( box.y1 - box.y0 );
     }
 
     /**
-     * Maps a point in box coordinates into model coordinates.
+     * Maps a point from box-relative coordinates into box-absolute point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0) at lower-left corner of box and (1, 1) at upper-right of box.
      */
-    public static void boxToModel( float x, float y, Box2 box, Vec2 out ) {
+    public static void relativeToAbsolute( float x, float y, Box2 box, Vec2 out ) {
         out.x = x * ( box.x1 - box.x0 ) + box.x0;
         out.y = y * ( box.y1 - box.y0 ) + box.y0;
     }
@@ -680,19 +683,22 @@ public final class Box {
     }
 
     /**
-     * Maps a point in model coordinates to box coordinates, 
-     * where ( 0, 0 ) is the lower-left corner and ( 1, 1 ) is upper-right corner.
+     * Maps a box-absolute point into box-relative point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0, 0) at lower-left-bottom corner of box and (1, 1, 1) at upper-right-top of box.
      */
-    public static void modelToBox( float x, float y, float z, Box3 box, Vec3 out ) {
+    public static void absoluteToRelative( float x, float y, float z, Box3 box, Vec3 out ) {
         out.x = ( x - box.x0 ) / ( box.x1 - box.x0 );
         out.y = ( y - box.y0 ) / ( box.y1 - box.y0 );
         out.z = ( z - box.z0 ) / ( box.z1 - box.z0 );
     }
 
     /**
-     * Maps a point in box coordinates into model coordinates.
+     * Maps a point from box-relative coordinates into box-absolute point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0, 0) at lower-left-bottom corner of box and (1, 1, 1) at upper-right-top of box.
      */
-    public static void boxToModel( float x, float y, float z, Box3 box, Vec3 out ) {
+    public static void relativeToAbsolute( float x, float y, float z, Box3 box, Vec3 out ) {
         out.x = x * ( box.x1 - box.x0 ) + box.x0;
         out.y = y * ( box.y1 - box.y0 ) + box.y0;
         out.z = z * ( box.z1 - box.z0 ) + box.z0;
@@ -988,18 +994,21 @@ public final class Box {
     }
 
     /**
-     * Maps a point in model coordinates to box coordinates,
-     * where ( 0, 0 ) is the lower-left corner and ( 1, 1 ) is upper-right corner.
+     * Maps a box-absolute point into box-relative point.
+     * A box-absolute point is a point using same coordinate system as the box..
+     * A box-relative point is (0, 0) at lower-left corner of box and (1, 1) at upper-right of box.
      */
-    public static void worldToBox2( double x, double y, double[] box, double[] outXY, int outOff ) {
+    public static void absoluteToRelative2( double x, double y, double[] box, double[] outXY, int outOff ) {
         outXY[outOff  ] = ( x - box[0] ) / ( box[2] - box[0] );
         outXY[outOff+1] = ( y - box[1] ) / ( box[3] - box[1] );
     }
 
     /**
-     * Maps a point in box coordinates into model coordinates.
+     * Maps a point from box-relative coordinates into box-absolute point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0) at lower-left corner of box and (1, 1) at upper-right of box.
      */
-    public static void boxToWorld2( double x, double y, double[] box, double[] outXY, int outOff ) {
+    public static void relativeToAbsolute2( double x, double y, double[] box, double[] outXY, int outOff ) {
         outXY[outOff  ] = x * ( box[2] - box[0] ) + box[0];
         outXY[outOff+1] = y * ( box[3] - box[1] ) + box[1];
     }
@@ -1015,13 +1024,14 @@ public final class Box {
      * @param outXY     Array to hold resulting xy coordinates.
      * @param outOff    Offset into output array.
      */
-    public static void mapPoint2( double x,
-                                  double y,
-                                  double[] srcDomain,
-                                  double[] dstDomain,
-                                  double[] outXY,
-                                  int outOff )
-    {
+    public static void mapPoint2( 
+        double x,
+        double y,
+        double[] srcDomain,
+        double[] dstDomain,
+        double[] outXY,
+        int outOff 
+    ) {
         outXY[outOff  ] = ( x - srcDomain[0] ) / ( srcDomain[2] - srcDomain[0] ) * ( dstDomain[2] - dstDomain[0] ) + dstDomain[0];
         outXY[outOff+1] = ( y - srcDomain[1] ) / ( srcDomain[3] - srcDomain[1] ) * ( dstDomain[3] - dstDomain[1] ) + dstDomain[1];
     }
@@ -1035,11 +1045,12 @@ public final class Box {
      * @param dstDomain Box defining destination domain (codomain).
      * @param out       On return, holds mapped box. May be same as {@code in}.
      */
-    public static void mapBox2( double[] in,
-                                double[] srcDomain,
-                                double[] dstDomain,
-                                double[] out )
-    {
+    public static void mapBox2( 
+        double[] in,
+        double[] srcDomain,
+        double[] dstDomain,
+        double[] out 
+    ) {
         double sx = ( dstDomain[2] - dstDomain[0] ) / ( srcDomain[2] - srcDomain[0] );
         double sy = ( dstDomain[3] - dstDomain[1] ) / ( srcDomain[3] - srcDomain[1] );
         double tx = dstDomain[0] - srcDomain[0] * sx;
@@ -1231,19 +1242,22 @@ public final class Box {
     }
 
     /**
-     * Maps a point in model coordinates to box coordinates,
-     * where ( 0, 0 ) is the lower-left corner and ( 1, 1 ) is upper-right corner.
+     * Maps a box-absolute point into box-relative point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0, 0) at lower-left-bottom corner of box and (1, 1, 1) at upper-right-top of box.
      */
-    public static void modelToBox3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
+    public static void absoluteToRelative3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
         outXYZ[0+outOff] = ( x - box[0] ) / ( box[3] - box[0] );
         outXYZ[1+outOff] = ( y - box[1] ) / ( box[4] - box[1] );
         outXYZ[2+outOff] = ( z - box[2] ) / ( box[5] - box[2] );
     }
 
     /**
-     * Maps a point in box coordinates into model coordinates.
+     * Maps a point from box-relative coordinates into box-absolute point.
+     * A box-absolute point is a point using same coordinate system as the box.
+     * A box-relative point is (0, 0, 0) at lower-left-bottom corner of box and (1, 1, 1) at upper-right-top of box.
      */
-    public static void boxToModel3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
+    public static void relativeToAbsolute3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
         outXYZ[0+outOff] = x * ( box[3] - box[0] ) + box[0];
         outXYZ[1+outOff] = y * ( box[4] - box[1] ) + box[1];
         outXYZ[2+outOff] = z * ( box[5] - box[2] ) + box[2];
@@ -1357,8 +1371,65 @@ public final class Box {
         out[5] = maxZ;
     }
 
-
-
+    
     private Box() {}
+    
+
+    /**
+     * @deprecated use {@link #absoluteToRelative}
+     */
+    public static void modelToBox( float x, float y, Box2 box, Vec2 out ) {
+        absoluteToRelative( x, y, box, out );
+    }
+
+    /**
+     * @deprecated Use {@link #relativeToAbsolute}
+     */
+    public static void boxToModel( float x, float y, Box2 box, Vec2 out ) {
+        relativeToAbsolute( x, y, box, out );
+    }
+
+    /**
+     * @deprecated use {@link #absoluteToRelative}
+     */
+    public static void modelToBox( float x, float y, float z, Box3 box, Vec3 out ) {
+        absoluteToRelative( x, y, z, box, out );
+    }
+
+    /**
+     * @deprecated use {@link #relativeToAbsolute}
+     */
+    public static void boxToModel( float x, float y, float z, Box3 box, Vec3 out ) {
+        relativeToAbsolute( x, y, z, box, out );
+    }
+
+    /**
+     * @deprecated use {@link #absoluteToRelative2}
+     */
+    public static void worldToBox2( double x, double y, double[] box, double[] outXY, int outOff ) {
+        absoluteToRelative2( x, y,  box, outXY, outOff );
+    }
+
+    /**
+     * @deprecated use {@link #relativeToAbsolute2}
+     */
+    public static void boxToWorld2( double x, double y, double[] box, double[] outXY, int outOff ) {
+        relativeToAbsolute2( x, y,  box, outXY, outOff );
+    }
+
+    /**
+     * @deprecated use {@link #absoluteToRelative3}
+     */
+    public static void modelToBox3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
+        absoluteToRelative3( x, y, y, box, outXYZ, outOff );
+    }
+
+    /**
+     * @deprecated use {@link #relativeToAbsolute3}
+     */
+    public static void boxToModel3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
+        relativeToAbsolute3( x, y, y, box, outXYZ, outOff );
+    }
+
 
 }
