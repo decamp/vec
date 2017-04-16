@@ -255,6 +255,32 @@ public final class Quat {
         out.w = cos;
     }
 
+    
+    public static void rotationBetweenUnitVecs( Vec3 src, Vec3 dst, Vec4 out ) {
+        float r = Vec.dot( src, dst ) + 1;
+        
+        if( r < 0.000001f ) {
+            r = 0;
+            if( Math.abs( src.x ) > Math.abs( src.z ) ) {
+                out.x = -src.y;
+                out.y = src.x;
+                out.z = 0;
+                out.w = 0;
+            } else {
+                out.x = 0;
+                out.y = -src.z;
+                out.z = src.y;
+                out.w = 0;
+            }
+
+        } else {
+            Vec.cross( src, dst, out );
+            out.w = r;
+        }
+                
+        normalize( out );
+    }
+    
     /**
      * Multiplies quaternion with axis-rotation.
      *

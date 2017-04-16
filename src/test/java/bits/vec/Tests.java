@@ -44,6 +44,16 @@ public class Tests {
         return false;
     }
 
+        
+    public static void assertNear( float a, float b ) {
+        assertTrue( isNear( a, b ) );
+    }
+
+
+    public static void assertNear( double a, double b ) {
+        assertTrue( isNear( a, b ) );
+    }
+    
     
     public static void assertNear( double[] a, double[] b ) {
         assertEquals( a.length, b.length );

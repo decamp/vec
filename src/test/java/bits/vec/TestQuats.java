@@ -179,6 +179,45 @@ public class TestQuats {
     }
     
     @Test
+    public void testGetRotationBetweenVecs() {
+        Random rand = new Random( 9 );
+        Vec4 q = new Vec4();
+        Vec3 result = new Vec3();
+        
+        for( int i = 0; i < 50; i++ ) {
+            Vec3 a = Tests.randPos( rand );
+            Vec3 b = Tests.randPos( rand );
+            
+            Vec.normalize( a );
+            Vec.normalize( b );
+
+            Quat.rotationBetweenUnitVecs( a, b, q );
+            Quat.multVec( q, a, result );
+                        
+            assertNear( Vec.len( a ), Vec.len( result ) );
+            Vec.normalize( b );
+            Vec.normalize( result );
+            assertNear( b, result );
+        }
+
+        for( int i = 0; i < 10; i++ ) {
+            Vec3 a = Tests.randPos( rand );
+            Vec3 b = new Vec3();
+            Vec.mult( -1, a, b );
+            Vec.normalize( a );
+            Vec.normalize( b );
+            
+            Quat.rotationBetweenUnitVecs( a, b, q );
+            Quat.multVec( q, a, result );
+
+            assertNear( Vec.len( a ), Vec.len( result ) );
+            Vec.normalize( b );
+            Vec.normalize( result );
+            assertNear( b, result );
+        }
+    }
+    
+    @Test
     public void testRandMatrixConversionsMat3() {
         Random rand = new Random( 6 );
         Vec4 q = new Vec4();
@@ -395,4 +434,6 @@ public class TestQuats {
         return true;
     }
 
+    
+    
 }

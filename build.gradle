@@ -7,7 +7,7 @@ buildscript {
 group = 'com.github.decamp'
 buildDir = "$projectDir/build"
 description = '3D Vector Math Library'
-version = '0.0.4'
+version = '0.0.5'
 
 repositories {
     jcenter()
