@@ -57,7 +57,7 @@ public final class Tol {
             diff = -diff;
         }        
         
-        if( diff < maxAbsError ) {
+        if( diff < maxAbsError ) {  
             return true;
         }
         
@@ -69,11 +69,7 @@ public final class Tol {
             b = -b;
         }
         
-        if( a > b ) {
-            return diff < a * maxRelError;
-        } else {
-            return diff < b * maxRelError;
-        }
+        return diff < ( a > b ? a : b ) * maxRelError;
     }
 
     /**
@@ -165,26 +161,23 @@ public final class Tol {
     public static boolean approxEqual( float a, float b, float maxRelError, float maxAbsError ) {
         float diff = a - b;
         
-        if( diff < 0.0f )
-            diff = -diff;
-        
-        if( diff < maxAbsError )
-            return true;
-        
-        if( a < 0.0f )
-            a = -a;
-        
-        if( b < 0.0f )
-            b = -b;
-        
-        if( a < b ) {
-            diff /= b;
-        }else{
-            diff /= a;
+        if( diff < 0.0f ) { 
+            diff = -diff; 
         }
-        
-        return diff < maxRelError;
-        
+
+        if( diff < maxAbsError ) { 
+            return true; 
+        }
+
+        if( a < 0.0f ) { 
+            a = -a; 
+        }
+
+        if( b < 0.0f ) { 
+            b = -b; 
+        }
+
+        return diff < ( a > b ? a : b ) * maxRelError;
     }
 
     /**
