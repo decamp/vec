@@ -16,14 +16,14 @@ public class Ang {
     public static final double PI         = Math.PI;
     public static final double HALF_PI    = ( 0.5 * PI );
     public static final double TWO_PI     = ( 2.0 * PI );
-    public static final double RAD_TO_DEG = PI / 180.0;
-    public static final double DEG_TO_RAD = 180.0 / PI;
+    public static final double RAD_TO_DEG = 180.0 / PI;
+    public static final double DEG_TO_RAD = PI / 180.0;
 
     public static final float FPI         = (float)( Math.PI );
     public static final float FHALF_PI    = (float)( ( 0.5 * PI ) );
     public static final float FTWO_PI     = (float)( ( 2.0 * PI ) );
-    public static final float FRAD_TO_DEG = (float)( PI / 180.0 );
-    public static final float FDEG_TO_RAD = (float)( 180.0 / PI );
+    public static final float FRAD_TO_DEG = (float)( 180.0 / PI );
+    public static final float FDEG_TO_RAD = (float)( PI / 180.0 );
 
     /**
      * Normalizes an angle to fall within in range [-PI,PI].
