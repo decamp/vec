@@ -100,7 +100,7 @@ public class TestMat3 {
 
 
     static void assertNear( float a, float b ) {
-        assertTrue( Tol.approxEqual( a, b ) );
+        assertTrue( Tol.equal( a, b ) );
     }
 
 }

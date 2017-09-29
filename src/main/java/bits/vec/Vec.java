@@ -216,7 +216,7 @@ public final class Vec {
      */
     public static void reject( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -233,7 +233,7 @@ public final class Vec {
      */
     public static void project( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -271,7 +271,7 @@ public final class Vec {
         float den = v0 * v0 + v1 * v1;
         float t   = num / den;
 
-        if( den < FSQRT_ABS_ERR || t <= 0.0 ) {
+        if( den < FSQRT_ABS_TOL || t <= 0.0 ) {
             //Return distance from n1 to p (which is already stored in <u0,u1>).
         } else if( t >= 1.0 ) {
             //Return distance from n2 to p.
@@ -302,7 +302,7 @@ public final class Vec {
         float dx = b1.x - b0.x;
         float dy = b1.y - b0.y;
         float dotPerp = bx * dy - by * dx;
-        if( dotPerp < FSQRT_ABS_ERR && -dotPerp < FSQRT_ABS_ERR ) {
+        if( dotPerp < FSQRT_ABS_TOL && -dotPerp < FSQRT_ABS_TOL ) {
             return false;
         }
         float cx = b0.x - a0.x;
@@ -330,7 +330,7 @@ public final class Vec {
         float dx = b1.x - b0.x;
         float dy = b1.y - b0.y;
         float dotPerp = bx * dy - by * dx;
-        if( dotPerp < FSQRT_ABS_ERR && -dotPerp < FSQRT_ABS_ERR ) {
+        if( dotPerp < FSQRT_ABS_TOL && -dotPerp < FSQRT_ABS_TOL ) {
             return false;
         }
 
@@ -622,7 +622,7 @@ public final class Vec {
      */
     public static void reject( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -640,7 +640,7 @@ public final class Vec {
      */
     public static void project( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -711,11 +711,11 @@ public final class Vec {
     public static void chooseOrtho( float x, float y, float z, int zeroDim, Vec3 out ) {
         switch( zeroDim ) {
         case 2:
-            if( y > FSQRT_ABS_ERR || -y > FSQRT_ABS_ERR ) {
+            if( y > FSQRT_ABS_TOL || -y > FSQRT_ABS_TOL ) {
                 out.x = 1;
                 out.y = -x/y;
                 out.z = 0;
-            } else if ( x > FSQRT_ABS_ERR || -x > FSQRT_ABS_ERR ) {
+            } else if ( x > FSQRT_ABS_TOL || -x > FSQRT_ABS_TOL ) {
                 out.x = -y/x;
                 out.y = 1;
                 out.z = 0;
@@ -729,11 +729,11 @@ public final class Vec {
             break;
 
         case 1:
-            if( x > FSQRT_ABS_ERR || -x > FSQRT_ABS_ERR ) {
+            if( x > FSQRT_ABS_TOL || -x > FSQRT_ABS_TOL ) {
                 out.x = -z / x;
                 out.y = 0;
                 out.z = 1;
-            } else if( z > FSQRT_ABS_ERR || -z > FSQRT_ABS_ERR ) {
+            } else if( z > FSQRT_ABS_TOL || -z > FSQRT_ABS_TOL ) {
                 out.x = 1;
                 out.y = 0;
                 out.z = -x / z;
@@ -747,11 +747,11 @@ public final class Vec {
             break;
 
         default:
-            if( z > FSQRT_ABS_ERR || -z > FSQRT_ABS_ERR ) {
+            if( z > FSQRT_ABS_TOL || -z > FSQRT_ABS_TOL ) {
                 out.x = 0;
                 out.y = 1;
                 out.z = -y / z;
-            } else if( y > FSQRT_ABS_ERR || -y > FSQRT_ABS_ERR ) {
+            } else if( y > FSQRT_ABS_TOL || -y > FSQRT_ABS_TOL ) {
                 out.x = 0;
                 out.y = -z / y;
                 out.z = 1;
@@ -803,7 +803,7 @@ public final class Vec {
         float den = v0 * v0 + v1 * v1 + v2 * v2;
         float t   = num / den;
 
-        if( den < FSQRT_ABS_ERR || t <= 0.0 ) {
+        if( den < FSQRT_ABS_TOL || t <= 0.0 ) {
             //Return distance from n1 to p (which is already stored in u0,u1,u2).
         } else if( t >= 1.0 ) {
             //Return distance from n2 to p.
@@ -850,8 +850,8 @@ public final class Vec {
 
         float den = dx * planeNorm.x + dy * planeNorm.y + dz * planeNorm.z;
 
-        if( den < FSQRT_ABS_ERR && den > -FSQRT_ABS_ERR ) {
-            return num < FSQRT_ABS_ERR && num > -FSQRT_ABS_ERR ? 2 : 0;
+        if( den < FSQRT_ABS_TOL && den > -FSQRT_ABS_TOL ) {
+            return num < FSQRT_ABS_TOL && num > -FSQRT_ABS_TOL ? 2 : 0;
         }
 
         if( optOut != null ) {
@@ -893,7 +893,7 @@ public final class Vec {
         float num = da0b0b1b0 * db1b0a1a0 - da0b0a1a0 * db1b0b1b0;
         float den = da1a0a1a0 * db1b0b1b0 - db1b0a1a0 * db1b0a1a0;
 
-        if( den < FSQRT_ABS_ERR && -den < FSQRT_ABS_ERR ) {
+        if( den < FSQRT_ABS_TOL && -den < FSQRT_ABS_TOL ) {
             return false;
         }
 
@@ -1358,7 +1358,7 @@ public final class Vec {
      */
     public static void reject2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot2( a, ref ) / lenRef;
@@ -1375,7 +1375,7 @@ public final class Vec {
      */
     public static void project2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot2( a, ref ) / lenRef;
@@ -1413,7 +1413,7 @@ public final class Vec {
         double den = v0 * v0 + v1 * v1;
         double t   = num / den;
 
-        if( den < SQRT_ABS_ERR || t <= 0.0 ) {
+        if( den < SQRT_ABS_TOL || t <= 0.0 ) {
             //Return distance from n1 to p (which is already stored in <u0,u1>).
         } else if( t >= 1.0 ) {
             //Return distance from n2 to p.
@@ -1444,7 +1444,7 @@ public final class Vec {
         double dx = b1[0] - b0[0];
         double dy = b1[1] - b0[1];
         double dotPerp = bx * dy - by * dx;
-        if( dotPerp < SQRT_ABS_ERR && -dotPerp < SQRT_ABS_ERR ) {
+        if( dotPerp < SQRT_ABS_TOL && -dotPerp < SQRT_ABS_TOL ) {
             return false;
         }
         double cx = b0[0] - a0[0];
@@ -1472,7 +1472,7 @@ public final class Vec {
         double dx = b1[0] - b0[0];
         double dy = b1[1] - b0[1];
         double dotPerp = bx * dy - by * dx;
-        if( dotPerp < SQRT_ABS_ERR && -dotPerp < SQRT_ABS_ERR ) {
+        if( dotPerp < SQRT_ABS_TOL && -dotPerp < SQRT_ABS_TOL ) {
             return false;
         }
 
@@ -1712,7 +1712,7 @@ public final class Vec {
      */
     public static void reject3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot3( a, ref ) / lenRef;
@@ -1730,7 +1730,7 @@ public final class Vec {
      */
     public static void project3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot3( a, ref ) / lenRef;
@@ -1796,11 +1796,11 @@ public final class Vec {
     public static void chooseOrtho3( double x, double y, double z, int zeroDim, double[] out ) {
         switch( zeroDim ) {
         case 2:
-            if( y > SQRT_ABS_ERR || -y > SQRT_ABS_ERR ) {
+            if( y > SQRT_ABS_TOL || -y > SQRT_ABS_TOL ) {
                 out[0] = 1;
                 out[1] = -x/y;
                 out[2] = 0;
-            } else if ( x > SQRT_ABS_ERR || -x > SQRT_ABS_ERR ) {
+            } else if ( x > SQRT_ABS_TOL || -x > SQRT_ABS_TOL ) {
                 out[0] = -y/x;
                 out[1] = 1;
                 out[2] = 0;
@@ -1814,11 +1814,11 @@ public final class Vec {
             break;
 
         case 1:
-            if( x > SQRT_ABS_ERR || -x > SQRT_ABS_ERR ) {
+            if( x > SQRT_ABS_TOL || -x > SQRT_ABS_TOL ) {
                 out[0] = -z / x;
                 out[1] = 0;
                 out[2] = 1;
-            } else if( z > SQRT_ABS_ERR || -z > SQRT_ABS_ERR ) {
+            } else if( z > SQRT_ABS_TOL || -z > SQRT_ABS_TOL ) {
                 out[0] = 1;
                 out[1] = 0;
                 out[2] = -x / z;
@@ -1832,11 +1832,11 @@ public final class Vec {
             break;
 
         default:
-            if( z > SQRT_ABS_ERR || -z > SQRT_ABS_ERR ) {
+            if( z > SQRT_ABS_TOL || -z > SQRT_ABS_TOL ) {
                 out[0] = 0;
                 out[1] = 1;
                 out[2] = -y / z;
-            } else if( y > SQRT_ABS_ERR || -y > SQRT_ABS_ERR ) {
+            } else if( y > SQRT_ABS_TOL || -y > SQRT_ABS_TOL ) {
                 out[0] = 0;
                 out[1] = -z / y;
                 out[2] = 1;
@@ -1888,7 +1888,7 @@ public final class Vec {
         double den = v0 * v0 + v1 * v1 + v2 * v2;
         double t   = num / den;
 
-        if( den < SQRT_ABS_ERR || t <= 0.0 ) {
+        if( den < SQRT_ABS_TOL || t <= 0.0 ) {
             //Return distance from n1 to p (which is already stored in u0,u1,u2).
         } else if( t >= 1.0 ) {
             //Return distance from n2 to p.
@@ -1935,8 +1935,8 @@ public final class Vec {
 
         double den = dx * planeNorm[0] + dy * planeNorm[1] + dz * planeNorm[2];
 
-        if( den < SQRT_ABS_ERR && -den < SQRT_ABS_ERR ) {
-            return num < SQRT_ABS_ERR && -num < SQRT_ABS_ERR ? 2 : 0;
+        if( den < SQRT_ABS_TOL && -den < SQRT_ABS_TOL ) {
+            return num < SQRT_ABS_TOL && -num < SQRT_ABS_TOL ? 2 : 0;
         }
 
         if( optOut != null ) {
@@ -1977,7 +1977,7 @@ public final class Vec {
         double num = da0b0b1b0 * db1b0a1a0 - da0b0a1a0 * db1b0b1b0;
         double den = da1a0a1a0 * db1b0b1b0 - db1b0a1a0 * db1b0a1a0;
 
-        if( den < SQRT_ABS_ERR && -den < SQRT_ABS_ERR ) {
+        if( den < SQRT_ABS_TOL && -den < SQRT_ABS_TOL ) {
             return false;
         }
 
@@ -2215,7 +2215,7 @@ public final class Vec {
      */
     public static void makeOrthoTo( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -2229,7 +2229,7 @@ public final class Vec {
      */
     public static void makeParallelTo( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -2244,7 +2244,7 @@ public final class Vec {
      */
     public static void makeOrthoTo( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -2259,7 +2259,7 @@ public final class Vec {
      */
     public static void makeParallelTo( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
-        if( lenRef < FSQRT_ABS_ERR ) {
+        if( lenRef < FSQRT_ABS_TOL ) {
             return;
         }
         float parScale = dot( a, ref ) / lenRef;
@@ -2274,7 +2274,7 @@ public final class Vec {
      */
     public static void makeOrthoTo2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot2( a, ref ) / lenRef;
@@ -2288,7 +2288,7 @@ public final class Vec {
      */
     public static void makeParallelTo2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot2( a, ref ) / lenRef;
@@ -2302,7 +2302,7 @@ public final class Vec {
      */
     public static void makeOrthoTo3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot3( a, ref ) / lenRef;
@@ -2317,7 +2317,7 @@ public final class Vec {
      */
     public static void makeParallelTo3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
-        if( lenRef < SQRT_ABS_ERR ) {
+        if( lenRef < SQRT_ABS_TOL ) {
             return;
         }
         double parScale = dot3( a, ref ) / lenRef;

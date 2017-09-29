@@ -32,7 +32,7 @@ public class TestMat {
 
             Mat.mult4( a, b, c );
             for( int j = 0; j < 16; j++ ) {
-                boolean eq = Tol.approxEqual( c[j], eye[j], 0.000001, 0.000001 );
+                boolean eq = Tol.equal( c[j], eye[j], 0.000001, 0.000001 );
                 assertTrue( eq ); 
             }
         }

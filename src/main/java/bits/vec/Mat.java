@@ -225,7 +225,7 @@ public final class Mat {
         // Compute determinant
         float invDet  = mat.m00 * c00 + mat.m01 * c01 + mat.m02 * c02;
         // Check if invertible
-        boolean valid = invDet > FSQRT_ABS_ERR || -invDet > FSQRT_ABS_ERR;
+        boolean valid = invDet > FSQRT_ABS_TOL || -invDet > FSQRT_ABS_TOL;
         // Invert determinant
         invDet = 1f / invDet;
 
@@ -461,7 +461,7 @@ public final class Mat {
 
         //Normalize length of X-axis.
         d = (float)Math.sqrt( mat.m00 * mat.m00 + mat.m10 * mat.m10 + mat.m20 * mat.m20 );
-        if( d > FSQRT_ABS_ERR || d > -FSQRT_ABS_ERR ) {
+        if( d > FSQRT_ABS_TOL || d > -FSQRT_ABS_TOL ) {
             d = 1f / d;
             mat.m00 *= d;
             mat.m10 *= d;
@@ -480,7 +480,7 @@ public final class Mat {
 
         //Normalize Y-axis.
         d = (float)Math.sqrt( mat.m01 * mat.m01 + mat.m11 * mat.m11 + mat.m21 * mat.m21 );
-        if( d > FSQRT_ABS_ERR || d > -FSQRT_ABS_ERR ) {
+        if( d > FSQRT_ABS_TOL || d > -FSQRT_ABS_TOL ) {
             d = 1.0f / d;
             mat.m01 *= d;
             mat.m11 *= d;
@@ -987,7 +987,7 @@ public final class Mat {
         // Compute determinant
         float invdet = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
         // Check if invertible.
-        boolean ret  = invdet > FSQRT_ABS_ERR || -invdet > FSQRT_ABS_ERR;
+        boolean ret  = invdet > FSQRT_ABS_TOL || -invdet > FSQRT_ABS_TOL;
         // Invert determinant
         invdet = 1.0f / invdet;
 
@@ -1632,7 +1632,7 @@ public final class Mat {
 
         //Normalize length of X-axis.
         d = (float)Math.sqrt( mat.m00 * mat.m00 + mat.m10 * mat.m10 + mat.m20 * mat.m20 );
-        if( d > FSQRT_ABS_ERR || -d > FSQRT_ABS_ERR ) {
+        if( d > FSQRT_ABS_TOL || -d > FSQRT_ABS_TOL ) {
             d = 1f / d;
             mat.m00 *= d;
             mat.m10 *= d;
@@ -1651,7 +1651,7 @@ public final class Mat {
 
         //Normalize Y-axis.
         d = (float)Math.sqrt( mat.m01 * mat.m01 + mat.m11 * mat.m11 + mat.m21 * mat.m21 );
-        if( d > FSQRT_ABS_ERR || -d > FSQRT_ABS_ERR ) {
+        if( d > FSQRT_ABS_TOL || -d > FSQRT_ABS_TOL ) {
             d = 1.0f / d;
             mat.m01 *= d;
             mat.m11 *= d;
@@ -1789,13 +1789,13 @@ public final class Mat {
         Vec3 rotAxis = new Vec3();
         Mat4 rot     = outMat == null ? new Mat4() : outMat;
 
-        if( ang < Math.PI * (1.0 + FREL_ERR )) {
+        if( ang < Math.PI * (1.0 + FREL_TOL)) {
             Vec.cross( vec, coneAxis, rotAxis );
         }else{
             Vec.chooseOrtho( coneAxis.x, coneAxis.y, coneAxis.z, rotAxis );
         }
 
-        Mat.getRotation( ang - coneRads * (1.0f - FREL_ERR), rotAxis.x, rotAxis.y, rotAxis.z, rot );
+        Mat.getRotation( ang - coneRads * (1.0f - FREL_TOL), rotAxis.x, rotAxis.y, rotAxis.z, rot );
         if( outVec != null ) {
             Mat.mult( rot, vec, outVec );
         }
@@ -1981,7 +1981,7 @@ public final class Mat {
         // Compute determinant
         double invdet = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
         // Check if invertible.
-        boolean ret  = invdet > SQRT_ABS_ERR || -invdet > SQRT_ABS_ERR;
+        boolean ret  = invdet > SQRT_ABS_TOL || -invdet > SQRT_ABS_TOL;
         // Invert determinant
         invdet = 1.0 / invdet;
 
@@ -2564,7 +2564,7 @@ public final class Mat {
 
         //Normalize length of X-axis.
         d = Math.sqrt( mat[0] * mat[0] + mat[1] * mat[1] + mat[2] * mat[2] );
-        if( d > SQRT_ABS_ERR || -d > SQRT_ABS_ERR ) {
+        if( d > SQRT_ABS_TOL || -d > SQRT_ABS_TOL ) {
             d = 1 / d;
             mat[0] *= d;
             mat[1] *= d;
@@ -2583,7 +2583,7 @@ public final class Mat {
 
         //Normalize Y-axis.
         d = Math.sqrt( mat[4] * mat[4] + mat[5] * mat[5] + mat[6] * mat[6] );
-        if( d > SQRT_ABS_ERR || -d > SQRT_ABS_ERR ) {
+        if( d > SQRT_ABS_TOL || -d > SQRT_ABS_TOL ) {
             d = 1.0 / d;
             mat[4] *= d;
             mat[5] *= d;
@@ -2711,13 +2711,13 @@ public final class Mat {
         double[] rotAxis = new double[3];
         double[] rot     = outMat == null ? new double[16] : outMat;
 
-        if( ang < Math.PI * (1.0 + REL_ERR )) {
+        if( ang < Math.PI * (1.0 + REL_TOL)) {
             Vec.cross3( vec, coneAxis, rotAxis );
         }else{
             Vec.chooseOrtho3( coneAxis[0], coneAxis[1], coneAxis[2], rotAxis );
         }
 
-        Mat.getRotate4( ang - coneRads * (1.0 - REL_ERR), rotAxis[0], rotAxis[1], rotAxis[2], rot );
+        Mat.getRotate4( ang - coneRads * (1.0 - REL_TOL), rotAxis[0], rotAxis[1], rotAxis[2], rot );
         if( outVec != null ) {
             Mat.mult4Vec3( rot, vec, outVec );
         }

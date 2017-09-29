@@ -82,7 +82,7 @@ public class Pots {
     /**
      * Binary log function that rounds up.
      *
-     * @return {@code val > 0}: the integer less-than-or-equal-to log_2( val ) <br>
+     * @return {@code val > 0}: the integer greater-than-or-equal-to log_2( val ) <br>
      *         otherwise : 0
      */
     public static int ceilLog2( int val ) {
@@ -163,7 +163,7 @@ public class Pots {
     /**
      * Binary log function that rounds answer up.
      *
-     * @return {@code val > 0}: the integer less-than-or-equal-to log_2( val ) <br>
+     * @return {@code val > 0}: the integer greater-than-or-equal-to log_2( val ) <br>
      *         otherwise : 0
      */
     public static long ceilLog2( long val ) {

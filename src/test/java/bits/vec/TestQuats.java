@@ -426,7 +426,7 @@ public class TestQuats {
     
     private static boolean matEquals( double[] a, double[] b ) {
         for( int i = 0; i < 16; i++ ) {
-            if( !Tol.approxEqual( a[i], b[i], 1E-8, 1E-8 ) ) {
+            if( !Tol.equal( a[i], b[i], 1E-8, 1E-8 ) ) {
                 return false;
             }
         }
