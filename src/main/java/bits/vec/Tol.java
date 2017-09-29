@@ -41,23 +41,23 @@ public final class Tol {
      * The absolute error is normally very small. The default mVal is ABS_TOL.
      * <p>
      * The relative error is the absolute error divided by the larger of the two magnitudes of {@code a} and
-     * {@code b}: {@code abs(a-b)/max(abs(a),abs(b))}. A functional maxRelError should be no smaller than
+     * {@code b}: {@code abs(a-b)/max(abs(a),abs(b))}. A functional relTol should be no smaller than
      * Tolerance.EPS.  The default mVal is REL_TOL.
      * 
      * @param a           Input value
      * @param b           Input value
-     * @param maxRelError Maximum relative error.
-     * @param maxAbsError Maximum absolute error.
+     * @param relTol Maximum relative error.
+     * @param absTol Maximum absolute error.
      * @return true if {@code a} and {@code b} are approximately equal.
      */
-    public static boolean equal( double a, double b, double maxRelError, double maxAbsError ) {
+    public static boolean equal( double a, double b, double relTol, double absTol ) {
         double diff = a - b;
         
         if( diff < 0.0 ) {
             diff = -diff;
         }        
         
-        if( diff < maxAbsError ) {  
+        if( diff < absTol ) {  
             return true;
         }
         
@@ -69,7 +69,7 @@ public final class Tol {
             b = -b;
         }
         
-        return diff < ( a > b ? a : b ) * maxRelError;
+        return diff < ( a > b ? a : b ) * relTol;
     }
 
     /**
@@ -90,14 +90,14 @@ public final class Tol {
      * 
      * @param a A mVal.
      * @param b A mVal.
-     * @param maxRelErr   Maximum relative error
-     * @param maxAbsErr   Maximum absolute error.
+     * @param relTol   Maximum relative error
+     * @param absTol   Maximum absolute error.
      * @return 0 if a approximately equals b, -1 if a is smaller, 1 if a is greater.
      * 
      * @see #equal
      */
-    public static int comp( double a, double b, double maxRelErr, double maxAbsErr ) {
-        return equal( a, b, maxRelErr, maxAbsErr ) ? 0 : ( a < b ? -1 : 1 );
+    public static int comp( double a, double b, double relTol, double absTol ) {
+        return equal( a, b, relTol, absTol ) ? 0 : ( a < b ? -1 : 1 );
     }
     
     /**
@@ -119,17 +119,17 @@ public final class Tol {
      * 
      * @param v       Some mVal
      * @param ref     A reference mVal that might be divided or multiplied by
-     * @param relErr  Minimum ratio between abs(v) and abs(ref) for abs(v) to be considered non-zero.
-     * @param absErr  Minimum mVal abs(v) must be to be considered non-zero.
+     * @param relTol  Minimum ratio between abs(v) and abs(ref) for abs(v) to be considered non-zero.
+     * @param absTol  Minimum mVal abs(v) must be to be considered non-zero.
      * @return true iff v is approximately equal to 0 relative to ref.
      */
-    public static boolean isZero( double v, double ref, double relErr, double absErr ) {
-        if( v < absErr && -v < absErr ) {
+    public static boolean isZero( double v, double ref, double relTol, double absTol ) {
+        if( v < absTol && -v < absTol ) {
             return true;
         }
         
-        relErr *= ( ref >= 0.0 ? ref : -ref );
-        return v < relErr && -v < relErr;
+        relTol *= ( ref >= 0.0 ? ref : -ref );
+        return v < relTol && -v < relTol;
     }
     
     /**
@@ -149,23 +149,23 @@ public final class Tol {
      * The absolute error is normally very small. The default is FABS_TOL.
      * <p>
      * The relative error is the absolute error divided by the larger of the two magnitudes of {@code a} and
-     * {@code b}: {@code abs(a-b)/max(abs(a),abs(b))}. A functional maxRelError should be no smaller than
+     * {@code b}: {@code abs(a-b)/max(abs(a),abs(b))}. A functional relTol should be no smaller than
      * Tolerance.FEPS. The default mVal is FREL_TOL.
      * 
      * @param a           Input value
      * @param b           Input value
-     * @param maxRelError Maximum relative error.
-     * @param maxAbsError Maximum absolute error.
+     * @param relTol Maximum relative error.
+     * @param absTol Maximum absolute error.
      * @return true if {@code a} and {@code b} are approximately equal.
      */
-    public static boolean equal( float a, float b, float maxRelError, float maxAbsError ) {
+    public static boolean equal( float a, float b, float relTol, float absTol ) {
         float diff = a - b;
         
         if( diff < 0.0f ) { 
             diff = -diff; 
         }
 
-        if( diff < maxAbsError ) { 
+        if( diff < absTol ) { 
             return true; 
         }
 
@@ -177,7 +177,7 @@ public final class Tol {
             b = -b; 
         }
 
-        return diff < ( a > b ? a : b ) * maxRelError;
+        return diff < ( a > b ? a : b ) * relTol;
     }
 
     /**
@@ -198,14 +198,14 @@ public final class Tol {
      * 
      * @param a A mVal.
      * @param b A mVal.
-     * @param maxRelErr   Maximum relative error
-     * @param maxAbsErr   Maximum absolute error.
+     * @param relTol Maximum relative error.
+     * @param absTol Maximum absolute error.
      * @return 0 if a approximately equals b, -1 if a is smaller, 1 if a is greater.
      * 
      * @see #equal
      */
-    public static int comp( float a, float b, float maxRelErr, float maxAbsErr ) {
-        return equal( a, b, maxRelErr, maxAbsErr ) ? 0 : ( a < b ? -1 : 1 );
+    public static int comp( float a, float b, float relTol, float absTol ) {
+        return equal( a, b, relTol, absTol ) ? 0 : ( a < b ? -1 : 1 );
     }
     
     /**
@@ -227,17 +227,17 @@ public final class Tol {
      * 
      * @param v       Some mVal
      * @param ref     A reference mVal that might be divided or multiplied by
-     * @param relErr  Minimum ratio between abs(v) and abs(ref) for abs(v) to be considered non-zero.
-     * @param absErr  Minimum mVal abs(v) must be to be considered non-zero.
+     * @param relTol  Minimum ratio between abs(v) and abs(ref) for abs(v) to be considered non-zero.
+     * @param absTol  Minimum mVal abs(v) must be to be considered non-zero.
      * @return true iff v is approximately equal to 0 relative to ref.
      */
-    public static boolean isZero( float v, float ref, float relErr, float absErr ) {
-        if( v < absErr && -v < absErr ) {
+    public static boolean isZero( float v, float ref, float relTol, float absTol ) {
+        if( v < absTol && -v < absTol ) {
             return true;
         }
         
-        relErr *= ( ref >= 0.0 ? ref : -ref );
-        return v < relErr && -v < relErr;
+        relTol *= ( ref >= 0.0 ? ref : -ref );
+        return v < relTol && -v < relTol;
     }
 
     
