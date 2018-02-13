@@ -10,22 +10,22 @@ import java.util.NoSuchElementException;
 
 
 /**
- * 4-dimensional vector.
+ * Methods for quaternions.
  *
- * @author Philip DeCamp
+ * @author decamp
  */
-public class Vec4 {
+public final class Quatd {
 
-    public float x;
-    public float y;
-    public float z;
-    public float w;
+    public double x;
+    public double y;
+    public double z;
+    public double w;
 
+    
+    public Quatd() {}
+        
 
-    public Vec4() {}
-
-
-    public Vec4( float x, float y, float z, float w ) {
+    public void set( double x, double y, double z, double w ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -33,16 +33,24 @@ public class Vec4 {
     }
 
 
-    public Vec4( Vec4 copy ) {
+    public void set( Quat copy ) {
         this.x = copy.x;
         this.y = copy.y;
         this.z = copy.z;
         this.w = copy.w;
     }
+    
+
+    public void set( Quatd copy ) {
+        this.x = copy.x;
+        this.y = copy.y;
+        this.z = copy.z;
+        this.w = copy.w;
+    }
+    
 
 
-
-    public float el( int d ) {
+    public double el( int d ) {
         switch( d ) {
         case 0: return x;
         case 1: return y;
@@ -54,7 +62,7 @@ public class Vec4 {
     }
 
 
-    public void el( int d, float v ) {
+    public void el( int d, double v ) {
         switch( d ) {
         case 0: x = v; return;
         case 1: y = v; return;
@@ -66,59 +74,26 @@ public class Vec4 {
     }
 
 
-    public void set( float x, float y, float z, float w ) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
-
-
-    public void set( double x, double y, double z, double w ) {
-        this.x = (float)x;
-        this.y = (float)y;
-        this.z = (float)z;
-        this.w = (float)w;
-    }
-
-
-    public void set( Vec4 copy ) {
-        this.x = copy.x;
-        this.y = copy.y;
-        this.z = copy.z;
-        this.w = copy.w;
-    }
-
-
-    public void set( Vec4d copy ) {
-        this.x = (float)copy.x;
-        this.y = (float)copy.y;
-        this.z = (float)copy.z;
-        this.z = (float)copy.w;
-    }
-
-
-
-
     @Override
     public boolean equals( Object obj ) {
-        if( !(obj instanceof Vec4 ) ) {
+        if( !(obj instanceof Quatd) ) {
             return false;
         }
 
-        Vec4 v = (Vec4)obj;
+        Quatd v = (Quatd)obj;
         // v == this is necessary to catch NaNs.
         return v == this || x == v.x && y == v.y && z == v.z && w == v.w;
     }
 
     @Override
     public int hashCode() {
-        return Float.floatToIntBits( x + y + z + w );
+        long hash = Double.doubleToLongBits( x + y + z + w );
+        return (int)( hash ^ ( hash >>> 32 ) );
     }
 
     @Override
     public String toString() {
         return String.format( Vec.FORMAT4, x, y, z, w );
-    }
+    }    
 
 }

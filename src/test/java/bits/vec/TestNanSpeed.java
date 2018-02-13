@@ -14,7 +14,7 @@ import java.util.Random;
  * Non-comprehensive microtest comparing different ways to detect NaNs.
  *
  * <p>Result was that they were about the same.
- * Appears that {@code v != v} is every-so-slightly faster than {@code eisNaN( v )}
+ * Appears that {@code v != v} is every-so-slightly faster than {@code isNaN( v )}
  *
  * For vectors, slightly faster to sum all elements then check result, but that will be mistaken if you
  * add Float.POSITIVE_INFINITY + Float.NEGATIVE_INFINITY.
@@ -122,6 +122,7 @@ public class TestNanSpeed {
         System.out.println( "v.*v != v.* v ) : " + ( t2 / 10000000000.0 ) );
     }
 
+    
     public static boolean isNaN( Mat3 mat ) {
         return mat.m00 != mat.m00 ||
                mat.m10 != mat.m10 ||

@@ -78,6 +78,14 @@ public class Tests {
     }
 
 
+    public static void assertNear( Quat a, Quat b ) {
+        assertTrue( isNear( a.x, b.x ) &&
+                    isNear( a.y, b.y ) &&
+                    isNear( a.z, b.z ) &&
+                    isNear( a.w, b.w ) );
+    }
+
+
     public static void assertNear( Mat3 a, Mat3 b ) {
         assertTrue( isNear( a.m00, b.m00 ) &&
                     isNear( a.m01, b.m01 ) &&
@@ -92,6 +100,62 @@ public class Tests {
 
 
     public static void assertNear( Mat4 a, Mat4 b ) {
+        assertTrue( isNear( a.m00, b.m00 ) &&
+                    isNear( a.m01, b.m01 ) &&
+                    isNear( a.m02, b.m02 ) &&
+                    isNear( a.m03, b.m03 ) &&
+                    isNear( a.m10, b.m10 ) &&
+                    isNear( a.m11, b.m11 ) &&
+                    isNear( a.m12, b.m12 ) &&
+                    isNear( a.m13, b.m13 ) &&
+                    isNear( a.m20, b.m20 ) &&
+                    isNear( a.m21, b.m21 ) &&
+                    isNear( a.m22, b.m22 ) &&
+                    isNear( a.m23, b.m23 ) &&
+                    isNear( a.m30, b.m30 ) &&
+                    isNear( a.m31, b.m31 ) &&
+                    isNear( a.m32, b.m32 ) &&
+                    isNear( a.m33, b.m33 ) );
+    }
+
+
+    public static void assertNear( Vec3d a, Vec3d b ) {
+        assertTrue( isNear( a.x, b.x ) &&
+                    isNear( a.y, b.y ) &&
+                    isNear( a.z, b.z ) );
+    }
+
+
+    public static void assertNear( Vec4d a, Vec4d b ) {
+        assertTrue( isNear( a.x, b.x ) &&
+                    isNear( a.y, b.y ) &&
+                    isNear( a.z, b.z ) &&
+                    isNear( a.w, b.w ) );
+    }
+
+
+    public static void assertNear( Quatd a, Quatd b ) {
+        assertTrue( isNear( a.x, b.x ) &&
+                    isNear( a.y, b.y ) &&
+                    isNear( a.z, b.z ) &&
+                    isNear( a.w, b.w ) );
+    }
+
+
+    public static void assertNear( Mat3d a, Mat3d b ) {
+        assertTrue( isNear( a.m00, b.m00 ) &&
+                    isNear( a.m01, b.m01 ) &&
+                    isNear( a.m02, b.m02 ) &&
+                    isNear( a.m10, b.m10 ) &&
+                    isNear( a.m11, b.m11 ) &&
+                    isNear( a.m12, b.m12 ) &&
+                    isNear( a.m20, b.m20 ) &&
+                    isNear( a.m21, b.m21 ) &&
+                    isNear( a.m22, b.m22 ) );
+    }
+
+
+    public static void assertNear( Mat4d a, Mat4d b ) {
         assertTrue( isNear( a.m00, b.m00 ) &&
                     isNear( a.m01, b.m01 ) &&
                     isNear( a.m02, b.m02 ) &&

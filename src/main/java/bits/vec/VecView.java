@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 /**
  * @author Philip DeCamp
  */
+@Deprecated
 public interface VecView<T> {
 
     int dim();

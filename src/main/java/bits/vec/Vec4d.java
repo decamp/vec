@@ -14,18 +14,18 @@ import java.util.NoSuchElementException;
  *
  * @author Philip DeCamp
  */
-public class Vec4 {
+public class Vec4d {
 
-    public float x;
-    public float y;
-    public float z;
-    public float w;
-
-
-    public Vec4() {}
+    public double x;
+    public double y;
+    public double z;
+    public double w;
 
 
-    public Vec4( float x, float y, float z, float w ) {
+    public Vec4d() {}
+
+
+    public Vec4d( double x, double y, double z, double w ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -33,7 +33,7 @@ public class Vec4 {
     }
 
 
-    public Vec4( Vec4 copy ) {
+    public Vec4d( Vec4d copy ) {
         this.x = copy.x;
         this.y = copy.y;
         this.z = copy.z;
@@ -42,7 +42,7 @@ public class Vec4 {
 
 
 
-    public float el( int d ) {
+    public double el( int d ) {
         switch( d ) {
         case 0: return x;
         case 1: return y;
@@ -54,7 +54,7 @@ public class Vec4 {
     }
 
 
-    public void el( int d, float v ) {
+    public void el( int d, double v ) {
         switch( d ) {
         case 0: x = v; return;
         case 1: y = v; return;
@@ -74,14 +74,6 @@ public class Vec4 {
     }
 
 
-    public void set( double x, double y, double z, double w ) {
-        this.x = (float)x;
-        this.y = (float)y;
-        this.z = (float)z;
-        this.w = (float)w;
-    }
-
-
     public void set( Vec4 copy ) {
         this.x = copy.x;
         this.y = copy.y;
@@ -91,29 +83,31 @@ public class Vec4 {
 
 
     public void set( Vec4d copy ) {
-        this.x = (float)copy.x;
-        this.y = (float)copy.y;
-        this.z = (float)copy.z;
-        this.z = (float)copy.w;
+        this.x = copy.x;
+        this.y = copy.y;
+        this.z = copy.z;
+        this.z = copy.w;
     }
+
 
 
 
 
     @Override
     public boolean equals( Object obj ) {
-        if( !(obj instanceof Vec4 ) ) {
+        if( !(obj instanceof Vec4d) ) {
             return false;
         }
 
-        Vec4 v = (Vec4)obj;
-        // v == this is necessary to catch NaNs.
+        Vec4d v = (Vec4d)obj;
+        // (v == this) is necessary to catch NaNs.
         return v == this || x == v.x && y == v.y && z == v.z && w == v.w;
     }
 
     @Override
     public int hashCode() {
-        return Float.floatToIntBits( x + y + z + w );
+        long hash = Double.doubleToLongBits( x + y + z + w );
+        return (int)( hash ^ ( hash >>> 32 ) );
     }
 
     @Override

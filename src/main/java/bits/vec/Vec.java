@@ -19,6 +19,7 @@ import static bits.vec.Tol.*;
  */
 public final class Vec {
 
+    public static final String FORMAT_NUM = "% 7.4f";
     public static final String FORMAT2 = "[ % 7.4f, % 7.4f ]";
     public static final String FORMAT3 = "[ % 7.4f, % 7.4f, % 7.4f ]";
     public static final String FORMAT4 = "[ % 7.4f, % 7.4f, % 7.4f, % 7.4f ]";
@@ -569,7 +570,7 @@ public final class Vec {
         out.y = a.z * b.x - b.z * a.x;
         out.z = a.x * b.y - b.x * a.y;
     }
-
+    
 
     public static void cross( Vec3 origin, Vec3 a, Vec3 b, Vec3 out ) {
         out.x = (a.y - origin.y) * (b.z - origin.z) - (b.y - origin.y) * (a.z - origin.z);
@@ -1190,6 +1191,1007 @@ public final class Vec {
 
     public static String format( Vec4 vec ) {
         return String.format( FORMAT4, vec.x, vec.y, vec.z, vec.w );
+    }
+
+
+
+
+
+    //== VEC2D Functions ===========================
+
+    
+    public static void add( Vec2d a, Vec2d b, Vec2d out ) {
+        out.x = a.x + b.x;
+        out.y = a.y + b.y;
+    }
+
+
+    public static void add( double dx, double dy, Vec2d a, Vec2d out ) {
+        out.x = a.x + dx;
+        out.y = a.y + dy;
+    }
+
+
+    public static void addTo( Vec2d a, Vec2d out ) {
+        out.x += a.x;
+        out.y += a.y;
+    }
+
+
+    public static void subtract( Vec2d a, Vec2d b, Vec2d out ) {
+        out.x = a.x - b.x;
+        out.y = a.y - b.y;
+    }
+
+
+    public static void subtractFrom( Vec2d a, Vec2d out ) {
+        out.x -= a.x;
+        out.y -= a.y;
+    }
+
+
+    public static void mult( double sa, Vec2d a ) {
+        a.x *= sa;
+        a.y *= sa;
+    }
+
+
+    public static void mult( double sa, Vec2d a, Vec2d out ) {
+        out.x = sa * a.x;
+        out.y = sa * a.y;
+    }
+
+
+    public static void mult( double sx, double sy, Vec2d a, Vec2d out ) {
+        out.x = sx * a.x;
+        out.y = sy * a.y;
+    }
+
+
+    public static void multAdd( double sa, Vec2d a, double sb, Vec2d b, Vec2d out ) {
+        out.x = a.x * sa + b.x * sb;
+        out.y = a.y * sa + b.y * sb;
+    }
+
+
+    public static void multAddTo( double sa, Vec2d a, double sOut, Vec2d out ) {
+        out.x = sOut * out.x + sa * a.x;
+        out.y = sOut * out.y + sa * a.y;
+    }
+
+
+    public static void min( Vec2d a, Vec2d b, Vec2d out ) {
+        out.x = a.x <= b.x ? a.x : b.x;
+        out.y = a.y <= b.y ? a.y : b.y;
+    }
+
+
+    public static void max( Vec2d a, Vec2d b, Vec2d out ) {
+        out.x = a.x >= b.x ? a.x : b.x;
+        out.y = a.y >= b.y ? a.y : b.y;
+    }
+
+
+    public static double len( Vec2d a ) {
+        return Math.sqrt( lenSquared( a ) );
+    }
+
+
+    public static double lenSquared( Vec2d a ) {
+        return a.x * a.x + a.y * a.y;
+    }
+
+
+    public static double dist( Vec2d a, Vec2d b ) {
+        return Math.sqrt( distSquared( a, b ) );
+    }
+
+
+    public static double distSquared( Vec2d a, Vec2d b ) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        return dx * dx + dy * dy;
+    }
+
+
+    public static void normalize( Vec2d a ) {
+        double s = 1f / len( a );
+        a.x *= s;
+        a.y *= s;
+    }
+
+
+    public static void normalize( Vec2d a, double normLength, Vec2d out ) {
+        double d = normLength / len(a);
+        out.x = a.x * d;
+        out.y = a.y * d;
+    }
+
+
+    public static double dot( Vec2d a, Vec2d b ) {
+        return a.x * b.x + a.y * b.y;
+    }
+
+
+    public static double dot( Vec2d origin, Vec2d a, Vec2d b ) {
+        return (a.x - origin.x) * (b.x - origin.x) +
+               (a.y - origin.y) * (b.y - origin.y);
+    }
+
+
+    public static double cosAng( Vec2d a, Vec2d b ) {
+        return dot( a, b ) / Math.sqrt( lenSquared( a ) * lenSquared( b ) );
+    }
+
+
+    public static double cosAng( Vec2d origin, Vec2d a, Vec2d b ) {
+        double ax = a.x - origin.x;
+        double ay = a.y - origin.y;
+        double bx = b.x - origin.x;
+        double by = b.y - origin.y;
+
+        double dd = ( ax*ax + ay*ay ) * ( bx*bx + by*by );
+        return ( ax*bx + ay*by ) / Math.sqrt( dd );
+    }
+
+
+    public static double ang( Vec2d a, Vec2d b ) {
+        return Math.acos( cosAng( a, b ) );
+    }
+
+
+    public static double ang( Vec2d origin, Vec2d a, Vec2d b ) {
+        return Math.acos( cosAng( origin, a, b ) );
+    }
+
+
+    public static void lerp( Vec2d a, Vec2d b, double p, Vec2d out ) {
+        double q = 1.0f - p;
+        out.x = q * a.x + p * b.x;
+        out.y = q * a.y + p * b.y;
+    }
+
+    /**
+     * Performs smallest possible modification to vector {@code a} to make it
+     * orthogonal to vector {@code ref}.
+     *
+     * @param a    Vector to modify.
+     * @param ref  Reference vector.
+     */
+    public static void reject( Vec2d a, Vec2d ref ) {
+        double lenRef = ref.x * ref.x + ref.y * ref.y;
+        if( lenRef < SQRT_ABS_TOL ) {
+            return;
+        }
+        double parScale = dot( a, ref ) / lenRef;
+        a.x -= ref.x * parScale;
+        a.y -= ref.y * parScale;
+    }
+
+    /**
+     * Performs smallest possible modification to vector {@code a} to make it
+     * parallel to vector {@code ref}.
+     *
+     * @param a    Vector to modify.
+     * @param ref  Reference vector.
+     */
+    public static void project( Vec2d a, Vec2d ref ) {
+        double lenRef = ref.x * ref.x + ref.y * ref.y;
+        if( lenRef < SQRT_ABS_TOL ) {
+            return;
+        }
+        double parScale = dot( a, ref ) / lenRef;
+        a.x = ref.x * parScale;
+        a.y = ref.y * parScale;
+    }
+
+    /**
+     * Returns shortest distance between a line defined and a point.
+     * @param n1 A point on the line
+     * @param n2 A second point on the line.
+     * @param p  Some point
+     * @return Distance between <tt>p</tt> and line that passes through <tt>n1</tt> and <tt>n2</tt>.
+     */
+    public static double linePointDistance( Vec2d n1, Vec2d n2, Vec2d p ) {
+        double c = (p.x - n1.x) * (p.y - n2.y) - (p.x - n2.x) * (p.y - n1.y);
+        return c / dist( n1, n2 );
+    }
+
+    /**
+     * Returns shortest distance between a line segment and a point.
+     *
+     * @param s1 Start of line segment
+     * @param s2 End of line segment
+     * @param p Some point
+     * @return smallest distance from point to any point on line segment.
+     */
+    public static double segmentPointDistance( Vec2d s1, Vec2d s2, Vec2d p ) {
+        double u0 =  p.x - s1.x;
+        double u1 =  p.y - s1.y;
+        double v0 = s2.x - s1.x;
+        double v1 = s2.y - s1.y;
+
+        double num = u0 * v0 + u1 * v1;
+        double den = v0 * v0 + v1 * v1;
+        double t   = num / den;
+
+        if( den < SQRT_ABS_TOL || t <= 0.0 ) {
+            //Return distance from n1 to p (which is already stored in <u0,u1>).
+        } else if( t >= 1.0 ) {
+            //Return distance from n2 to p.
+            u0 = p.x - s2.x;
+            u1 = p.y - s2.y;
+        } else {
+            //Make u perpendicular to line.
+            u0 -= v0 * t;
+            u1 -= v1 * t;
+        }
+
+        return Math.sqrt( u0 * u0 + u1 * u1 );
+    }
+
+    /**
+     * Finds intersection between two lines.
+     *
+     * @param a0  First point on line a
+     * @param a1  Second point on line a
+     * @param b0  First point on line b
+     * @param b1  Second point on line b
+     * @param out On return, holds point of intersection if lines are not parallel.
+     * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
+     */
+    public static boolean lineIntersection( Vec2d a0, Vec2d a1, Vec2d b0, Vec2d b1, Vec2d out ) {
+        double bx = a1.x - a0.x;
+        double by = a1.y - a0.y;
+        double dx = b1.x - b0.x;
+        double dy = b1.y - b0.y;
+        double dotPerp = bx * dy - by * dx;
+        if( dotPerp < SQRT_ABS_TOL && -dotPerp < SQRT_ABS_TOL ) {
+            return false;
+        }
+        double cx = b0.x - a0.x;
+        double cy = b0.y - a0.y;
+        double t = (cx * dy - cy * dx) / dotPerp;
+
+        out.x = a0.x + t * bx;
+        out.y = a0.y + t * by;
+        return true;
+    }
+
+    /**
+     * Finds intersection between two line segments.
+     *
+     * @param a0  First point on segment a
+     * @param a1  Second point on segment a
+     * @param b0  First point on segment b
+     * @param b1  Second point on segment b
+     * @param out On return, holds point of intersection if exists.
+     * @return true if lines intersect at single place.
+     */
+    public static boolean segmentIntersection( Vec2d a0, Vec2d a1, Vec2d b0, Vec2d b1, Vec2d out ) {
+        double bx = a1.x - a0.x;
+        double by = a1.y - a0.y;
+        double dx = b1.x - b0.x;
+        double dy = b1.y - b0.y;
+        double dotPerp = bx * dy - by * dx;
+        if( dotPerp < SQRT_ABS_TOL && -dotPerp < SQRT_ABS_TOL ) {
+            return false;
+        }
+
+        double cx = b0.x - a0.x;
+        double cy = b0.y - a0.y;
+        double t = (cx * dy - cy * dx) / dotPerp;
+        if( t < 0 || t > 1 ) {
+            return false;
+        }
+
+        double u = (cx * by - cy * bx) / dotPerp;
+        if( u < 0 || u > 1 ) {
+            return false;
+        }
+
+        out.x = a0.x + t * bx;
+        out.y = a0.y + t * by;
+        return true;
+    }
+
+
+    public static boolean isNaN( Vec2d vec ) {
+        return vec.x != vec.x || vec.y != vec.y;
+    }
+
+
+    
+    //== VEC3D Functions =======================================================
+
+    
+    public static void add( double dx, double dy, double dz, Vec3d a, Vec3d out ) {
+        out.x = a.x + dx;
+        out.y = a.y + dy;
+        out.z = a.z + dz;
+    }
+
+
+    public static void addTo( Vec3d a, Vec3d out ) {
+        out.x += a.x;
+        out.y += a.y;
+        out.z += a.z;
+    }
+
+
+    public static void addTo( double dx, double dy, double dz, Vec3d out ) {
+        out.x += dx;
+        out.y += dy;
+        out.z += dz;
+    }
+
+
+    public static void subtract( Vec3d a, Vec3d b, Vec3d out ) {
+        out.x = a.x - b.x;
+        out.y = a.y - b.y;
+        out.z = a.z - b.z;
+    }
+
+
+    public static void subtractFrom( Vec3d a, Vec3d out ) {
+        out.x -= a.x;
+        out.y -= a.y;
+        out.z -= a.z;
+    }
+
+
+    public static void mult( double sa, Vec3d a ) {
+        a.x *= sa;
+        a.y *= sa;
+        a.z *= sa;
+    }
+
+
+    public static void mult( double sa, Vec3d a, Vec3d out ) {
+        out.x = sa * a.x;
+        out.y = sa * a.y;
+        out.z = sa * a.z;
+    }
+
+
+    public static void mult( double sx, double sy, double sz, Vec3d a, Vec3d out ) {
+        out.x = sx * a.x;
+        out.y = sy * a.y;
+        out.z = sz * a.z;
+    }
+
+
+    public static void multAdd( double sa, Vec3d a, double sb, Vec3d b, Vec3d out ) {
+        out.x = a.x * sa + b.x * sb;
+        out.y = a.y * sa + b.y * sb;
+        out.z = a.z * sa + b.z * sb;
+    }
+
+
+    public static void multAddTo( double sa, Vec3d a, double sOut, Vec3d out ) {
+        out.x = sOut * out.x + sa * a.x;
+        out.y = sOut * out.y + sa * a.y;
+        out.z = sOut * out.z + sa * a.z;
+    }
+
+
+    public static void min( Vec3d a, Vec3d b, Vec3d out ) {
+        out.x = a.x <= b.x ? a.x : b.x;
+        out.y = a.y <= b.y ? a.y : b.y;
+        out.z = a.z <= b.z ? a.z : b.z;
+    }
+
+
+    public static void max( Vec3d a, Vec3d b, Vec3d out ) {
+        out.x = a.x >= b.x ? a.x : b.x;
+        out.y = a.y >= b.y ? a.y : b.y;
+        out.z = a.z >= b.z ? a.z : b.z;
+    }
+
+
+    public static double len( Vec3d a ) {
+        return Math.sqrt( lenSquared( a ) );
+    }
+
+
+    public static double lenSquared( Vec3d a ) {
+        return a.x * a.x + a.y * a.y + a.z * a.z;
+    }
+
+
+    public static double dist( Vec3d a, Vec3d b ) {
+        return Math.sqrt( distSquared( a, b ) );
+    }
+
+
+    public static double distSquared( Vec3d a, Vec3d b ) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        double dz = a.z - b.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+
+    public static void normalize( Vec3d a ) {
+        double s = 1f / len( a );
+        a.x *= s;
+        a.y *= s;
+        a.z *= s;
+    }
+
+
+    public static void normalize( Vec3d a, double normLength, Vec3d out ) {
+        double d = normLength / len(a);
+        out.x = a.x * d;
+        out.y = a.y * d;
+        out.z = a.z * d;
+    }
+
+
+    public static double dot( Vec3d a, Vec3d b ) {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+
+    public static double dot( Vec3d origin, Vec3d a, Vec3d b ) {
+        return (a.x - origin.x) * (b.x - origin.x) +
+               (a.y - origin.y) * (b.y - origin.y) +
+               (a.z - origin.z) * (b.z - origin.z);
+    }
+
+
+    public static void cross( Vec3d a, Vec3d b, Vec3d out ) {
+        out.x = a.y * b.z - b.y * a.z;
+        out.y = a.z * b.x - b.z * a.x;
+        out.z = a.x * b.y - b.x * a.y;
+    }
+
+
+    public static void cross( Vec3d origin, Vec3d a, Vec3d b, Vec3d out ) {
+        out.x = (a.y - origin.y) * (b.z - origin.z) - (b.y - origin.y) * (a.z - origin.z);
+        out.y = (a.z - origin.z) * (b.x - origin.x) - (b.z - origin.z) * (a.x - origin.x);
+        out.z = (a.x - origin.x) * (b.y - origin.y) - (b.x - origin.x) * (a.y - origin.y);
+    }
+
+
+    public static double cosAng( Vec3d a, Vec3d b ) {
+        return dot( a, b ) / Math.sqrt( lenSquared( a ) * lenSquared( b ) );
+    }
+
+
+    public static double cosAng( Vec3d origin, Vec3d a, Vec3d b ) {
+        double ax = a.x - origin.x;
+        double ay = a.y - origin.y;
+        double az = a.z - origin.z;
+        double bx = b.x - origin.x;
+        double by = b.y - origin.y;
+        double bz = b.z - origin.z;
+
+        double dd = ( ax*ax + ay*ay + az*az ) * ( bx*bx + by*by + bz*bz );
+        return ( ax*bx + ay*by + az*bz ) / Math.sqrt( dd );
+    }
+
+
+    public static double ang( Vec3d a, Vec3d b ) {
+        return Math.acos( cosAng( a, b ) );
+    }
+
+
+    public static double ang( Vec3d origin, Vec3d a, Vec3d b ) {
+        return Math.acos( cosAng( origin, a, b ) );
+    }
+
+
+    public static void lerp( Vec3d a, Vec3d b, double p, Vec3d out ) {
+        double q = 1.0f - p;
+        out.x = q * a.x + p * b.x;
+        out.y = q * a.y + p * b.y;
+        out.z = q * a.z + p * b.z;
+    }
+
+    /**
+     * Performs smallest possible modification to vector {@code a} to make it
+     * orthogonal to vector {@code ref}.
+     *
+     * @param a    Vector to modify.
+     * @param ref  Reference vector.
+     */
+    public static void reject( Vec3d a, Vec3d ref ) {
+        double lenRef = lenSquared( ref );
+        if( lenRef < SQRT_ABS_TOL ) {
+            return;
+        }
+        double parScale = dot( a, ref ) / lenRef;
+        a.x -= ref.x * parScale;
+        a.y -= ref.y * parScale;
+        a.z -= ref.z * parScale;
+    }
+
+    /**
+     * Performs smallest possible modification to vector {@code a} to make it
+     * parallel to vector {@code ref}.
+     *
+     * @param a    Vector to modify.
+     * @param ref  Reference vector.
+     */
+    public static void project( Vec3d a, Vec3d ref ) {
+        double lenRef = lenSquared( ref );
+        if( lenRef < SQRT_ABS_TOL ) {
+            return;
+        }
+        double parScale = dot( a, ref ) / lenRef;
+        a.x = ref.x * parScale;
+        a.y = ref.y * parScale;
+        a.z = ref.z * parScale;
+    }
+
+    /**
+     * Finds signed axis-aligned unit-vector nearest to input vector.
+     * For example, the nearest axis to [ 0.8, -1.3, 0.1 ] is [ 0.0, -1.0, 0.0 ].
+     *
+     * @param x X-coord of axis.
+     * @param y Y-coord of axis.
+     * @param z Z-coord of axis.
+     * @param out Length-3 array to hold axis on return.
+     */
+    public static void nearestAxis( double x, double y, double z, Vec3d out ) {
+        double ax = x >= 0 ? x : -x;
+        double ay = y >= 0 ? y : -y;
+        double az = z >= 0 ? z : -z;
+
+        if( ax > ay && ax > az ) {
+            out.x = x >= 0 ? 1 : -1;
+            out.y = 0;
+            out.z = 0;
+        } else if( ay > az ) {
+            out.x = 0;
+            out.y = y >= 0 ? 1 : -1;
+            out.z = 0;
+        } else {
+            out.x = 0;
+            out.y = 0;
+            out.z = z >= 0 ? 1 : -1;
+        }
+    }
+
+    /**
+     * Picks a unit-length vector that is orthogonal to the input vector.
+     */
+    public static void chooseOrtho( double x, double y, double z, Vec3d out3x1 ) {
+        chooseOrtho( x, y, z, 2, out3x1 );
+    }
+
+    /**
+     * Picks a unitl-length vector that is orthogonal to the input vector.
+     * <p>
+     * This method allows the user to define a "zero-dimension", where the
+     * vector that is returned by this method is guaranteed to have a zero coordinate
+     * for that dimension. Additionally, the coordinate after the zero-dimension will
+     * hold a non-negative mVal.
+     * <p>
+     * For example, <br>
+     * {@code chooseOrtho3( 1.0f, 1.0f, 1.0f, 0, out )}<br>
+     * will set <br>
+     * {@code out = [  0.0000,  0.7071, -0.7071 ] }<br>
+     * where {@code out.x} is zero and {@code out.y} is non-negative. <br>
+     * {@code chooseOrtho3( 1.0f, 1.0f, 1.0f, 2, out )}<br>
+     * will set <br>
+     * {@code out = [  0.7071, -0.7071,  0.0000 ] }<br>
+     *
+     * @param x       X-coord of vector.
+     * @param y       Y-coord of vector.
+     * @param z       Z-coord of vector.
+     * @param zeroDim Number {0,1,2} indicating if the output x, y, or z axis should be zero.
+     * @param out     Length-3 array to hold output axis.
+     */
+    public static void chooseOrtho( double x, double y, double z, int zeroDim, Vec3d out ) {
+        switch( zeroDim ) {
+        case 2:
+            if( y > SQRT_ABS_TOL || -y > SQRT_ABS_TOL ) {
+                out.x = 1;
+                out.y = -x/y;
+                out.z = 0;
+            } else if ( x > SQRT_ABS_TOL || -x > SQRT_ABS_TOL ) {
+                out.x = -y/x;
+                out.y = 1;
+                out.z = 0;
+            } else {
+                out.x = 1;
+                out.y = 0;
+                out.z = 0;
+                // No need to normalize3.
+                return;
+            }
+            break;
+
+        case 1:
+            if( x > SQRT_ABS_TOL || -x > SQRT_ABS_TOL ) {
+                out.x = -z / x;
+                out.y = 0;
+                out.z = 1;
+            } else if( z > SQRT_ABS_TOL || -z > SQRT_ABS_TOL ) {
+                out.x = 1;
+                out.y = 0;
+                out.z = -x / z;
+            } else {
+                out.x = 0;
+                out.y = 0;
+                out.z = 1;
+                // No need to normalize3.
+                return;
+            }
+            break;
+
+        default:
+            if( z > SQRT_ABS_TOL || -z > SQRT_ABS_TOL ) {
+                out.x = 0;
+                out.y = 1;
+                out.z = -y / z;
+            } else if( y > SQRT_ABS_TOL || -y > SQRT_ABS_TOL ) {
+                out.x = 0;
+                out.y = -z / y;
+                out.z = 1;
+            } else {
+                out.x = 0;
+                out.y = 1;
+                out.z = 0;
+                // No need to normalize3.
+                return;
+            }
+            break;
+        }
+
+        normalize( out );
+    }
+
+    /**
+     * Returns shortest distance between a line defined and a point.
+     * @param n1 A point on the line
+     * @param n2 A second point on the line.
+     * @param p  Some point
+     * @return Distance between <tt>p</tt> and line that passes through <tt>n1</tt> and <tt>n2</tt>.
+     */
+    public static double lineToPointDistance( Vec3d n1, Vec3d n2, Vec3d p ) {
+        double cx = (p.y - n1.y) * (p.z - n2.z) - (p.y - n2.y) * (p.z - n1.z);
+        double cy = (p.z - n1.z) * (p.x - n2.x) - (p.z - n2.z) * (p.x - n1.x);
+        double cz = (p.x - n1.x) * (p.y - n2.y) - (p.x - n2.x) * (p.y - n1.y);
+        return Math.sqrt( cx * cx + cy * cy + cz * cz ) / dist( n1, n2 );
+    }
+
+    /**
+     * Returns shortest distance between a line segment and a point.
+     *
+     * @param n1 Start of line segment
+     * @param n2 End of line segment
+     * @param p Some point
+     * @return smallest distance from point to any point on line segment.
+     */
+    public static double lineSegmentToPointDistance( Vec3d n1, Vec3d n2, Vec3d p ) {
+        double u0 = p.x - n1.x;
+        double u1 = p.y - n1.y;
+        double u2 = p.z - n1.z;
+
+        double v0 = n2.x - n1.x;
+        double v1 = n2.y - n1.y;
+        double v2 = n2.z - n1.z;
+
+        double num = u0 * v0 + u1 * v1 + u2 * v2;
+        double den = v0 * v0 + v1 * v1 + v2 * v2;
+        double t   = num / den;
+
+        if( den < SQRT_ABS_TOL || t <= 0.0 ) {
+            //Return distance from n1 to p (which is already stored in u0,u1,u2).
+        } else if( t >= 1.0 ) {
+            //Return distance from n2 to p.
+            u0 = p.x - n2.x;
+            u1 = p.y - n2.y;
+            u2 = p.z - n2.z;
+        } else {
+            //Make u perpendicular to line.
+            u0 -= v0 * t;
+            u1 -= v1 * t;
+            u2 -= v2 * t;
+        }
+
+        return Math.sqrt( u0 * u0 + u1 * u1 + u2 * u2 );
+    }
+
+    /**
+     * Finds intersection of line and plane. The intersection point is
+     * only defined if this method returns 1, indicating that the line and
+     * plane intersect at one point.
+     *
+     * @param line0      First point on line.
+     * @param line1      Second point on line.
+     * @param planePoint A Point on the plane.
+     * @param planeNorm  Normal vector of plane.
+     * @param optOut     length-3 array to hold point of intersection. May be {@code null}
+     * @return 0 if no intersection,
+     *         1 if point intersection ( line crosses plane )
+     *         2 if line intersection ( line lies on plane )
+     */
+    public static int intersectLinePlane( Vec3d line0,
+                                          Vec3d line1,
+                                          Vec3d planePoint,
+                                          Vec3d planeNorm,
+                                          Vec3d optOut )
+    {
+        double dx = line1.x - line0.x;
+        double dy = line1.y - line0.y;
+        double dz = line1.z - line0.z;
+
+        double num = (planePoint.x - line0.x) * planeNorm.x +
+                    (planePoint.y - line0.y) * planeNorm.y +
+                    (planePoint.z - line0.z) * planeNorm.z;
+
+        double den = dx * planeNorm.x + dy * planeNorm.y + dz * planeNorm.z;
+
+        if( den < SQRT_ABS_TOL && den > -SQRT_ABS_TOL ) {
+            return num < SQRT_ABS_TOL && num > -SQRT_ABS_TOL ? 2 : 0;
+        }
+
+        if( optOut != null ) {
+            double d = num / den;
+            optOut.x = d * dx + line0.x;
+            optOut.y = d * dy + line0.y;
+            optOut.z = d * dz + line0.z;
+        }
+
+        return 1;
+    }
+
+
+    /**
+     * Finds "intersection", or smallest connecting line, between two 3d lines.
+     * (Lines, not line segments).
+     *
+     * @param a0       First point on line a
+     * @param a1       Second point on line a
+     * @param b0       First point on line b
+     * @param b1       Second point on line b
+     * @param optOutA  On return, holds point on line a nearest to line b (optional)
+     * @param optOutB  On return, holds point on line b nearest to line a (optional)
+     * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
+     */
+    public static boolean intersectLineLine( Vec3d a0,
+                                             Vec3d a1,
+                                             Vec3d b0,
+                                             Vec3d b1,
+                                             Vec3d optOutA,
+                                             Vec3d optOutB )
+    {
+        double da0b0b1b0 = (a0.x - b0.x) * (b1.x - b0.x) + (a0.y - b0.y) * (b1.y - b0.y) + (a0.z - b0.z) * (b1.z - b0.z);
+        double db1b0a1a0 = (b1.x - b0.x) * (a1.x - a0.x) + (b1.y - b0.y) * (a1.y - a0.y) + (b1.z - b0.z) * (a1.z - a0.z);
+        double da0b0a1a0 = (a0.x - b0.x) * (a1.x - a0.x) + (a0.y - b0.y) * (a1.y - a0.y) + (a0.z - b0.z) * (a1.z - a0.z);
+        double db1b0b1b0 = (b1.x - b0.x) * (b1.x - b0.x) + (b1.y - b0.y) * (b1.y - b0.y) + (b1.z - b0.z) * (b1.z - b0.z);
+        double da1a0a1a0 = (a1.x - a0.x) * (a1.x - a0.x) + (a1.y - a0.y) * (a1.y - a0.y) + (a1.z - a0.z) * (a1.z - a0.z);
+
+        double num = da0b0b1b0 * db1b0a1a0 - da0b0a1a0 * db1b0b1b0;
+        double den = da1a0a1a0 * db1b0b1b0 - db1b0a1a0 * db1b0a1a0;
+
+        if( den < SQRT_ABS_TOL && -den < SQRT_ABS_TOL ) {
+            return false;
+        }
+
+        double mua = num / den;
+        if( optOutA != null ) {
+            multAdd( 1.0f - mua, a0, mua, a1, optOutA );
+        }
+        if( optOutB != null ) {
+            double mub = ( da0b0b1b0 + mua * db1b0a1a0 ) / db1b0b1b0;
+            multAdd( 1.0f - mub, b0, mub, b1, optOutB );
+        }
+
+        return true;
+    }
+
+
+    public static boolean isNaN( Vec3d vec ) {
+        return vec.x != vec.x ||
+               vec.y != vec.y ||
+               vec.z != vec.z;
+    }
+
+
+
+    //== VEC4D Functions =======================================================
+
+
+    public static void add( Vec4d a, Vec4d b, Vec4d out ) {
+        out.x = a.x + b.x;
+        out.y = a.y + b.y;
+        out.z = a.z + b.z;
+        out.w = a.w + b.w;
+    }
+
+
+    public static void add( double dx, double dy, double dz, double dw, Vec4d a, Vec4d out ) {
+        out.x = a.x + dx;
+        out.y = a.y + dy;
+        out.z = a.z + dz;
+        out.w = a.w + dw;
+    }
+
+
+    public static void addTo( Vec4d a, Vec4d out ) {
+        out.x += a.x;
+        out.y += a.y;
+        out.z += a.z;
+        out.w += a.w;
+    }
+
+
+    public static void subtract( Vec4d a, Vec4d b, Vec4d out ) {
+        out.x = a.x - b.x;
+        out.y = a.y - b.y;
+        out.z = a.z - b.z;
+        out.w = a.w - b.w;
+    }
+
+
+    public static void subtractFrom( Vec4d a, Vec4d out ) {
+        out.x -= a.x;
+        out.y -= a.y;
+        out.z -= a.z;
+        out.w -= a.w;
+    }
+
+
+    public static void mult( double sa, Vec4d a ) {
+        a.x *= sa;
+        a.y *= sa;
+        a.z *= sa;
+        a.w *= sa;
+    }
+
+
+    public static void mult( double sa, Vec4d a, Vec4d out ) {
+        out.x = sa * a.x;
+        out.y = sa * a.y;
+        out.z = sa * a.z;
+        out.w = sa * a.w;
+    }
+
+
+    public static void mult( double sx, double sy, double sz, double sw, Vec4d a, Vec4d out ) {
+        out.x = sx * a.x;
+        out.y = sy * a.y;
+        out.z = sz * a.z;
+        out.w = sw * a.w;
+    }
+
+
+    public static void multAdd( double sa, Vec4d a, double sb, Vec4d b, Vec4d out ) {
+        out.x = a.x * sa + b.x * sb;
+        out.y = a.y * sa + b.y * sb;
+        out.z = a.z * sa + b.z * sb;
+        out.w = a.w * sa + b.w * sb;
+    }
+
+
+    public static void multAddTo( double sa, Vec4d a, double sOut, Vec4d out ) {
+        out.x = sOut * out.x + sa * a.x;
+        out.y = sOut * out.y + sa * a.y;
+        out.z = sOut * out.z + sa * a.z;
+        out.w = sOut * out.w + sa * a.w;
+    }
+
+
+    public static void min( Vec4d a, Vec4d b, Vec4d out ) {
+        out.x = a.x <= b.x ? a.x : b.x;
+        out.y = a.y <= b.y ? a.y : b.y;
+        out.z = a.z <= b.z ? a.z : b.z;
+        out.w = a.w <= b.w ? a.w : b.w;
+    }
+
+
+    public static void max( Vec4d a, Vec4d b, Vec4d out ) {
+        out.x = a.x >= b.x ? a.x : b.x;
+        out.y = a.y >= b.y ? a.y : b.y;
+        out.z = a.z >= b.z ? a.z : b.z;
+        out.w = a.w >= b.w ? a.w : b.w;
+    }
+
+
+    public static double len( Vec4d a ) {
+        return Math.sqrt( lenSquared( a ) );
+    }
+
+
+    public static double lenSquared( Vec4d a ) {
+        return a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w;
+    }
+
+
+    public static double dist( Vec4d a, Vec4d b ) {
+        return Math.sqrt( distSquared( a, b ) );
+    }
+
+
+    public static double distSquared( Vec4d a, Vec4d b ) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        double dz = a.z - b.z;
+        double dw = a.w - b.w;
+        return dx * dx + dy * dy + dz * dz + dw * dw;
+    }
+
+
+    public static void normalize( Vec4d a ) {
+        double s = 1f / len( a );
+        a.x *= s;
+        a.y *= s;
+        a.z *= s;
+        a.w *= s;
+    }
+
+
+    public static void normalize( Vec4d a, double normLength, Vec4d out ) {
+        double d = normLength / len(a);
+        out.x = a.x * d;
+        out.y = a.y * d;
+        out.z = a.z * d;
+        out.w = a.w * d;
+    }
+
+
+    public static double dot( Vec4d a, Vec4d b ) {
+        return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+    }
+
+
+    public static double dot( Vec4d origin, Vec4d a, Vec4d b ) {
+        return (a.x - origin.x) * (b.x - origin.x) +
+               (a.y - origin.y) * (b.y - origin.y) +
+               (a.z - origin.z) * (b.z - origin.z) +
+               (a.w - origin.w) * (b.w - origin.w);
+    }
+
+
+    public static double cosAng( Vec4d a, Vec4d b ) {
+        return dot( a, b ) / Math.sqrt( lenSquared( a ) * lenSquared( b ) );
+    }
+
+
+    public static double cosAng( Vec4d origin, Vec4d a, Vec4d b ) {
+        double ax = a.x - origin.x;
+        double ay = a.y - origin.y;
+        double az = a.z - origin.z;
+        double aw = a.w - origin.w;
+        double bx = b.x - origin.x;
+        double by = b.y - origin.y;
+        double bz = b.z - origin.z;
+        double bw = b.w - origin.w;
+
+        double dd = ( ax*ax + ay*ay + az*az + aw*aw ) * ( bx*bx + by*by + bz*bz + bw*bw );
+        return ( ax*bx + ay*by + az*bz + aw*bw ) / Math.sqrt( dd );
+    }
+
+
+    public static double ang( Vec4d a, Vec4d b ) {
+        return Math.acos( cosAng( a, b ) );
+    }
+
+
+    public static double ang( Vec4d origin, Vec4d a, Vec4d b ) {
+        return Math.acos( cosAng( origin, a, b ) );
+    }
+
+
+    public static void lerp( Vec4d a, Vec4d b, double p, Vec4d out ) {
+        double q = 1.0f - p;
+        out.x = q * a.x + p * b.x;
+        out.y = q * a.y + p * b.y;
+        out.z = q * a.z + p * b.z;
+        out.w = q * a.w + p * b.w;
+    }
+
+
+    public static boolean isNaN( Vec4d vec ) {
+        return vec.x != vec.x ||
+               vec.y != vec.y ||
+               vec.z != vec.z ||
+               vec.w != vec.w;
     }
 
 
@@ -2205,6 +3207,10 @@ public final class Vec {
         return String.format( FORMAT4, vec[0], vec[1], vec[2], vec[3] );
     }
 
+
+
+    //== Other Functions =======================================================
+    
 
     private Vec() {}
 

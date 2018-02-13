@@ -19,133 +19,7 @@ import static bits.vec.Tol.*;
  */
 public final class Mat {
 
-
     //=== MAT3 Functions ======================================
-
-
-    public static void put( Mat3 mat, Mat3 out ) {
-        out.m00 = mat.m00;
-        out.m01 = mat.m01;
-        out.m02 = mat.m02;
-        out.m10 = mat.m10;
-        out.m11 = mat.m11;
-        out.m12 = mat.m12;
-        out.m20 = mat.m20;
-        out.m21 = mat.m21;
-        out.m22 = mat.m22;
-    }
-
-
-    public static void put( Mat3 mat, Mat4 out ) {
-        out.m00 = mat.m00;
-        out.m01 = mat.m01;
-        out.m02 = mat.m02;
-        out.m03 = 0;
-        out.m10 = mat.m10;
-        out.m11 = mat.m11;
-        out.m12 = mat.m12;
-        out.m23 = 0;
-        out.m20 = mat.m20;
-        out.m21 = mat.m21;
-        out.m22 = mat.m22;
-        out.m23 = 0;
-        out.m30 = 0;
-        out.m31 = 0;
-        out.m32 = 0;
-        out.m33 = 1;
-    }
-
-
-    public static void put( Mat3 mat, ByteBuffer bb ) {
-        bb.putFloat( mat.m00 );
-        bb.putFloat( mat.m10 );
-        bb.putFloat( mat.m20 );
-        bb.putFloat( mat.m01 );
-        bb.putFloat( mat.m11 );
-        bb.putFloat( mat.m21 );
-        bb.putFloat( mat.m02 );
-        bb.putFloat( mat.m12 );
-        bb.putFloat( mat.m22 );
-    }
-
-
-    public static void put( ByteBuffer bb, Mat3 mat ) {
-        mat.m00 = bb.getFloat();
-        mat.m10 = bb.getFloat();
-        mat.m20 = bb.getFloat();
-        mat.m01 = bb.getFloat();
-        mat.m11 = bb.getFloat();
-        mat.m21 = bb.getFloat();
-        mat.m02 = bb.getFloat();
-        mat.m12 = bb.getFloat();
-        mat.m22 = bb.getFloat();
-    }
-
-
-    public static void put( Mat3 mat, FloatBuffer fb ) {
-        fb.put( mat.m00 );
-        fb.put( mat.m10 );
-        fb.put( mat.m20 );
-        fb.put( mat.m01 );
-        fb.put( mat.m11 );
-        fb.put( mat.m21 );
-        fb.put( mat.m02 );
-        fb.put( mat.m12 );
-        fb.put( mat.m22 );
-    }
-
-
-    public static void put( FloatBuffer fb, Mat3 mat ) {
-        mat.m00 = fb.get();
-        mat.m10 = fb.get();
-        mat.m20 = fb.get();
-        mat.m01 = fb.get();
-        mat.m11 = fb.get();
-        mat.m21 = fb.get();
-        mat.m02 = fb.get();
-        mat.m12 = fb.get();
-        mat.m22 = fb.get();
-    }
-
-
-    public static void put( float[] arr, Mat3 mat ) {
-        mat.m00 = arr[0];
-        mat.m10 = arr[1];
-        mat.m20 = arr[2];
-        mat.m01 = arr[3];
-        mat.m11 = arr[4];
-        mat.m21 = arr[5];
-        mat.m02 = arr[6];
-        mat.m12 = arr[7];
-        mat.m22 = arr[8];
-    }
-
-
-    public static void put( Mat3 mat, float[] arr ) {
-        arr[0] = mat.m00;
-        arr[1] = mat.m10;
-        arr[2] = mat.m20;
-        arr[3] = mat.m01;
-        arr[4] = mat.m11;
-        arr[5] = mat.m21;
-        arr[6] = mat.m02;
-        arr[7] = mat.m12;
-        arr[8] = mat.m22;
-    }
-
-
-    public static void put( float v, Mat3 out ) {
-        out.m00 = v;
-        out.m10 = v;
-        out.m20 = v;
-        out.m01 = v;
-        out.m11 = v;
-        out.m21 = v;
-        out.m02 = v;
-        out.m12 = v;
-        out.m22 = v;
-    }
-
 
     public static void mult( Mat3 a, Mat3 b, Mat3 out ) {
         float a0 = a.m00;
@@ -189,7 +63,12 @@ public final class Mat {
 
 
     public static void mult( Mat3 a, Vec4 b, Vec4 out ) {
-        mult( a, (Vec3)b, out );
+        float t0 = a.m00*b.x + a.m01*b.y + a.m02*b.z;
+        float t1 = a.m10*b.x + a.m11*b.y + a.m12*b.z;
+        float t2 = a.m20*b.x + a.m21*b.y + a.m22*b.z;
+        out.x = t0;
+        out.y = t1;
+        out.z = t2;
         out.w = b.w;
     }
 
@@ -537,14 +416,14 @@ public final class Mat {
      * @param workB Workspace
      * @param out   Holds interpolated rotation on output.
      */
-    public static void slerp( Mat3 rotA, Mat3 rotB, float t, Vec4 workA, Vec4 workB, Mat3 out ) {
+    public static void slerp( Mat3 rotA, Mat3 rotB, float t, Quat workA, Quat workB, Mat3 out ) {
         Quat.matToQuat( rotA, workA );
         Quat.matToQuat( rotB, workB );
         Quat.slerp( workA, workB, t, workA );
         Quat.quatToMat( workA, out );
     }
-
-
+    
+    
     public static String format( Mat3 mat ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "[" );
@@ -570,33 +449,8 @@ public final class Mat {
 
 
 
-    //=== MAT4 Functions ========================================
-
-
-    public static void put( Mat4 mat, Mat4 out ) {
-        out.m00 = mat.m00;
-        out.m01 = mat.m01;
-        out.m02 = mat.m02;
-        out.m03 = mat.m03;
-
-        out.m10 = mat.m10;
-        out.m11 = mat.m11;
-        out.m12 = mat.m12;
-        out.m13 = mat.m13;
-
-        out.m20 = mat.m20;
-        out.m21 = mat.m21;
-        out.m22 = mat.m22;
-        out.m23 = mat.m23;
-
-        out.m30 = mat.m30;
-        out.m31 = mat.m31;
-        out.m32 = mat.m32;
-        out.m33 = mat.m33;
-    }
-
-
-    public static void put( Mat4 mat, Mat3 out ) {
+    @Deprecated
+    public static void put( Mat3 mat, Mat3 out ) {
         out.m00 = mat.m00;
         out.m01 = mat.m01;
         out.m02 = mat.m02;
@@ -608,146 +462,155 @@ public final class Mat {
         out.m22 = mat.m22;
     }
 
+    @Deprecated
+    public static void put( Mat3 mat, Mat4 out ) {
+        out.m00 = mat.m00;
+        out.m01 = mat.m01;
+        out.m02 = mat.m02;
+        out.m03 = 0;
+        out.m10 = mat.m10;
+        out.m11 = mat.m11;
+        out.m12 = mat.m12;
+        out.m23 = 0;
+        out.m20 = mat.m20;
+        out.m21 = mat.m21;
+        out.m22 = mat.m22;
+        out.m23 = 0;
+        out.m30 = 0;
+        out.m31 = 0;
+        out.m32 = 0;
+        out.m33 = 1;
+    }
 
-    public static void put( Mat4 mat, ByteBuffer bb ) {
+    @Deprecated
+    public static void put( Mat3 mat, ByteBuffer bb ) {
         bb.putFloat( mat.m00 );
         bb.putFloat( mat.m10 );
         bb.putFloat( mat.m20 );
-        bb.putFloat( mat.m30 );
         bb.putFloat( mat.m01 );
         bb.putFloat( mat.m11 );
         bb.putFloat( mat.m21 );
-        bb.putFloat( mat.m31 );
         bb.putFloat( mat.m02 );
         bb.putFloat( mat.m12 );
         bb.putFloat( mat.m22 );
-        bb.putFloat( mat.m32 );
-        bb.putFloat( mat.m03 );
-        bb.putFloat( mat.m13 );
-        bb.putFloat( mat.m23 );
-        bb.putFloat( mat.m33 );
     }
 
-
-    public static void put( ByteBuffer bb, Mat4 mat ) {
+    @Deprecated
+    public static void put( ByteBuffer bb, Mat3 mat ) {
         mat.m00 = bb.getFloat();
         mat.m10 = bb.getFloat();
         mat.m20 = bb.getFloat();
-        mat.m30 = bb.getFloat();
         mat.m01 = bb.getFloat();
         mat.m11 = bb.getFloat();
         mat.m21 = bb.getFloat();
-        mat.m31 = bb.getFloat();
         mat.m02 = bb.getFloat();
         mat.m12 = bb.getFloat();
         mat.m22 = bb.getFloat();
-        mat.m32 = bb.getFloat();
-        mat.m03 = bb.getFloat();
-        mat.m13 = bb.getFloat();
-        mat.m23 = bb.getFloat();
-        mat.m33 = bb.getFloat();
     }
 
-
-    public static void put( Mat4 mat, FloatBuffer fb ) {
+    @Deprecated
+    public static void put( Mat3 mat, FloatBuffer fb ) {
         fb.put( mat.m00 );
         fb.put( mat.m10 );
         fb.put( mat.m20 );
-        fb.put( mat.m30 );
         fb.put( mat.m01 );
         fb.put( mat.m11 );
         fb.put( mat.m21 );
-        fb.put( mat.m31 );
         fb.put( mat.m02 );
         fb.put( mat.m12 );
         fb.put( mat.m22 );
-        fb.put( mat.m32 );
-        fb.put( mat.m03 );
-        fb.put( mat.m13 );
-        fb.put( mat.m23 );
-        fb.put( mat.m33 );
     }
 
-
-    public static void put( FloatBuffer fb, Mat4 mat ) {
+    @Deprecated
+    public static void put( FloatBuffer fb, Mat3 mat ) {
         mat.m00 = fb.get();
         mat.m10 = fb.get();
         mat.m20 = fb.get();
-        mat.m30 = fb.get();
         mat.m01 = fb.get();
         mat.m11 = fb.get();
         mat.m21 = fb.get();
-        mat.m31 = fb.get();
         mat.m02 = fb.get();
         mat.m12 = fb.get();
         mat.m22 = fb.get();
-        mat.m32 = fb.get();
-        mat.m03 = fb.get();
-        mat.m13 = fb.get();
-        mat.m23 = fb.get();
-        mat.m33 = fb.get();
     }
 
-
-    public static void put( Mat4 mat, float[] arr ) {
-        arr[ 0] = mat.m00;
-        arr[ 1] = mat.m10;
-        arr[ 2] = mat.m20;
-        arr[ 3] = mat.m30;
-        arr[ 4] = mat.m01;
-        arr[ 5] = mat.m11;
-        arr[ 6] = mat.m21;
-        arr[ 7] = mat.m31;
-        arr[ 8] = mat.m02;
-        arr[ 9] = mat.m12;
-        arr[10] = mat.m22;
-        arr[11] = mat.m32;
-        arr[12] = mat.m03;
-        arr[13] = mat.m13;
-        arr[14] = mat.m23;
-        arr[15] = mat.m33;
+    @Deprecated
+    public static void put( float[] arr, Mat3 mat ) {
+        mat.m00 = arr[0];
+        mat.m10 = arr[1];
+        mat.m20 = arr[2];
+        mat.m01 = arr[3];
+        mat.m11 = arr[4];
+        mat.m21 = arr[5];
+        mat.m02 = arr[6];
+        mat.m12 = arr[7];
+        mat.m22 = arr[8];
     }
 
-
-    public static void put( float[] arr, Mat4 mat ) {
-        mat.m00 = arr[ 0];
-        mat.m10 = arr[ 1];
-        mat.m20 = arr[ 2];
-        mat.m30 = arr[ 3];
-        mat.m01 = arr[ 4];
-        mat.m11 = arr[ 5];
-        mat.m21 = arr[ 6];
-        mat.m31 = arr[ 7];
-        mat.m02 = arr[ 8];
-        mat.m12 = arr[ 9];
-        mat.m22 = arr[10];
-        mat.m32 = arr[11];
-        mat.m03 = arr[12];
-        mat.m13 = arr[13];
-        mat.m23 = arr[14];
-        mat.m33 = arr[15];
+    @Deprecated
+    public static void put( Mat3 mat, float[] arr ) {
+        arr[0] = mat.m00;
+        arr[1] = mat.m10;
+        arr[2] = mat.m20;
+        arr[3] = mat.m01;
+        arr[4] = mat.m11;
+        arr[5] = mat.m21;
+        arr[6] = mat.m02;
+        arr[7] = mat.m12;
+        arr[8] = mat.m22;
     }
 
+    @Deprecated
+    public static void put( double[] arr, Mat3 mat ) {
+        mat.m00 = (float)arr[0];
+        mat.m10 = (float)arr[1];
+        mat.m20 = (float)arr[2];
+        mat.m01 = (float)arr[3];
+        mat.m11 = (float)arr[4];
+        mat.m21 = (float)arr[5];
+        mat.m02 = (float)arr[6];
+        mat.m12 = (float)arr[7];
+        mat.m22 = (float)arr[8];
+    }
 
-    public static void put( float v, Mat4 out ) {
+    @Deprecated
+    public static void put( Mat3 mat, double[] arr ) {
+        arr[0] = mat.m00;
+        arr[1] = mat.m10;
+        arr[2] = mat.m20;
+        arr[3] = mat.m01;
+        arr[4] = mat.m11;
+        arr[5] = mat.m21;
+        arr[6] = mat.m02;
+        arr[7] = mat.m12;
+        arr[8] = mat.m22;
+    }
+
+    @Deprecated
+    public static void put( float v, Mat3 out ) {
         out.m00 = v;
         out.m10 = v;
         out.m20 = v;
-        out.m30 = v;
         out.m01 = v;
         out.m11 = v;
         out.m21 = v;
-        out.m31 = v;
         out.m02 = v;
         out.m12 = v;
         out.m22 = v;
-        out.m32 = v;
-        out.m03 = v;
-        out.m13 = v;
-        out.m23 = v;
-        out.m33 = v;
     }
 
+    @Deprecated
+    public static void slerp( Mat3 rotA, Mat3 rotB, float t, Vec4 workA, Vec4 workB, Mat3 out ) {
+        Quat.matToQuat( rotA, workA );
+        Quat.matToQuat( rotB, workB );
+        Quat.slerp( workA, workB, t, workA );
+        Quat.quatToMat( workA, out );
+    }
+    
+
+    
+    //=== MAT4 Functions ========================================
+    
     /**
      * Multiplies two matrices.
      *
@@ -1834,6 +1697,1746 @@ public final class Mat {
                Float.isNaN( mat.m23 ) ||
                Float.isNaN( mat.m33 );
     }
+
+
+    @Deprecated
+    public static void put( Mat4 mat, Mat4 out ) {
+        out.m00 = mat.m00;
+        out.m01 = mat.m01;
+        out.m02 = mat.m02;
+        out.m03 = mat.m03;
+
+        out.m10 = mat.m10;
+        out.m11 = mat.m11;
+        out.m12 = mat.m12;
+        out.m13 = mat.m13;
+
+        out.m20 = mat.m20;
+        out.m21 = mat.m21;
+        out.m22 = mat.m22;
+        out.m23 = mat.m23;
+
+        out.m30 = mat.m30;
+        out.m31 = mat.m31;
+        out.m32 = mat.m32;
+        out.m33 = mat.m33;
+    }
+
+    @Deprecated
+    public static void put( Mat4 mat, Mat3 out ) {
+        out.m00 = mat.m00;
+        out.m01 = mat.m01;
+        out.m02 = mat.m02;
+        out.m10 = mat.m10;
+        out.m11 = mat.m11;
+        out.m12 = mat.m12;
+        out.m20 = mat.m20;
+        out.m21 = mat.m21;
+        out.m22 = mat.m22;
+    }
+
+    @Deprecated
+    public static void put( Mat4 mat, ByteBuffer bb ) {
+        bb.putFloat( mat.m00 );
+        bb.putFloat( mat.m10 );
+        bb.putFloat( mat.m20 );
+        bb.putFloat( mat.m30 );
+        bb.putFloat( mat.m01 );
+        bb.putFloat( mat.m11 );
+        bb.putFloat( mat.m21 );
+        bb.putFloat( mat.m31 );
+        bb.putFloat( mat.m02 );
+        bb.putFloat( mat.m12 );
+        bb.putFloat( mat.m22 );
+        bb.putFloat( mat.m32 );
+        bb.putFloat( mat.m03 );
+        bb.putFloat( mat.m13 );
+        bb.putFloat( mat.m23 );
+        bb.putFloat( mat.m33 );
+    }
+
+    @Deprecated
+    public static void put( ByteBuffer bb, Mat4 mat ) {
+        mat.m00 = bb.getFloat();
+        mat.m10 = bb.getFloat();
+        mat.m20 = bb.getFloat();
+        mat.m30 = bb.getFloat();
+        mat.m01 = bb.getFloat();
+        mat.m11 = bb.getFloat();
+        mat.m21 = bb.getFloat();
+        mat.m31 = bb.getFloat();
+        mat.m02 = bb.getFloat();
+        mat.m12 = bb.getFloat();
+        mat.m22 = bb.getFloat();
+        mat.m32 = bb.getFloat();
+        mat.m03 = bb.getFloat();
+        mat.m13 = bb.getFloat();
+        mat.m23 = bb.getFloat();
+        mat.m33 = bb.getFloat();
+    }
+
+    @Deprecated
+    public static void put( Mat4 mat, FloatBuffer fb ) {
+        fb.put( mat.m00 );
+        fb.put( mat.m10 );
+        fb.put( mat.m20 );
+        fb.put( mat.m30 );
+        fb.put( mat.m01 );
+        fb.put( mat.m11 );
+        fb.put( mat.m21 );
+        fb.put( mat.m31 );
+        fb.put( mat.m02 );
+        fb.put( mat.m12 );
+        fb.put( mat.m22 );
+        fb.put( mat.m32 );
+        fb.put( mat.m03 );
+        fb.put( mat.m13 );
+        fb.put( mat.m23 );
+        fb.put( mat.m33 );
+    }
+
+    @Deprecated
+    public static void put( FloatBuffer fb, Mat4 mat ) {
+        mat.m00 = fb.get();
+        mat.m10 = fb.get();
+        mat.m20 = fb.get();
+        mat.m30 = fb.get();
+        mat.m01 = fb.get();
+        mat.m11 = fb.get();
+        mat.m21 = fb.get();
+        mat.m31 = fb.get();
+        mat.m02 = fb.get();
+        mat.m12 = fb.get();
+        mat.m22 = fb.get();
+        mat.m32 = fb.get();
+        mat.m03 = fb.get();
+        mat.m13 = fb.get();
+        mat.m23 = fb.get();
+        mat.m33 = fb.get();
+    }
+
+    @Deprecated
+    public static void put( Mat4 mat, float[] arr ) {
+        arr[ 0] = mat.m00;
+        arr[ 1] = mat.m10;
+        arr[ 2] = mat.m20;
+        arr[ 3] = mat.m30;
+        arr[ 4] = mat.m01;
+        arr[ 5] = mat.m11;
+        arr[ 6] = mat.m21;
+        arr[ 7] = mat.m31;
+        arr[ 8] = mat.m02;
+        arr[ 9] = mat.m12;
+        arr[10] = mat.m22;
+        arr[11] = mat.m32;
+        arr[12] = mat.m03;
+        arr[13] = mat.m13;
+        arr[14] = mat.m23;
+        arr[15] = mat.m33;
+    }
+
+    @Deprecated
+    public static void put( float[] arr, Mat4 mat ) {
+        mat.m00 = arr[ 0];
+        mat.m10 = arr[ 1];
+        mat.m20 = arr[ 2];
+        mat.m30 = arr[ 3];
+        mat.m01 = arr[ 4];
+        mat.m11 = arr[ 5];
+        mat.m21 = arr[ 6];
+        mat.m31 = arr[ 7];
+        mat.m02 = arr[ 8];
+        mat.m12 = arr[ 9];
+        mat.m22 = arr[10];
+        mat.m32 = arr[11];
+        mat.m03 = arr[12];
+        mat.m13 = arr[13];
+        mat.m23 = arr[14];
+        mat.m33 = arr[15];
+    }
+
+    @Deprecated
+    public static void put( Mat4 mat, double[] arr ) {
+        arr[ 0] = mat.m00;
+        arr[ 1] = mat.m10;
+        arr[ 2] = mat.m20;
+        arr[ 3] = mat.m30;
+        arr[ 4] = mat.m01;
+        arr[ 5] = mat.m11;
+        arr[ 6] = mat.m21;
+        arr[ 7] = mat.m31;
+        arr[ 8] = mat.m02;
+        arr[ 9] = mat.m12;
+        arr[10] = mat.m22;
+        arr[11] = mat.m32;
+        arr[12] = mat.m03;
+        arr[13] = mat.m13;
+        arr[14] = mat.m23;
+        arr[15] = mat.m33;
+    }
+
+    @Deprecated
+    public static void put( double[] arr, Mat4 mat ) {
+        mat.m00 = (float)arr[ 0];
+        mat.m10 = (float)arr[ 1];
+        mat.m20 = (float)arr[ 2];
+        mat.m30 = (float)arr[ 3];
+        mat.m01 = (float)arr[ 4];
+        mat.m11 = (float)arr[ 5];
+        mat.m21 = (float)arr[ 6];
+        mat.m31 = (float)arr[ 7];
+        mat.m02 = (float)arr[ 8];
+        mat.m12 = (float)arr[ 9];
+        mat.m22 = (float)arr[10];
+        mat.m32 = (float)arr[11];
+        mat.m03 = (float)arr[12];
+        mat.m13 = (float)arr[13];
+        mat.m23 = (float)arr[14];
+        mat.m33 = (float)arr[15];
+    }
+
+    @Deprecated
+    public static void put( float v, Mat4 out ) {
+        out.m00 = v;
+        out.m10 = v;
+        out.m20 = v;
+        out.m30 = v;
+        out.m01 = v;
+        out.m11 = v;
+        out.m21 = v;
+        out.m31 = v;
+        out.m02 = v;
+        out.m12 = v;
+        out.m22 = v;
+        out.m32 = v;
+        out.m03 = v;
+        out.m13 = v;
+        out.m23 = v;
+        out.m33 = v;
+    }
+
+    
+
+    //=== MAT3D Functions ======================================
+
+    
+    public static void mult( Mat3d a, Mat3d b, Mat3d out ) {
+        double a0 = a.m00;
+        double a1 = a.m10;
+        double a2 = a.m20;
+        double a3 = a.m01;
+        double a4 = a.m11;
+        double a5 = a.m21;
+        double a6 = a.m02;
+        double a7 = a.m12;
+        double a8 = a.m22;
+        double b0 = b.m00;
+        double b1 = b.m10;
+        double b2 = b.m20;
+        out.m00 = a0*b0 + a3*b1 + a6*b2;
+        out.m10 = a1*b0 + a4*b1 + a7*b2;
+        out.m20 = a2*b0 + a5*b1 + a8*b2;
+        b0 = b.m01;
+        b1 = b.m11;
+        b2 = b.m21;
+        out.m01 = a0*b0 + a3*b1 + a6*b2;
+        out.m11 = a1*b0 + a4*b1 + a7*b2;
+        out.m21 = a2*b0 + a5*b1 + a8*b2;
+        b0 = b.m02;
+        b1 = b.m12;
+        b2 = b.m22;
+        out.m02 = a0*b0 + a3*b1 + a6*b2;
+        out.m12 = a1*b0 + a4*b1 + a7*b2;
+        out.m22 = a2*b0 + a5*b1 + a8*b2;
+    }
+
+
+    public static void mult( Mat3d a, Vec3d b, Vec3d out ) {
+        double t0 = a.m00*b.x + a.m01*b.y + a.m02*b.z;
+        double t1 = a.m10*b.x + a.m11*b.y + a.m12*b.z;
+        double t2 = a.m20*b.x + a.m21*b.y + a.m22*b.z;
+        out.x = t0;
+        out.y = t1;
+        out.z = t2;
+    }
+
+
+    public static void mult( Mat3d a, Vec4d b, Vec4d out ) {
+        double t0 = a.m00*b.x + a.m01*b.y + a.m02*b.z;
+        double t1 = a.m10*b.x + a.m11*b.y + a.m12*b.z;
+        double t2 = a.m20*b.x + a.m21*b.y + a.m22*b.z;
+        out.x = t0;
+        out.y = t1;
+        out.z = t2;
+        out.w = b.w;
+    }
+
+
+    public static void multAdd( double sa, Mat3d a, double sb, Mat3d b, Mat3d out ) {
+        out.m00 = sa * a.m00 + sb * b.m00;
+        out.m10 = sa * a.m10 + sb * b.m10;
+        out.m20 = sa * a.m20 + sb * b.m20;
+        out.m01 = sa * a.m01 + sb * b.m01;
+        out.m11 = sa * a.m11 + sb * b.m11;
+        out.m21 = sa * a.m21 + sb * b.m21;
+        out.m02 = sa * a.m02 + sb * b.m02;
+        out.m12 = sa * a.m12 + sb * b.m12;
+        out.m22 = sa * a.m22 + sb * b.m22;
+    }
+
+    /**
+     * @param mat    Input matrix
+     * @param out    Array to hold inverted matrix on return.
+     * @return true if matrix determinant is not near zero and accurate invert was found.
+     */
+    public static boolean invert( Mat3d mat, Mat3d out ) {
+        double c00 = mat.m11 * mat.m22 - mat.m21 * mat.m12;
+        double c01 = mat.m20 * mat.m12 - mat.m10 * mat.m22;
+        double c02 = mat.m10 * mat.m21 - mat.m20 * mat.m11;
+        double c10 = mat.m21 * mat.m02 - mat.m01 * mat.m22;
+        double c11 = mat.m00 * mat.m22 - mat.m20 * mat.m02;
+        double c12 = mat.m20 * mat.m01 - mat.m00 * mat.m21;
+        double c20 = mat.m01 * mat.m12 - mat.m11 * mat.m02;
+        double c21 = mat.m10 * mat.m02 - mat.m00 * mat.m12;
+        double c22 = mat.m00 * mat.m11 - mat.m10 * mat.m01;
+
+        // Compute determinant
+        double invDet  = mat.m00 * c00 + mat.m01 * c01 + mat.m02 * c02;
+        // Check if invertible
+        boolean valid = invDet > SQRT_ABS_TOL || -invDet > SQRT_ABS_TOL;
+        // Invert determinant
+        invDet = 1.0 / invDet;
+
+        out.m00 = c00 * invDet;
+        out.m10 = c01 * invDet;
+        out.m20 = c02 * invDet;
+        out.m01 = c10 * invDet;
+        out.m11 = c11 * invDet;
+        out.m21 = c12 * invDet;
+        out.m02 = c20 * invDet;
+        out.m12 = c21 * invDet;
+        out.m22 = c22 * invDet;
+
+        return valid;
+    }
+
+
+    public static void transpose( Mat3d a, Mat3d out ) {
+        double a0 = a.m00;
+        double a1 = a.m10;
+        double a2 = a.m20;
+        double a3 = a.m01;
+        double a4 = a.m11;
+        double a5 = a.m21;
+        double a6 = a.m02;
+        double a7 = a.m12;
+        double a8 = a.m22;
+        out.m00 = a0;
+        out.m10 = a3;
+        out.m20 = a6;
+        out.m01 = a1;
+        out.m11 = a4;
+        out.m21 = a7;
+        out.m02 = a2;
+        out.m12 = a5;
+        out.m22 = a8;
+    }
+
+
+    public static double det( Mat3d mat ) {
+        return mat.m00 * ( mat.m11 * mat.m22 - mat.m21 * mat.m12 ) +
+               mat.m01 * ( mat.m20 * mat.m12 - mat.m10 * mat.m22 ) +
+               mat.m02 * ( mat.m10 * mat.m21 - mat.m20 * mat.m11 );
+    }
+
+
+    public static Mat3d identity3d() {
+        Mat3d ret = new Mat3d();
+        ret.m00 = 1;
+        ret.m11 = 1;
+        ret.m22 = 1;
+        return ret;
+    }
+
+
+    public static void identity( Mat3d out ) {
+        out.m00 = 1f;
+        out.m10 = 0f;
+        out.m20 = 0f;
+        out.m01 = 0f;
+        out.m11 = 1f;
+        out.m21 = 0f;
+        out.m02 = 0f;
+        out.m12 = 0f;
+        out.m22 = 1f;
+    }
+
+
+    public static void getScale( float sx, float sy, float sz, Mat3d out ) {
+        out.m00 = sx;
+        out.m10 = 0f;
+        out.m20 = 0f;
+        out.m01 = 0f;
+        out.m11 = sy;
+        out.m21 = 0f;
+        out.m02 = 0f;
+        out.m12 = 0f;
+        out.m22 = sz;
+    }
+
+
+    public static void scale( Mat3d mat, float sx, float sy, float sz, Mat3d out ) {
+        out.m00 = sx * mat.m00;
+        out.m10 = sx * mat.m10;
+        out.m20 = sx * mat.m20;
+        out.m01 = sy * mat.m01;
+        out.m11 = sy * mat.m11;
+        out.m21 = sy * mat.m21;
+        out.m02 = sz * mat.m02;
+        out.m12 = sz * mat.m12;
+        out.m22 = sz * mat.m22;
+    }
+
+
+    public static void preScale( float sx, float sy, float sz, Mat3d mat, Mat3d out ) {
+        out.m00 = sx * mat.m00;
+        out.m10 = sy * mat.m10;
+        out.m20 = sz * mat.m20;
+        out.m01 = sx * mat.m01;
+        out.m11 = sy * mat.m11;
+        out.m21 = sz * mat.m21;
+        out.m02 = sx * mat.m02;
+        out.m12 = sy * mat.m12;
+        out.m22 = sz * mat.m22;
+    }
+
+
+    public static void getRotation( float rads, float x, float y, float z, Mat3d out ) {
+        float c = (float)Math.cos( rads );
+        float s = (float)Math.sin( rads );
+
+        float sum = 1f / (float)Math.sqrt( x*x + y*y + z*z );
+        x *= sum;
+        y *= sum;
+        z *= sum;
+
+        out.m00 = x*x*(1-c)+c;
+        out.m10 = x*y*(1-c)+z*s;
+        out.m20 = x*z*(1-c)-y*s;
+
+        out.m01 = x*y*(1-c)-z*s;
+        out.m11 = y*y*(1-c)+c;
+        out.m21 = y*z*(1-c)+x*s;
+
+        out.m02 = x*z*(1-c)+y*s;
+        out.m12 = y*z*(1-c)-x*s;
+        out.m22 = z*z*(1-c)+c;
+    }
+
+    /**
+     * Multiplies matrix with axis-rotation.
+     *
+     * @param mat  Input matrix.
+     * @param rads Degree of  rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param out  receives output
+     */
+    public static void rotate( Mat3d mat, double rads, double x, double y, double z, Mat3d out ) {
+        final double c = Math.cos( rads );
+        final double s = Math.sin( rads );
+        final double invSum = 1.0 / Math.sqrt( x*x + y*y + z*z );
+        x *= invSum;
+        y *= invSum;
+        z *= invSum;
+
+        final double a00 = x*x*(1-c)+c;
+        final double a01 = x*y*(1-c)+z*s;
+        final double a02 = x*z*(1-c)-y*s;
+        final double a04 = x*y*(1-c)-z*s;
+        final double a05 = y*y*(1-c)+c;
+        final double a06 = y*z*(1-c)+x*s;
+        final double a08 = x*z*(1-c)+y*s;
+        final double a09 = y*z*(1-c)-x*s;
+        final double a10 = z*z*(1-c)+c;
+
+        double b0 = mat.m00;
+        double b1 = mat.m01;
+        double b2 = mat.m02;
+        out.m00 = a00*b0 + a01*b1 + a02*b2;
+        out.m01 = a04*b0 + a05*b1 + a06*b2;
+        out.m02 = a08*b0 + a09*b1 + a10*b2;
+        b0 = mat.m10;
+        b1 = mat.m11;
+        b2 = mat.m12;
+        out.m10 = a00*b0 + a01*b1 + a02*b2;
+        out.m11 = a04*b0 + a05*b1 + a06*b2;
+        out.m12 = a08*b0 + a09*b1 + a10*b2;
+        b0 = mat.m20;
+        b1 = mat.m21;
+        b2 = mat.m22;
+        out.m20 = a00*b0 + a01*b1 + a02*b2;
+        out.m21 = a04*b0 + a05*b1 + a06*b2;
+        out.m22 = a08*b0 + a09*b1 + a10*b2;
+    }
+
+    /**
+     * Multiplies axis-rotation with matrix.
+     *
+     * @param rads Degree of rotation.
+     * @param x    X-Coord of rotation axis.
+     * @param y    Y-Coord of rotation axis.
+     * @param z    Z-Coord of rotation axis.
+     * @param mat  Input matrix.
+     * @param out  receives output
+     */
+    public static void preRotate( double rads, double x, double y, double z, Mat3d mat, Mat3d out ) {
+        double c = Math.cos( rads );
+        double s = Math.sin( rads );
+        double sum = 1.0 / Math.sqrt( x * x + y * y + z * z );
+        x *= sum;
+        y *= sum;
+        z *= sum;
+
+        double a00 = x*x*(1-c)+c;
+        double a01 = x*y*(1-c)+z*s;
+        double a02 = x*z*(1-c)-y*s;
+        double a04 = x*y*(1-c)-z*s;
+        double a05 = y*y*(1-c)+c;
+        double a06 = y*z*(1-c)+x*s;
+        double a08 = x*z*(1-c)+y*s;
+        double a09 = y*z*(1-c)-x*s;
+        double a10 = z*z*(1-c)+c;
+        double b0 = mat.m00;
+        double b1 = mat.m10;
+        double b2 = mat.m20;
+        out.m00 = a00*b0 + a04*b1 + a08*b2;
+        out.m10 = a01*b0 + a05*b1 + a09*b2;
+        out.m20 = a02*b0 + a06*b1 + a10*b2;
+        b0 = mat.m01;
+        b1 = mat.m11;
+        b2 = mat.m21;
+        out.m01 = a00*b0 + a04*b1 + a08*b2;
+        out.m11 = a01*b0 + a05*b1 + a09*b2;
+        out.m21 = a02*b0 + a06*b1 + a10*b2;
+        b0 = mat.m02;
+        b1 = mat.m12;
+        b2 = mat.m22;
+        out.m02 = a00*b0 + a04*b1 + a08*b2;
+        out.m12 = a01*b0 + a05*b1 + a09*b2;
+        out.m22 = a02*b0 + a06*b1 + a10*b2;
+    }
+
+    /**
+     * Removes any getTranslation/scaling3/skew or other non-rotation3
+     * transformations from a matrix.
+     *
+     * @param mat 3x3 homography matrix to turn into strict rotation3 matrix.
+     */
+    public static void normalizeRotationMatrix( Mat3d mat ) {
+        double d;
+
+        //Normalize length of X-axis.
+        d = Math.sqrt( mat.m00 * mat.m00 + mat.m10 * mat.m10 + mat.m20 * mat.m20 );
+        if( d > FSQRT_ABS_TOL || d > -FSQRT_ABS_TOL ) {
+            d = 1f / d;
+            mat.m00 *= d;
+            mat.m10 *= d;
+            mat.m20 *= d;
+        } else {
+            mat.m00 = 1;
+            mat.m10 = 0;
+            mat.m20 = 0;
+        }
+
+        //Orthogonalize Y-axis to X-axis
+        d = mat.m00 * mat.m01 + mat.m10 * mat.m11 + mat.m20 * mat.m21;
+        mat.m01 -= d * mat.m00;
+        mat.m11 -= d * mat.m10;
+        mat.m21 -= d * mat.m20;
+
+        //Normalize Y-axis.
+        d = Math.sqrt( mat.m01 * mat.m01 + mat.m11 * mat.m11 + mat.m21 * mat.m21 );
+        if( d > FSQRT_ABS_TOL || d > -FSQRT_ABS_TOL ) {
+            d = 1.0f / d;
+            mat.m01 *= d;
+            mat.m11 *= d;
+            mat.m21 *= d;
+        } else {
+            Vec3d ortho = new Vec3d();
+            Vec.chooseOrtho( mat.m00, mat.m10, mat.m20, ortho );
+            mat.m01 = ortho.x;
+            mat.m11 = ortho.y;
+            mat.m21 = ortho.z;
+        }
+
+        //Compute Z-axis
+        mat.m02 = mat.m10 * mat.m21 - mat.m20 * mat.m11;
+        mat.m12 = mat.m20 * mat.m01 - mat.m00 * mat.m21;
+        mat.m22 = mat.m00 * mat.m11 - mat.m10 * mat.m01;
+    }
+
+
+    public static void basisVecsToRotation( Vec3d x, Vec3d y, Mat3d out ) {
+        out.m00 = x.x;
+        out.m10 = x.y;
+        out.m20 = x.z;
+        out.m01 = y.x;
+        out.m11 = y.y;
+        out.m21 = y.z;
+        out.m02 = x.y * y.z - y.y * x.z;
+        out.m12 = x.z * y.x - y.z * x.x;
+        out.m22 = x.x * y.y - y.x * x.y;
+    }
+
+
+    public static void basisVecsToRotation( Vec3d x, Vec3d y, Vec3d z, Mat3d out ) {
+        out.m00 = x.x;
+        out.m10 = x.y;
+        out.m20 = x.z;
+        out.m01 = y.x;
+        out.m11 = y.y;
+        out.m21 = y.z;
+        out.m02 = z.x;
+        out.m12 = z.y;
+        out.m22 = z.z;
+    }
+
+    /**
+     * Computes spherical interpolation on two rotation matrices.
+     *
+     * @see bits.vec.Quat#slerp
+     *
+     * @param rotA  Rotation matrix
+     * @param rotB  Rotation matrix
+     * @param t     Interpolation parameter. 0 = {@code rotA}, 1 = {@code rotB}, 0.5 = halfway between.
+     * @param workA Workspace
+     * @param workB Workspace
+     * @param out   Holds interpolated rotation on output.
+     */
+    public static void slerp( Mat3d rotA, Mat3d rotB, double t, Quatd workA, Quatd workB, Mat3d out ) {
+        Quat.matToQuat( rotA, workA );
+        Quat.matToQuat( rotB, workB );
+        Quat.slerp( workA, workB, t, workA );
+        Quat.quatToMat( workA, out );
+    }
+
+
+    public static String format( Mat3d mat ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "[" );
+        sb.append( String.format( Vec.FORMAT3, mat.m00, mat.m01, mat.m02 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT3, mat.m10, mat.m11, mat.m12 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT3, mat.m20, mat.m21, mat.m22 ) );
+        sb.append( "]");
+        return sb.toString();
+    }
+
+
+    public static boolean isNaN( Mat3d mat ) {
+        return Double.isNaN( mat.m00 ) ||
+               Double.isNaN( mat.m10 ) ||
+               Double.isNaN( mat.m20 ) ||
+               Double.isNaN( mat.m01 ) ||
+               Double.isNaN( mat.m11 ) ||
+               Double.isNaN( mat.m21 ) ||
+               Double.isNaN( mat.m02 ) ||
+               Double.isNaN( mat.m12 ) ||
+               Double.isNaN( mat.m22 );
+    }
+
+
+    
+    //=== MAT4D Functions ========================================
+    
+    /**
+     * Multiplies two matrices.
+     *
+     * @param a   Size-4 matrix.
+     * @param b   Size-4 matrix.
+     * @param out Size-4 matrix. On return, holds <tt>a * b</tt>. May be same array as <tt>a</tt> or <tt>b</tt>.
+     */
+    public static void mult( Mat4d a, Mat4d b, Mat4d out ) {
+        // I tested many configurations for multiplication.
+        // This one was the fastest as well as avoids array aliasing without branching.
+        double a00 = a.m00;
+        double a10 = a.m10;
+        double a20 = a.m20;
+        double a30 = a.m30;
+        double a01 = a.m01;
+        double a11 = a.m11;
+        double a21 = a.m21;
+        double a31 = a.m31;
+        double a02 = a.m02;
+        double a12 = a.m12;
+        double a22 = a.m22;
+        double a32 = a.m32;
+        double a03 = a.m03;
+        double a13 = a.m13;
+        double a23 = a.m23;
+        double a33 = a.m33;
+        double b0 = b.m00;
+        double b1 = b.m10;
+        double b2 = b.m20;
+        double b3 = b.m30;
+        out.m00 = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+        out.m10 = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+        out.m20 = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+        out.m30 = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+        b0 = b.m01;
+        b1 = b.m11;
+        b2 = b.m21;
+        b3 = b.m31;
+        out.m01 = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+        out.m11 = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+        out.m21 = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+        out.m31 = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+        b0 = b.m02;
+        b1 = b.m12;
+        b2 = b.m22;
+        b3 = b.m32;
+        out.m02 = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+        out.m12 = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+        out.m22 = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+        out.m32 = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+        b0 = b.m03;
+        b1 = b.m13;
+        b2 = b.m23;
+        b3 = b.m33;
+        out.m03 = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+        out.m13 = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+        out.m23 = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+        out.m33 = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    }
+
+    /**
+     * Multiplies two matrices.
+     *
+     * @param a   Size-4 matrix.
+     * @param b   Size-3 matrix.
+     * @param out Size-4 matrix. On return, holds <tt>a * b</tt>. May be same array as <tt>a</tt> or <tt>b</tt>.
+     */
+    public static void mult( Mat4d a, Mat3d b, Mat4d out ) {
+        double a00 = a.m00;
+        double a10 = a.m10;
+        double a20 = a.m20;
+        double a30 = a.m30;
+        double a01 = a.m01;
+        double a11 = a.m11;
+        double a21 = a.m21;
+        double a31 = a.m31;
+        double a02 = a.m02;
+        double a12 = a.m12;
+        double a22 = a.m22;
+        double a32 = a.m32;
+        double b0 = b.m00;
+        double b1 = b.m10;
+        double b2 = b.m20;
+        //double b3 = b.m30;
+        out.m00 = a00*b0 + a01*b1 + a02*b2;
+        out.m10 = a10*b0 + a11*b1 + a12*b2;
+        out.m20 = a20*b0 + a21*b1 + a22*b2;
+        out.m30 = a30*b0 + a31*b1 + a32*b2;
+        b0 = b.m01;
+        b1 = b.m11;
+        b2 = b.m21;
+        out.m01 = a00*b0 + a01*b1 + a02*b2;
+        out.m11 = a10*b0 + a11*b1 + a12*b2;
+        out.m21 = a20*b0 + a21*b1 + a22*b2;
+        out.m31 = a30*b0 + a31*b1 + a32*b2;
+        b0 = b.m02;
+        b1 = b.m12;
+        b2 = b.m22;
+        out.m02 = a00*b0 + a01*b1 + a02*b2;
+        out.m12 = a10*b0 + a11*b1 + a12*b2;
+        out.m22 = a20*b0 + a21*b1 + a22*b2;
+        out.m32 = a30*b0 + a31*b1 + a32*b2;
+        out.m03 = a.m03;
+        out.m13 = a.m13;
+        out.m23 = a.m23;
+        out.m33 = a.m33;
+    }
+
+    /**
+     * Multiplies two matrices.
+     *
+     * @param a   Size-4 matrix.
+     * @param b   Size-4 matrix.
+     * @param out Size-4 matrix. On return, holds <tt>a * b</tt>. May be same array as <tt>a</tt> or <tt>b</tt>.
+     */
+    public static void mult( Mat3d a, Mat4d b, Mat4d out ) {
+        double a00 = a.m00;
+        double a10 = a.m10;
+        double a20 = a.m20;
+        double a01 = a.m01;
+        double a11 = a.m11;
+        double a21 = a.m21;
+        double a02 = a.m02;
+        double a12 = a.m12;
+        double a22 = a.m22;
+        double b0 = b.m00;
+        double b1 = b.m10;
+        double b2 = b.m20;
+        out.m00 = a00*b0 + a01*b1 + a02*b2;
+        out.m10 = a10*b0 + a11*b1 + a12*b2;
+        out.m20 = a20*b0 + a21*b1 + a22*b2;
+        out.m30 = b.m30;
+        b0 = b.m01;
+        b1 = b.m11;
+        b2 = b.m21;
+        out.m01 = a00*b0 + a01*b1 + a02*b2;
+        out.m11 = a10*b0 + a11*b1 + a12*b2;
+        out.m21 = a20*b0 + a21*b1 + a22*b2;
+        out.m31 = b.m31;
+        b0 = b.m02;
+        b1 = b.m12;
+        b2 = b.m22;
+        out.m02 = a00*b0 + a01*b1 + a02*b2;
+        out.m12 = a10*b0 + a11*b1 + a12*b2;
+        out.m22 = a20*b0 + a21*b1 + a22*b2;
+        out.m32 = b.m32;
+        b0 = b.m03;
+        b1 = b.m13;
+        b2 = b.m23;
+        out.m03 = a00*b0 + a01*b1 + a02*b2;
+        out.m13 = a10*b0 + a11*b1 + a12*b2;
+        out.m23 = a20*b0 + a21*b1 + a22*b2;
+        out.m33 = b.m33;
+    }
+
+
+    public static void mult( Mat4d a, Vec3d b, Vec3d out ) {
+        double b0 = b.x;
+        double b1 = b.y;
+        double b2 = b.z;
+        double x = a.m00*b0 + a.m01*b1 + a.m02*b2 + a.m03;
+        double y = a.m10*b0 + a.m11*b1 + a.m12*b2 + a.m13;
+        double z = a.m20*b0 + a.m21*b1 + a.m22*b2 + a.m23;
+        double w = a.m30*b0 + a.m31*b1 + a.m32*b2 + a.m33;
+        w = 1.0f / w;
+        out.x = x * w;
+        out.y = y * w;
+        out.z = z * w;
+    }
+
+
+    public static void mult( Mat4d a, Vec4d b, Vec4d out ) {
+        double t0 = a.m00*b.x + a.m01*b.y + a.m02*b.z + a.m03*b.w;
+        double t1 = a.m10*b.x + a.m11*b.y + a.m12*b.z + a.m13*b.w;
+        double t2 = a.m20*b.x + a.m21*b.y + a.m22*b.z + a.m23*b.w;
+        double t3 = a.m30*b.x + a.m31*b.y + a.m32*b.z + a.m33*b.w;
+        out.x = t0;
+        out.y = t1;
+        out.z = t2;
+        out.w = t3;
+    }
+
+
+    public static void multAdd( double sa, Mat4d a, double sb, Mat4d b, Mat4d out ) {
+        out.m00 = sa * a.m00 + sb * b.m00;
+        out.m10 = sa * a.m10 + sb * b.m10;
+        out.m20 = sa * a.m20 + sb * b.m20;
+        out.m30 = sa * a.m30 + sb * b.m30;
+        out.m01 = sa * a.m01 + sb * b.m01;
+        out.m11 = sa * a.m11 + sb * b.m11;
+        out.m21 = sa * a.m21 + sb * b.m21;
+        out.m31 = sa * a.m31 + sb * b.m31;
+        out.m02 = sa * a.m02 + sb * b.m02;
+        out.m12 = sa * a.m12 + sb * b.m12;
+        out.m22 = sa * a.m22 + sb * b.m22;
+        out.m32 = sa * a.m32 + sb * b.m32;
+        out.m03 = sa * a.m03 + sb * b.m03;
+        out.m13 = sa * a.m13 + sb * b.m13;
+        out.m23 = sa * a.m23 + sb * b.m23;
+        out.m33 = sa * a.m33 + sb * b.m33;
+    }
+
+    /**
+     * @param mat Input matrix
+     * @return determinent of matrix
+     */
+    public static double det( Mat4d mat ) {
+        double s0 = ( mat.m00 * mat.m11 - mat.m10 * mat.m01 ) * ( mat.m22 * mat.m33 - mat.m32 * mat.m23 );
+        double s1 = ( mat.m00 * mat.m12 - mat.m10 * mat.m02 ) * ( mat.m21 * mat.m33 - mat.m31 * mat.m23 );
+        double s2 = ( mat.m00 * mat.m13 - mat.m10 * mat.m03 ) * ( mat.m21 * mat.m32 - mat.m31 * mat.m22 );
+        double s3 = ( mat.m01 * mat.m12 - mat.m11 * mat.m02 ) * ( mat.m20 * mat.m33 - mat.m30 * mat.m23 );
+        double s4 = ( mat.m01 * mat.m13 - mat.m11 * mat.m03 ) * ( mat.m20 * mat.m32 - mat.m30 * mat.m22 );
+        double s5 = ( mat.m02 * mat.m13 - mat.m12 * mat.m03 ) * ( mat.m20 * mat.m31 - mat.m30 * mat.m21 );
+        return s0 - s1 + s2 + s3 - s4 + s5;
+    }
+
+    /**
+     * @param mat Input matrix
+     * @param out Array to hold inverted matrix on return.
+     * @return true if matrix determinant is not near zero and accurate invert was found.
+     */
+    public static boolean invert( Mat4d mat, Mat4d out ) {
+        double s0 = mat.m00 * mat.m11 - mat.m10 * mat.m01;
+        double s1 = mat.m00 * mat.m12 - mat.m10 * mat.m02;
+        double s2 = mat.m00 * mat.m13 - mat.m10 * mat.m03;
+        double s3 = mat.m01 * mat.m12 - mat.m11 * mat.m02;
+        double s4 = mat.m01 * mat.m13 - mat.m11 * mat.m03;
+        double s5 = mat.m02 * mat.m13 - mat.m12 * mat.m03;
+
+        double c5 = mat.m22 * mat.m33 - mat.m32 * mat.m23;
+        double c4 = mat.m21 * mat.m33 - mat.m31 * mat.m23;
+        double c3 = mat.m21 * mat.m32 - mat.m31 * mat.m22;
+        double c2 = mat.m20 * mat.m33 - mat.m30 * mat.m23;
+        double c1 = mat.m20 * mat.m32 - mat.m30 * mat.m22;
+        double c0 = mat.m20 * mat.m31 - mat.m30 * mat.m21;
+
+        // Compute determinant
+        double invdet = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
+        // Check if invertible.
+        boolean ret  = invdet > SQRT_ABS_TOL || -invdet > SQRT_ABS_TOL;
+        // Invert determinant
+        invdet = 1.0f / invdet;
+
+        double t00 = ( mat.m11 * c5 - mat.m12 * c4 + mat.m13 * c3) * invdet;
+        double t01 = (-mat.m10 * c5 + mat.m12 * c2 - mat.m13 * c1) * invdet;
+        double t02 = ( mat.m10 * c4 - mat.m11 * c2 + mat.m13 * c0) * invdet;
+        double t03 = (-mat.m10 * c3 + mat.m11 * c1 - mat.m12 * c0) * invdet;
+        double t04 = (-mat.m01 * c5 + mat.m02 * c4 - mat.m03 * c3) * invdet;
+        double t05 = ( mat.m00 * c5 - mat.m02 * c2 + mat.m03 * c1) * invdet;
+        double t06 = (-mat.m00 * c4 + mat.m01 * c2 - mat.m03 * c0) * invdet;
+        double t07 = ( mat.m00 * c3 - mat.m01 * c1 + mat.m02 * c0) * invdet;
+        double t08 = ( mat.m31 * s5 - mat.m32 * s4 + mat.m33 * s3) * invdet;
+        double t09 = (-mat.m30 * s5 + mat.m32 * s2 - mat.m33 * s1) * invdet;
+        double t10 = ( mat.m30 * s4 - mat.m31 * s2 + mat.m33 * s0) * invdet;
+        double t11 = (-mat.m30 * s3 + mat.m31 * s1 - mat.m32 * s0) * invdet;
+        double t12 = (-mat.m21 * s5 + mat.m22 * s4 - mat.m23 * s3) * invdet;
+        double t13 = ( mat.m20 * s5 - mat.m22 * s2 + mat.m23 * s1) * invdet;
+        double t14 = (-mat.m20 * s4 + mat.m21 * s2 - mat.m23 * s0) * invdet;
+        double t15 = ( mat.m20 * s3 - mat.m21 * s1 + mat.m22 * s0) * invdet;
+
+        out.m00 = t00;
+        out.m10 = t01;
+        out.m20 = t02;
+        out.m30 = t03;
+        out.m01 = t04;
+        out.m11 = t05;
+        out.m21 = t06;
+        out.m31 = t07;
+        out.m02 = t08;
+        out.m12 = t09;
+        out.m22 = t10;
+        out.m32 = t11;
+        out.m03 = t12;
+        out.m13 = t13;
+        out.m23 = t14;
+        out.m33 = t15;
+
+        return ret;
+    }
+
+
+    public static void transpose( Mat4d mat, Mat4d out ) {
+        // About 15% faster without local copies.
+        double a00 = mat.m00;
+        double a01 = mat.m10;
+        double a02 = mat.m20;
+        double a03 = mat.m30;
+        double a04 = mat.m01;
+        double a05 = mat.m11;
+        double a06 = mat.m21;
+        double a07 = mat.m31;
+        double a08 = mat.m02;
+        double a09 = mat.m12;
+        double a10 = mat.m22;
+        double a11 = mat.m32;
+        double a12 = mat.m03;
+        double a13 = mat.m13;
+        double a14 = mat.m23;
+        double a15 = mat.m33;
+
+        out.m00 = a00;
+        out.m10 = a04;
+        out.m20 = a08;
+        out.m30 = a12;
+
+        out.m01 = a01;
+        out.m11 = a05;
+        out.m21 = a09;
+        out.m31 = a13;
+
+        out.m02 = a02;
+        out.m12 = a06;
+        out.m22 = a10;
+        out.m32 = a14;
+
+        out.m03 = a03;
+        out.m13 = a07;
+        out.m23 = a11;
+        out.m33 = a15;
+    }
+
+
+    public static void identity( Mat4d out ) {
+        out.m00 = 1;  out.m01 = 0;  out.m02 = 0;  out.m03 = 0;
+        out.m10 = 0;  out.m11 = 1;  out.m12 = 0;  out.m13 = 0;
+        out.m20 = 0;  out.m21 = 0;  out.m22 = 1;  out.m23 = 0;
+        out.m30 = 0;  out.m31 = 0;  out.m32 = 0;  out.m33 = 1;
+    }
+
+    /**
+     * Computes a getRotate4 matrix.
+     *
+     * @param radians Degree of getRotate4.
+     * @param x       X-Coord of getRotate4 axis.
+     * @param y       Y-Coord of getRotate4 axis.
+     * @param z       Z-Coord of getRotate4 axis.
+     * @param out     Length-16 array to hold output on return.
+     */
+    public static void getRotation( double radians, double x, double y, double z, Mat4d out ) {
+        double c = Math.cos( radians );
+        double s = Math.sin( radians );
+        double sum = 1f / Math.sqrt( x*x + y*y + z*z );
+        x *= sum;
+        y *= sum;
+        z *= sum;
+
+        out.m00 = x*x*(1-c)+c;
+        out.m10 = x*y*(1-c)+z*s;
+        out.m20 = x*z*(1-c)-y*s;
+        out.m30 = 0;
+
+        out.m01 = x*y*(1-c)-z*s;
+        out.m11 = y*y*(1-c)+c;
+        out.m21 = y*z*(1-c)+x*s;
+        out.m31 = 0;
+
+        out.m02 = x*z*(1-c)+y*s;
+        out.m12 = y*z*(1-c)-x*s;
+        out.m22 = z*z*(1-c)+c;
+        out.m32 = 0.0f;
+
+        out.m03 = 0;
+        out.m13 = 0;
+        out.m23 = 0;
+        out.m33 = 1;
+    }
+
+    /**
+     * Multiplies an arbitrary matrix with a getRotate4 matrix.
+     *
+     * @param mat     Input matrix.
+     * @param radians Degree of getRotate4.
+     * @param x       X-Coord of getRotate4 axis.
+     * @param y       Y-Coord of getRotate4 axis.
+     * @param z       Z-Coord of getRotate4 axis.
+     * @param out     Length-16 array to hold output on return.
+     */
+    public static void rotate( Mat4d mat, double radians, double x, double y, double z, Mat4d out ) {
+        final double c = Math.cos( radians );
+        final double s = Math.sin( radians );
+        final double invSum = 1f / Math.sqrt( x*x + y*y + z*z );
+        x *= invSum;
+        y *= invSum;
+        z *= invSum;
+
+        final double a00 = x*x*(1-c)+c;
+        final double a01 = x*y*(1-c)+z*s;
+        final double a02 = x*z*(1-c)-y*s;
+        final double a04 = x*y*(1-c)-z*s;
+        final double a05 = y*y*(1-c)+c;
+        final double a06 = y*z*(1-c)+x*s;
+        final double a08 = x*z*(1-c)+y*s;
+        final double a09 = y*z*(1-c)-x*s;
+        final double a10 = z*z*(1-c)+c;
+
+        double b0 = mat.m00;
+        double b1 = mat.m01;
+        double b2 = mat.m02;
+        double b3 = mat.m03;
+        out.m00 = a00*b0 + a01*b1 + a02*b2;
+        out.m01 = a04*b0 + a05*b1 + a06*b2;
+        out.m02 = a08*b0 + a09*b1 + a10*b2;
+        out.m03 = b3;
+        b0 = mat.m10;
+        b1 = mat.m11;
+        b2 = mat.m12;
+        b3 = mat.m13;
+        out.m10 = a00*b0 + a01*b1 + a02*b2;
+        out.m11 = a04*b0 + a05*b1 + a06*b2;
+        out.m12 = a08*b0 + a09*b1 + a10*b2;
+        out.m13 = b3;
+        b0 = mat.m20;
+        b1 = mat.m21;
+        b2 = mat.m22;
+        b3 = mat.m23;
+        out.m20 = a00*b0 + a01*b1 + a02*b2;
+        out.m21 = a04*b0 + a05*b1 + a06*b2;
+        out.m22 = a08*b0 + a09*b1 + a10*b2;
+        out.m23 = b3;
+        b0 = mat.m30;
+        b1 = mat.m31;
+        b2 = mat.m32;
+        b3 = mat.m33;
+        out.m30 = a00*b0 + a01*b1 + a02*b2;
+        out.m31 = a04*b0 + a05*b1 + a06*b2;
+        out.m32 = a08*b0 + a09*b1 + a10*b2;
+        out.m33 = b3;
+    }
+
+    /**
+     * Multiplies a getRotate4 matrix with an arbitrary matrix.
+     *
+     * @param radians Degree of getRotate4.
+     * @param x       X-Coord of getRotate4 axis.
+     * @param y       Y-Coord of getRotate4 axis.
+     * @param z       Z-Coord of getRotate4 axis.
+     * @param mat     Input matrix.
+     * @param out     Length-16 array to hold output on return.
+     */
+    public static void preRotate( double radians, double x, double y, double z, Mat4d mat, Mat4d out ) {
+        double c = Math.cos( radians );
+        double s = Math.sin( radians );
+        double sum = 1f / Math.sqrt( x*x + y*y + z*z );
+        x *= sum;
+        y *= sum;
+        z *= sum;
+
+        double a00 = x*x*(1-c)+c;
+        double a01 = x*y*(1-c)+z*s;
+        double a02 = x*z*(1-c)-y*s;
+        double a04 = x*y*(1-c)-z*s;
+        double a05 = y*y*(1-c)+c;
+        double a06 = y*z*(1-c)+x*s;
+        double a08 = x*z*(1-c)+y*s;
+        double a09 = y*z*(1-c)-x*s;
+        double a10 = z*z*(1-c)+c;
+        double b0 = mat.m00;
+        double b1 = mat.m10;
+        double b2 = mat.m20;
+        double b3 = mat.m30;
+        out.m00 = a00*b0 + a04*b1 + a08*b2;
+        out.m10 = a01*b0 + a05*b1 + a09*b2;
+        out.m20 = a02*b0 + a06*b1 + a10*b2;
+        out.m30 = b3;
+        b0 = mat.m01;
+        b1 = mat.m11;
+        b2 = mat.m21;
+        b3 = mat.m31;
+        out.m01 = a00*b0 + a04*b1 + a08*b2;
+        out.m11 = a01*b0 + a05*b1 + a09*b2;
+        out.m21 = a02*b0 + a06*b1 + a10*b2;
+        out.m31 = b3;
+        b0 = mat.m02;
+        b1 = mat.m12;
+        b2 = mat.m22;
+        b3 = mat.m32;
+        out.m02 = a00*b0 + a04*b1 + a08*b2;
+        out.m12 = a01*b0 + a05*b1 + a09*b2;
+        out.m22 = a02*b0 + a06*b1 + a10*b2;
+        out.m32 = b3;
+        b0 = mat.m03;
+        b1 = mat.m13;
+        b2 = mat.m23;
+        b3 = mat.m33;
+        out.m03 = a00*b0 + a04*b1 + a08*b2;
+        out.m13 = a01*b0 + a05*b1 + a09*b2;
+        out.m23 = a02*b0 + a06*b1 + a10*b2;
+        out.m33 = b3;
+    }
+
+
+    public static void getScale( double sx, double sy, double sz, double sw, Mat4d out ) {
+        out.m00 = sx;
+        out.m10 = 0.0f;
+        out.m20 = 0.0f;
+        out.m30 = 0.0f;
+        out.m01 = 0.0f;
+        out.m11 = sy;
+        out.m21 = 0.0f;
+        out.m31 = 0.0f;
+        out.m02 = 0.0f;
+        out.m12 = 0.0f;
+        out.m22 = sz;
+        out.m32 = 0.0f;
+        out.m03 = 0.0f;
+        out.m13 = 0.0f;
+        out.m23 = 0.0f;
+        out.m33 = sw;
+    }
+
+
+    public static void scale( Mat4d mat, double sx, double sy, double sz, double sw, Mat4d out ) {
+        out.m00 = sx * mat.m00;
+        out.m10 = sx * mat.m10;
+        out.m20 = sx * mat.m20;
+        out.m30 = sx * mat.m30;
+        out.m01 = sy * mat.m01;
+        out.m11 = sy * mat.m11;
+        out.m21 = sy * mat.m21;
+        out.m31 = sy * mat.m31;
+        out.m02 = sz * mat.m02;
+        out.m12 = sz * mat.m12;
+        out.m22 = sz * mat.m22;
+        out.m32 = sz * mat.m32;
+        out.m03 = sw * mat.m03;
+        out.m13 = sw * mat.m13;
+        out.m23 = sw * mat.m23;
+        out.m33 = sw * mat.m33;
+    }
+
+
+    public static void preScale( double sx, double sy, double sz, double sw, Mat4d mat, Mat4d out ) {
+        out.m00 = sx * mat.m00;
+        out.m10 = sy * mat.m10;
+        out.m20 = sz * mat.m20;
+        out.m30 = sw * mat.m30;
+        out.m01 = sx * mat.m01;
+        out.m11 = sy * mat.m11;
+        out.m21 = sz * mat.m21;
+        out.m31 = sw * mat.m31;
+        out.m02 = sx * mat.m02;
+        out.m12 = sy * mat.m12;
+        out.m22 = sz * mat.m22;
+        out.m32 = sw * mat.m32;
+        out.m03 = sx * mat.m03;
+        out.m13 = sy * mat.m13;
+        out.m23 = sz * mat.m23;
+        out.m33 = sw * mat.m33;
+    }
+
+
+    public static void getTranslation( double tx, double ty, double tz, Mat4d out ) {
+        out.m00 = 1;
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+        out.m01 = 0;
+        out.m11 = 1;
+        out.m21 = 0;
+        out.m31 = 0;
+        out.m02 = 0;
+        out.m12 = 0;
+        out.m22 = 1;
+        out.m32 = 0;
+        out.m03 = tx;
+        out.m13 = ty;
+        out.m23 = tz;
+        out.m33 = 1;
+    }
+
+
+    public static void translate( Mat4d mat, double tx, double ty, double tz, Mat4d out ) {
+        double b0 = mat.m00;
+        double b1 = mat.m01;
+        double b2 = mat.m02;
+        double b3 = mat.m03;
+        out.m00 = b0;
+        out.m01 = b1;
+        out.m02 = b2;
+        out.m03 = tx * b0 + ty * b1 + tz * b2 + b3;
+        b0 = mat.m10;
+        b1 = mat.m11;
+        b2 = mat.m12;
+        b3 = mat.m13;
+        out.m10 = b0;
+        out.m11 = b1;
+        out.m12 = b2;
+        out.m13 = tx * b0 + ty * b1 + tz * b2 + b3;
+        b0 = mat.m20;
+        b1 = mat.m21;
+        b2 = mat.m22;
+        b3 = mat.m23;
+        out.m20 = b0;
+        out.m21 = b1;
+        out.m22 = b2;
+        out.m23 = tx * b0 + ty * b1 + tz * b2 + b3;
+        b0 = mat.m30;
+        b1 = mat.m31;
+        b2 = mat.m32;
+        b3 = mat.m33;
+        out.m30 = b0;
+        out.m31 = b1;
+        out.m32 = b2;
+        out.m33 = tx * b0 + ty * b1 + tz * b2 + b3;
+    }
+
+
+    public static void preTranslate( double tx, double ty, double tz, Mat4d mat, Mat4d out ) {
+        double b0 = mat.m00;
+        double b1 = mat.m10;
+        double b2 = mat.m20;
+        double b3 = mat.m30;
+        out.m00 = b0 + tx * b3;
+        out.m10 = b1 + ty * b3;
+        out.m20 = b2 + tz * b3;
+        out.m30 = b3;
+        b0 = mat.m01;
+        b1 = mat.m11;
+        b2 = mat.m21;
+        b3 = mat.m31;
+        out.m01 = b0 + tx * b3;
+        out.m11 = b1 + ty * b3;
+        out.m21 = b2 + tz * b3;
+        out.m31 = b3;
+        b0 = mat.m02;
+        b1 = mat.m12;
+        b2 = mat.m22;
+        b3 = mat.m32;
+        out.m02 = b0 + tx * b3;
+        out.m12 = b1 + ty * b3;
+        out.m22 = b2 + tz * b3;
+        out.m32 = b3;
+        b0 = mat.m03;
+        b1 = mat.m13;
+        b2 = mat.m23;
+        b3 = mat.m33;
+        out.m03 = b0 + tx * b3;
+        out.m13 = b1 + ty * b3;
+        out.m23 = b2 + tz * b3;
+        out.m33 = b3;
+    }
+
+
+    public static void multFrustum( Mat4d mat, double left, double right, double bottom, double top, double near, double far, Mat4d out ) {
+        double a, b, c;
+
+        a = 2.0f * near / (right - left);
+        out.m00 = a * mat.m00;
+        out.m10 = a * mat.m10;
+        out.m20 = a * mat.m20;
+        out.m30 = a * mat.m30;
+
+        a = 2 * near / (top - bottom);
+        out.m01 = a * mat.m01;
+        out.m11 = a * mat.m11;
+        out.m21 = a * mat.m21;
+        out.m31 = a * mat.m31;
+
+        a = (right + left) / (right - left);
+        b = (top + bottom) / (top - bottom);
+        c = -(far + near) / (far - near);
+        out.m02 = a * mat.m00 + b * mat.m01 + c * mat.m02 - mat.m03;
+        out.m12 = a * mat.m10 + b * mat.m11 + c * mat.m12 - mat.m13;
+        out.m22 = a * mat.m20 + b * mat.m21 + c * mat.m22 - mat.m23;
+        out.m32 = a * mat.m30 + b * mat.m31 + c * mat.m32 - mat.m33;
+
+        a = -(2 * far * near) / (far - near);
+        out.m03 = a * mat.m03;
+        out.m13 = a * mat.m13;
+        out.m23 = a * mat.m23;
+        out.m33 = a * mat.m33;
+    }
+
+
+    public static void getFrustum( double left, double right, double bottom, double top, double near, double far, Mat4d out ) {
+        out.m00 = 2.0f * near / (right - left);
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+
+        out.m01 = 0;
+        out.m11 = 2 * near / (top - bottom);
+        out.m21 = 0;
+        out.m31 = 0;
+
+        out.m02 = (right + left) / (right - left);
+        out.m12 = (top + bottom) / (top - bottom);
+        out.m22 = -(far + near) / (far - near);
+        out.m32 = -1;
+
+        out.m03 = 0;
+        out.m13 = 0;
+        out.m23 = -(2 * far * near) / (far - near);
+        out.m33 = 0;
+    }
+
+
+    public static void multOrtho( Mat4d mat, double left, double right, double bottom, double top, double near, double far, Mat4d out ) {
+        double a, b, c;
+
+        a = 2f / ( right - left );
+        out.m00 = a * mat.m00;
+        out.m10 = a * mat.m10;
+        out.m20 = a * mat.m20;
+        out.m30 = a * mat.m30;
+
+        a = 2f / ( top - bottom );
+        out.m01 = a * mat.m01;
+        out.m11 = a * mat.m11;
+        out.m21 = a * mat.m21;
+        out.m31 = a * mat.m31;
+
+        a = -2.0f / (far - near);
+        out.m02 = a * mat.m02;
+        out.m12 = a * mat.m12;
+        out.m22 = a * mat.m22;
+        out.m32 = a * mat.m32;
+
+        a = -(right + left) / (right - left);
+        b = -(top + bottom) / (top - bottom);
+        c = -(far + near) / (far - near);
+
+        out.m03 = a * mat.m00 + b * mat.m01 + c * mat.m02 + mat.m03;
+        out.m13 = a * mat.m10 + b * mat.m11 + c * mat.m12 + mat.m13;
+        out.m23 = a * mat.m20 + b * mat.m21 + c * mat.m22 + mat.m23;
+        out.m33 = a * mat.m30 + b * mat.m31 + c * mat.m32 + mat.m33;
+    }
+
+
+    public static void getOrtho( double left, double right, double bottom, double top, double near, double far, Mat4d out ) {
+        out.m00 = 2.0f / (right - left);
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+
+        out.m01 = 0;
+        out.m11 = 2.0f / (top - bottom);
+        out.m21 = 0;
+        out.m31 = 0;
+
+        out.m02 = 0;
+        out.m12 = 0;
+        out.m22 = -2.0f / (far - near);
+        out.m32 = 0;
+
+        out.m03 = -(right + left) / (right - left);
+        out.m13 = -(top + bottom) / (top - bottom);
+        out.m23 = -(far + near) / (far - near);
+        out.m33 = 1;
+    }
+
+
+    public static void getViewport( double x, double y, double w, double h, Mat4d out ) {
+        out.m00 = 0.5f * w;
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+
+        out.m01 = 0;
+        out.m11 = 0.5f * h;
+        out.m21 = 0;
+        out.m31 = 0;
+
+        out.m02 = 0;
+        out.m12 = 0;
+        out.m22 = 1;
+        out.m32 = 0;
+
+        out.m03 = 0.5f * w + x;
+        out.m13 = 0.5f * h + y;
+        out.m23 = 0;
+        out.m33 = 1;
+    }
+
+
+    public static void getViewportDepth( double x, double y, double w, double h, double near, double far, Mat4d out ) {
+        out.m00 = 0.5f * w;
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+        out.m01 = 0;
+
+        out.m11 = 0.5f * h;
+        out.m21 = 0;
+        out.m31 = 0;
+
+        out.m02 = 0;
+        out.m12 = 0;
+        out.m22 = 0.5f * ( far - near );
+        out.m32 = 0;
+
+        out.m03 = 0.5f * w + x;
+        out.m13 = 0.5f * h + y;
+        out.m23 = 0.5f * ( far + near );
+        out.m33 = 1;
+    }
+
+
+    public static void lookAt( Mat4d eyeVec, Mat4d centerVec, Mat4d upVec, Mat4d outMat ) {
+        double fx  = centerVec.m00 - eyeVec.m00;
+        double fy  = centerVec.m10 - eyeVec.m10;
+        double fz  = centerVec.m20 - eyeVec.m20;
+        double len = ( 1.0 / Math.sqrt( fx * fx + fy * fy + fz * fz ) );
+        fx *= len;
+        fy *= len;
+        fz *= len;
+
+        double ux = upVec.m00;
+        double uy = upVec.m10;
+        double uz = upVec.m20;
+        len = ( 1.0 / Math.sqrt( ux * ux + uy * uy + uz * uz ) );
+        ux /= len;
+        uy /= len;
+        uz /= len;
+
+        double sx = fy * uz - fz * uy;
+        double sy = fz * ux - fx * uz;
+        double sz = fx * uy - fy * ux;
+
+        ux = sy * fz - sz * fy;
+        uy = sz * fx - sx * fz;
+        uz = sx * fy - sy * fx;
+
+        outMat.m00 = sx;
+        outMat.m10 = ux;
+        outMat.m20 = -fx;
+        outMat.m30 = 0;
+        outMat.m01 = sy;
+        outMat.m11 = uy;
+        outMat.m21 = -fy;
+        outMat.m31 = 0;
+        outMat.m02 = sz;
+        outMat.m12 = uz;
+        outMat.m22 = -fz;
+        outMat.m32 = 0;
+        outMat.m03 = -(sx * eyeVec.m00 + sy * eyeVec.m10 + sz * eyeVec.m20);
+        outMat.m13 = -(ux * eyeVec.m00 + uy * eyeVec.m10 + uz * eyeVec.m20);
+        outMat.m23 = fx * eyeVec.m00 + fy * eyeVec.m10 + fz * eyeVec.m20;
+        outMat.m33 = 1;
+    }
+
+
+    public static void viewport( double x, double y, double w, double h, Mat4d out ) {
+        out.m00 = w * 0.5f;
+        out.m10 = 0;
+        out.m20 = 0;
+        out.m30 = 0;
+
+        out.m01 = 0;
+        out.m11 = h * 0.5f;
+        out.m21 = 0;
+        out.m31 = 0;
+
+        out.m02 = 0;
+        out.m12 = 0;
+        out.m22 = 1;
+        out.m32 = 0;
+
+        out.m03 = w * 0.5f + x;
+        out.m13 = h * 0.5f + y;
+        out.m23 = 0;
+        out.m33 = 1;
+    }
+
+    /**
+     * Removes any getTranslate4/getScale4/skew or other non-getRotate4
+     * transformations from a matrix.
+     *
+     * @param mat 4x4 homography matrix to turn into strict getRotate4 matrix.
+     */
+    public static void normalizeRotationMatrix( Mat4d mat ) {
+        double d;
+
+        //Kill getTranslate4, scalings.
+        mat.m30 = 0;
+        mat.m31 = 0;
+        mat.m32 = 0;
+        mat.m03 = 0;
+        mat.m13 = 0;
+        mat.m23 = 0;
+        mat.m33 = 1;
+
+        //Normalize length of X-axis.
+        d = Math.sqrt( mat.m00 * mat.m00 + mat.m10 * mat.m10 + mat.m20 * mat.m20 );
+        if( d > SQRT_ABS_TOL || -d > SQRT_ABS_TOL ) {
+            d = 1f / d;
+            mat.m00 *= d;
+            mat.m10 *= d;
+            mat.m20 *= d;
+        }else{
+            mat.m00 = 1;
+            mat.m10 = 0;
+            mat.m20 = 0;
+        }
+
+        //Orthogonalize Y-axis to X-axis
+        d = mat.m00 * mat.m01 + mat.m10 * mat.m11 + mat.m20 * mat.m21;
+        mat.m01 -= d * mat.m00;
+        mat.m11 -= d * mat.m10;
+        mat.m21 -= d * mat.m20;
+
+        //Normalize Y-axis.
+        d = Math.sqrt( mat.m01 * mat.m01 + mat.m11 * mat.m11 + mat.m21 * mat.m21 );
+        if( d > SQRT_ABS_TOL || -d > SQRT_ABS_TOL ) {
+            d = 1.0f / d;
+            mat.m01 *= d;
+            mat.m11 *= d;
+            mat.m21 *= d;
+        }else{
+            Vec3d orth = new Vec3d();
+            Vec.chooseOrtho( mat.m00, mat.m10, mat.m20, orth );
+            mat.m01 = orth.x;
+            mat.m11 = orth.y;
+            mat.m21 = orth.z;
+        }
+
+        //Compute Z-axis
+        mat.m02 = mat.m10*mat.m21 - mat.m20*mat.m11;
+        mat.m12 = mat.m20*mat.m01 - mat.m00*mat.m21;
+        mat.m22 = mat.m00*mat.m11 - mat.m10*mat.m01;
+    }
+
+
+    public static void axesToTransform( Vec3d x, Vec3d y, Mat4d out ) {
+        Vec3d z = new Vec3d();
+        Vec.cross( x, y, z );
+        axesToTransform( x, y, z, out );
+    }
+
+
+    public static void axesToTransform( Vec3d x, Vec3d y, Vec3d z, Mat4d out ) {
+        out.m00 = x.x;
+        out.m10 = x.y;
+        out.m20 = x.z;
+        out.m30 = 0;
+        out.m01 = y.x;
+        out.m11 = y.y;
+        out.m21 = y.z;
+        out.m31 = 0;
+        out.m02 = z.x;
+        out.m12 = z.y;
+        out.m22 = z.z;
+        out.m32 = 0;
+        out.m03 = 0;
+        out.m13 = 0;
+        out.m23 = 0;
+        out.m33 = 1;
+    }
+
+    /**
+     * This method will adjust a getRotate4 matrix so that one of the basis vectors will
+     * be parallel to an axis.
+     *
+     * @param mat   Input getRotate4 matrix.
+     * @param basis Basis vector to align to axis. {@code 0 == x-basis, 1 == y-basis, 2 == z-basis}.
+     * @param out   Holds modified getRotate4 matrix on output.
+     */
+    public static void alignBasisVectorToAxis( Mat4d mat, int basis, Mat4d out ) {
+        Vec3d x;
+        Vec3d y;
+        Vec3d z;
+
+        switch( basis ) {
+        case 0:
+        {
+            // Clamp specified vector to nearest axis.
+            x = new Vec3d();
+            Vec.nearestAxis( mat.m00, mat.m10, mat.m20, x );
+            y = new Vec3d( mat.m01, mat.m11, mat.m21 );
+            z = new Vec3d( mat.m02, mat.m12, mat.m23 );
+
+            Vec.cross( x, y, z );
+            Vec.normalize( z );
+            Vec.cross( z, x, y );
+            break;
+        }
+        case 1:
+        {
+            // Clamp specified vector to nearest axis.
+            y = new Vec3d();
+            Vec.nearestAxis( mat.m01, mat.m11, mat.m21, y );
+            z = new Vec3d( mat.m02, mat.m12, mat.m22 );
+            x = new Vec3d( mat.m00, mat.m10, mat.m20 );
+
+            Vec.cross( y, x, z );
+            Vec.normalize( x );
+            Vec.cross( x, y, z );
+            break;
+        }
+        default:
+        {
+            // Clamp specified vector to nearest axis.
+            z = new Vec3d();
+            Vec.nearestAxis( mat.m02, mat.m12, mat.m22, z );
+            x = new Vec3d( mat.m00, mat.m10, mat.m20 );
+            y = new Vec3d( mat.m01, mat.m11, mat.m21 );
+
+            Vec.cross( z, x, y );
+            Vec.normalize( y );
+            Vec.cross( y, z, x );
+            break;
+        }}
+
+        axesToTransform( x, y, z, out );
+    }
+
+    /**
+     * Makes the smallest angular adjustment possible to a vector such that
+     * the resulting vector will lie inside the closed surface of a cone.
+     * In other words, after calling {@code clampToCone3},
+     * {@code ang3(vec, coneAxis) <= coneRads}.
+     *
+     * @param vec       Vector to clamp
+     * @param coneAxis  Axis of cone
+     * @param coneRads  Angle between axis and surface of cone.
+     * @param outVec    Vector with smallest possible angular distance from {@code vec} that lies inside cone.  May be {@code null}.
+     * @param outMat    Rotation matrix used to rotate4 vector onto cone.  May be {@code null}
+     * @return true if any adjustment made, false if output is identical to input
+     */
+    public static boolean clampToCone( Vec3d vec, Vec3d coneAxis, double coneRads, Vec3d outVec, Mat4d outMat ) {
+        double cosAng = Vec.cosAng( vec, coneAxis );
+        double ang    = Math.acos( cosAng );
+
+        if( ang != ang ) {
+            ang = cosAng > 0.0f ? 0.0f : Math.PI;
+        }
+        if( ang <= coneRads ) {
+            if( outVec != null ) {
+                outVec.x = vec.x;
+                outVec.y = vec.y;
+                outVec.z = vec.z;
+            }
+            if( outMat != null ) {
+                Mat.identity( outMat );
+            }
+            return false;
+        }
+
+        Vec3d rotAxis = new Vec3d();
+        Mat4d rot     = outMat == null ? new Mat4d() : outMat;
+
+        if( ang < Math.PI * (1.0 + FREL_TOL)) {
+            Vec.cross( vec, coneAxis, rotAxis );
+        }else{
+            Vec.chooseOrtho( coneAxis.x, coneAxis.y, coneAxis.z, rotAxis );
+        }
+
+        Mat.getRotation( ang - coneRads * (1.0f - FREL_TOL), rotAxis.x, rotAxis.y, rotAxis.z, rot );
+        if( outVec != null ) {
+            Mat.mult( rot, vec, outVec );
+        }
+
+        return true;
+    }
+
+
+    public static String format( Mat4d mat ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "[" );
+        sb.append( String.format( Vec.FORMAT4, mat.m00, mat.m01, mat.m02, mat.m03 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, mat.m10, mat.m11, mat.m12, mat.m13 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, mat.m20, mat.m21, mat.m22, mat.m23 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, mat.m30, mat.m31, mat.m32, mat.m33 ) );
+        sb.append( "]");
+        return sb.toString();
+    }
+
+
+    public static boolean isNaN( Mat4d mat ) {
+        return Double.isNaN( mat.m00 ) ||
+               Double.isNaN( mat.m10 ) ||
+               Double.isNaN( mat.m20 ) ||
+               Double.isNaN( mat.m30 ) ||
+               Double.isNaN( mat.m01 ) ||
+               Double.isNaN( mat.m11 ) ||
+               Double.isNaN( mat.m21 ) ||
+               Double.isNaN( mat.m31 ) ||
+               Double.isNaN( mat.m02 ) ||
+               Double.isNaN( mat.m12 ) ||
+               Double.isNaN( mat.m22 ) ||
+               Double.isNaN( mat.m32 ) ||
+               Double.isNaN( mat.m03 ) ||
+               Double.isNaN( mat.m13 ) ||
+               Double.isNaN( mat.m23 ) ||
+               Double.isNaN( mat.m33 );
+    }
+
 
 
 

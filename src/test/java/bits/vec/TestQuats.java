@@ -17,7 +17,7 @@ public class TestQuats {
 
     @Test
     public void testIdentityToMat3() {
-        Vec4 q = new Vec4( 0, 0, 0, 1 );
+        Quat q = new Quat( 0, 0, 0, 1 );
         Mat3 mat = new Mat3();
         Quat.quatToMat( q, mat );
         
@@ -26,12 +26,12 @@ public class TestQuats {
         assertNear( mat, eye );
         
         Quat.matToQuat( eye, q );
-        assertNear( q, new Vec4( 0, 0, 0, 1 ) );
+        assertNear( q, new Quat( 0, 0, 0, 1 ) );
     }
 
     @Test
     public void testIdentityToMat4() {
-        Vec4 q = new Vec4( 0, 0, 0, 1 );
+        Quat q = new Quat( 0, 0, 0, 1 );
         Mat4 mat = new Mat4();
         Quat.quatToMat( q, mat );
 
@@ -40,14 +40,14 @@ public class TestQuats {
         assertNear( mat, eye );
 
         Quat.matToQuat( eye, q );
-        assertNear( q, new Vec4( 0, 0, 0, 1 ) );
+        assertNear( q, new Quat( 0, 0, 0, 1 ) );
     }
 
     @Test
     public void testMult() {
         Random rand = new Random( 8 );
-        Vec4 qa = new Vec4();
-        Vec4 qb = new Vec4();
+        Quat qa = new Quat();
+        Quat qb = new Quat();
         Mat3 ma = new Mat3();
         Mat3 mb = new Mat3();
         
@@ -87,7 +87,7 @@ public class TestQuats {
     @Test
     public void testMultVec() {
         Random rand = new Random( 8 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Mat3 m = new Mat3();
         Vec3 vq = new Vec3();
         Vec3 vm = new Vec3();
@@ -135,7 +135,7 @@ public class TestQuats {
     @Test
     public void testPreRotate() {
         Random rand = new Random( 8 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Mat3 m = new Mat3();
         Mat3 result = new Mat3();
 
@@ -158,7 +158,7 @@ public class TestQuats {
     @Test
     public void testRotate() {
         Random rand = new Random( 8 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Mat3 m = new Mat3();
         Mat3 result = new Mat3();
 
@@ -181,7 +181,7 @@ public class TestQuats {
     @Test
     public void testGetRotationBetweenVecs() {
         Random rand = new Random( 9 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Vec3 result = new Vec3();
         
         for( int i = 0; i < 50; i++ ) {
@@ -220,7 +220,7 @@ public class TestQuats {
     @Test
     public void testRandMatrixConversionsMat3() {
         Random rand = new Random( 6 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Mat3 rotOut = new Mat3();
 
         for( int i = 0; i < 100; i++ ) {
@@ -234,7 +234,7 @@ public class TestQuats {
     @Test
     public void testRandMatrixConversionsMat4() {
         Random rand = new Random( 6 );
-        Vec4 q = new Vec4();
+        Quat q = new Quat();
         Mat4 rotOut = new Mat4();
 
         for( int i = 0; i < 100; i++ ) {

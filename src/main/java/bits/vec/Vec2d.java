@@ -15,27 +15,29 @@ import java.util.NoSuchElementException;
  *
  * @author Philip DeCamp  
  */
-public class Vec2 {
+public class Vec2d {
 
-    public float x;
-    public float y;
-
-
-    public Vec2() {}
+    public double x;
+    public double y;
 
 
-    public Vec2( float x, float y ) {
-        set( x, y );
+    public Vec2d() {}
+
+
+    public Vec2d( double x, double y ) {
+        this.x = x;
+        this.y = y;
     }
 
 
-    public Vec2( Vec2 copy ) {
-        set( copy );
+    public Vec2d( Vec2d copy ) {
+        x = copy.x;
+        y = copy.y;
     }
 
 
 
-    public float el( int d ) {
+    public double el( int d ) {
         switch( d ) {
         case 0: return x;
         case 1: return y;
@@ -45,7 +47,7 @@ public class Vec2 {
     }
 
 
-    public void el( int d, float v ) {
+    public void el( int d, double v ) {
         switch( d ) {
         case 0: x = v; break;
         case 1: y = v; break;
@@ -54,16 +56,10 @@ public class Vec2 {
         }
     }
 
-    
-    public void set( float x, float y ) {
-        this.x = x;
-        this.y = y;
-    }
-
 
     public void set( double x, double y ) {
-        this.x = (float)x;
-        this.y = (float)y;
+        this.x = x;
+        this.y = y;
     }
 
 
@@ -72,33 +68,35 @@ public class Vec2 {
         y = copy.y;
     }
 
-    
+
     public void set( Vec2d copy ) {
-        x = (float)copy.x;
-        y = (float)copy.y;
+        x = copy.x;
+        y = copy.y;
     }
-    
-    
+
+
     public void set( ByteBuffer bb ) {
-        x = bb.getFloat();
-        y = bb.getFloat();
+        x = bb.getDouble();
+        y = bb.getDouble();
     }
-    
-    
+
+
+
 
     @Override
     public boolean equals( Object obj ) {
-        if( !( obj instanceof Vec2 ) ) {
+        if( !( obj instanceof Vec2d) ) {
             return false;
         }
-        Vec2 v = (Vec2)obj;
+        Vec2d v = (Vec2d)obj;
         // "v == this" is needed to protect against NaNs.
         return v == this || x == v.x && y == v.y;
     }
 
     @Override
     public int hashCode() {
-        return Float.floatToIntBits( x + y );
+        long bits = Double.doubleToLongBits( x + y );
+        return (int)( bits ^ ( bits >>> 32 ) );
     }
 
     @Override

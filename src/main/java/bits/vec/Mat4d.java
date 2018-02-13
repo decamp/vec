@@ -7,6 +7,7 @@
 package bits.vec;
 
 
+import java.nio.ByteBuffer;
 import java.util.NoSuchElementException;
 
 
@@ -15,21 +16,21 @@ import java.util.NoSuchElementException;
  *
  * @author Philip DeCamp
  */
-public class Mat4 {
+public class Mat4d {
 
-    public float m00, m01, m02, m03;
-    public float m10, m11, m12, m13;
-    public float m20, m21, m22, m23;
-    public float m30, m31, m32, m33;
+    public double m00, m01, m02, m03;
+    public double m10, m11, m12, m13;
+    public double m20, m21, m22, m23;
+    public double m30, m31, m32, m33;
 
-    public Mat4() {}
+    public Mat4d() {}
 
 
-    public Mat4( 
-        float m00, float m10, float m20, float m30,
-        float m01, float m11, float m21, float m31,
-        float m02, float m12, float m22, float m32,
-        float m03, float m13, float m23, float m33 
+    public Mat4d( 
+        double m00, double m10, double m20, double m30,
+        double m01, double m11, double m21, double m31,
+        double m02, double m12, double m22, double m32,
+        double m03, double m13, double m23, double m33 
     ) {
         this.m00 = m00;
         this.m01 = m01;
@@ -50,14 +51,14 @@ public class Mat4 {
     }
 
 
-    public Mat4( Mat4 copy ) {
+    public Mat4d( Mat4d copy ) {
         set( copy );
     }
 
 
 
 
-    public float el( int row, int col ) {
+    public double el( int row, int col ) {
         switch( row ) {
         case 0:
             switch( col ) {
@@ -96,7 +97,7 @@ public class Mat4 {
     }
 
 
-    public void el( int row, int col, float v ) {
+    public void el( int row, int col, double v ) {
         switch( row ) {
         case 0:
             switch( col ) {
@@ -135,7 +136,8 @@ public class Mat4 {
     }
 
 
-    public void set( float v ) {
+
+    public void set( double v ) {
         this.m00 = v;
         this.m01 = v;
         this.m02 = v;
@@ -154,12 +156,12 @@ public class Mat4 {
         this.m33 = v;
     }
 
-    
+
     public void set(
-        float m00, float m10, float m20, float m30,
-        float m01, float m11, float m21, float m31,
-        float m02, float m12, float m22, float m32,
-        float m03, float m13, float m23, float m33
+        double m00, double m10, double m20, double m30,
+        double m01, double m11, double m21, double m31,
+        double m02, double m12, double m22, double m32,
+        double m03, double m13, double m23, double m33
     ) {
         this.m00 = m00;
         this.m01 = m01;
@@ -179,95 +181,115 @@ public class Mat4 {
         this.m33 = m33;
     }
 
-
+    
     public void set( Mat3 copy ) {
-        this.m00 = copy.m00;
-        this.m01 = copy.m01;
-        this.m02 = copy.m02;
-        this.m03 = 0;
-        this.m10 = copy.m10;
-        this.m11 = copy.m11;
-        this.m12 = copy.m12;
-        this.m13 = 0;
-        this.m20 = copy.m20;
-        this.m21 = copy.m21;
-        this.m22 = copy.m22;
-        this.m23 = 0;
-        this.m30 = 0;
-        this.m31 = 0;
-        this.m32 = 0;
-        this.m33 = 1;
+        m00 = copy.m00;
+        m01 = copy.m01;
+        m02 = copy.m02;
+        m03 = 0;
+        m10 = copy.m10;
+        m11 = copy.m11;
+        m12 = copy.m12;
+        m13 = 0;
+        m20 = copy.m20;
+        m21 = copy.m21;
+        m22 = copy.m22;
+        m23 = 0;
+        m30 = 0;
+        m31 = 0;
+        m32 = 0;
+        m33 = 1;
     }
 
 
     public void set( Mat3d copy ) {
-        this.m00 = (float)copy.m00;
-        this.m01 = (float)copy.m01;
-        this.m02 = (float)copy.m02;
-        this.m03 = (float)0;
-        this.m10 = (float)copy.m10;
-        this.m11 = (float)copy.m11;
-        this.m12 = (float)copy.m12;
-        this.m13 = (float)0;
-        this.m20 = (float)copy.m20;
-        this.m21 = (float)copy.m21;
-        this.m22 = (float)copy.m22;
-        this.m23 = (float)0;
-        this.m30 = (float)0;
-        this.m31 = (float)0;
-        this.m32 = (float)0;
-        this.m33 = (float)1;
+        m00 = copy.m00;
+        m01 = copy.m01;
+        m02 = copy.m02;
+        m03 = 0;
+        m10 = copy.m10;
+        m11 = copy.m11;
+        m12 = copy.m12;
+        m13 = 0;
+        m20 = copy.m20;
+        m21 = copy.m21;
+        m22 = copy.m22;
+        m23 = 0;
+        m30 = 0;
+        m31 = 0;
+        m32 = 0;
+        m33 = 1;
     }
 
 
     public void set( Mat4 copy ) {
-        this.m00 = copy.m00;
-        this.m01 = copy.m01;
-        this.m02 = copy.m02;
-        this.m03 = copy.m03;
-        this.m10 = copy.m10;
-        this.m11 = copy.m11;
-        this.m12 = copy.m12;
-        this.m13 = copy.m13;
-        this.m20 = copy.m20;
-        this.m21 = copy.m21;
-        this.m22 = copy.m22;
-        this.m23 = copy.m23;
-        this.m30 = copy.m30;
-        this.m31 = copy.m31;
-        this.m32 = copy.m32;
-        this.m33 = copy.m33;
+        m00 = copy.m00;
+        m01 = copy.m01;
+        m02 = copy.m02;
+        m03 = copy.m03;
+        m10 = copy.m10;
+        m11 = copy.m11;
+        m12 = copy.m12;
+        m13 = copy.m13;
+        m20 = copy.m20;
+        m21 = copy.m21;
+        m22 = copy.m22;
+        m23 = copy.m23;
+        m30 = copy.m30;
+        m31 = copy.m31;
+        m32 = copy.m32;
+        m33 = copy.m33;
     }
 
 
     public void set( Mat4d copy ) {
-        this.m00 = (float)copy.m00;
-        this.m01 = (float)copy.m01;
-        this.m02 = (float)copy.m02;
-        this.m03 = (float)copy.m03;
-        this.m10 = (float)copy.m10;
-        this.m11 = (float)copy.m11;
-        this.m12 = (float)copy.m12;
-        this.m13 = (float)copy.m13;
-        this.m20 = (float)copy.m20;
-        this.m21 = (float)copy.m21;
-        this.m22 = (float)copy.m22;
-        this.m23 = (float)copy.m23;
-        this.m30 = (float)copy.m30;
-        this.m31 = (float)copy.m31;
-        this.m32 = (float)copy.m32;
-        this.m33 = (float)copy.m33;
+        m00 = copy.m00;
+        m01 = copy.m01;
+        m02 = copy.m02;
+        m03 = copy.m03;
+        m10 = copy.m10;
+        m11 = copy.m11;
+        m12 = copy.m12;
+        m13 = copy.m13;
+        m20 = copy.m20;
+        m21 = copy.m21;
+        m22 = copy.m22;
+        m23 = copy.m23;
+        m30 = copy.m30;
+        m31 = copy.m31;
+        m32 = copy.m32;
+        m33 = copy.m33;
     }
 
+
+    public void set( ByteBuffer bb ) {
+        m00 = bb.getDouble();
+        m10 = bb.getDouble();
+        m20 = bb.getDouble();
+        m30 = bb.getDouble();
+        m01 = bb.getDouble();
+        m11 = bb.getDouble();
+        m21 = bb.getDouble();
+        m31 = bb.getDouble();
+        m02 = bb.getDouble();
+        m12 = bb.getDouble();
+        m22 = bb.getDouble();
+        m32 = bb.getDouble();
+        m03 = bb.getDouble();
+        m13 = bb.getDouble();
+        m23 = bb.getDouble();
+        m33 = bb.getDouble();
+    }
+    
 
 
     @Override
     public boolean equals( Object obj ) {
-        if( !( obj instanceof Mat4 ) ) {
+        if( !( obj instanceof Mat4d) ) {
             return false;
         }
 
-        Mat4 v = (Mat4)obj;
+        Mat4d v = (Mat4d)obj;
         // v == this is necessary to catch NaNs.
         return v == this ||
                m00 == v.m00 &&
@@ -290,11 +312,11 @@ public class Mat4 {
 
     @Override
     public int hashCode() {
-        int hash = Float.floatToIntBits( m00 + m11 + m22 + m33 );
-        hash ^= Float.floatToIntBits( m01 + m12 + m23 + m30 );
-        hash ^= Float.floatToIntBits( m02 + m13 + m20 + m31 );
-        hash ^= Float.floatToIntBits( m03 + m10 + m21 + m32 );
-        return hash;
+        long hash = Double.doubleToLongBits( m00 + m11 + m22 + m33 );
+        hash ^= Double.doubleToLongBits( m01 + m12 + m23 + m30 );
+        hash ^= Double.doubleToLongBits( m02 + m13 + m20 + m31 );
+        hash ^= Double.doubleToLongBits( m03 + m10 + m21 + m32 );
+        return (int)( hash ^ ( hash >>> 32 ) );
     }
 
     @Override

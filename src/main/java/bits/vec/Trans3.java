@@ -9,6 +9,7 @@ package bits.vec;
 
 /**
  * Trans3 (3D Transform) represents a rotation and translation, in that order.
+ * @deprecated Why bother using Trans3 if overspecified anywith with matrix for rotation? Oops.
  */
 public class Trans3 {
     public final Vec3 mPos = new Vec3();

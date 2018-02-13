@@ -52,11 +52,11 @@ public class TestMat3 {
         for( int i = 0; i < 100; i++ ) {
             fillRandom( rand, left3 );
             fillRandom( rand, right3 );
-            Mat.put( left3, left4 );
-            Mat.put( right3, right4 );
+            left4.set( left3 );
+            right4.set( right3 );
 
             Mat.mult( left3, right3, tmp );
-            Mat.put( tmp, ans0 );
+            ans0.set( tmp );
             Mat.mult( left3, right4, ans1 );
             Mat.mult( left4, right3, ans2 );
 
