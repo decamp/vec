@@ -23,32 +23,17 @@ public final class Quatd {
 
     
     public Quatd() {}
-        
 
-    public void set( double x, double y, double z, double w ) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
-
-
-    public void set( Quat copy ) {
-        this.x = copy.x;
-        this.y = copy.y;
-        this.z = copy.z;
-        this.w = copy.w;
+    
+    public Quatd( double x, double y, double z, double w ) {
+        set( x, y, z, w );
     }
     
-
-    public void set( Quatd copy ) {
-        this.x = copy.x;
-        this.y = copy.y;
-        this.z = copy.z;
-        this.w = copy.w;
+    
+    public Quatd( Quat copy ) {
+        set( copy );
     }
     
-
 
     public double el( int d ) {
         switch( d ) {
@@ -71,6 +56,30 @@ public final class Quatd {
         default:
             throw new NoSuchElementException();
         }
+    }
+
+
+    public void set( double x, double y, double z, double w ) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+
+    public void set( Quat copy ) {
+        this.x = copy.x;
+        this.y = copy.y;
+        this.z = copy.z;
+        this.w = copy.w;
+    }
+
+
+    public void set( Quatd copy ) {
+        this.x = copy.x;
+        this.y = copy.y;
+        this.z = copy.z;
+        this.w = copy.w;
     }
 
 

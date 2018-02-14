@@ -251,7 +251,13 @@ public class Mat3d {
 
     @Override
     public String toString() {
-        return Mat.format( this );
+        StringBuilder sb = new StringBuilder();
+        sb.append( "[" );
+        sb.append( String.format( Vec.FORMAT3, m00, m01, m02 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT3, m10, m11, m12 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT3, m20, m21, m22 ) );
+        sb.append( "]");
+        return sb.toString();
     }
 
 }

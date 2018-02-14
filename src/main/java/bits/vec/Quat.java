@@ -32,6 +32,11 @@ public final class Quat {
     }
 
     
+    public Quat( Quat copy ) {
+        set( copy );
+    }
+
+    
 
     public float el( int d ) {
         switch( d ) {
@@ -78,6 +83,14 @@ public final class Quat {
         this.y = copy.y;
         this.z = copy.z;
         this.w = copy.w;
+    }
+
+
+    public void set( Quatd copy ) {
+        this.x = (float)copy.x;
+        this.y = (float)copy.y;
+        this.z = (float)copy.z;
+        this.w = (float)copy.w;
     }
 
 

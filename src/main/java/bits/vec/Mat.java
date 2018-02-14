@@ -425,13 +425,7 @@ public final class Mat {
     
     
     public static String format( Mat3 mat ) {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "[" );
-        sb.append( String.format( Vec.FORMAT3, mat.m00, mat.m01, mat.m02 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT3, mat.m10, mat.m11, mat.m12 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT3, mat.m20, mat.m21, mat.m22 ) );
-        sb.append( "]");
-        return sb.toString();
+        return mat.toString();
     }
 
 
@@ -1668,14 +1662,7 @@ public final class Mat {
 
 
     public static String format( Mat4 mat ) {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "[" );
-        sb.append( String.format( Vec.FORMAT4, mat.m00, mat.m01, mat.m02, mat.m03 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m10, mat.m11, mat.m12, mat.m13 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m20, mat.m21, mat.m22, mat.m23 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m30, mat.m31, mat.m32, mat.m33 ) );
-        sb.append( "]");
-        return sb.toString();
+        return mat.toString();
     }
 
 
@@ -2324,13 +2311,7 @@ public final class Mat {
 
 
     public static String format( Mat3d mat ) {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "[" );
-        sb.append( String.format( Vec.FORMAT3, mat.m00, mat.m01, mat.m02 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT3, mat.m10, mat.m11, mat.m12 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT3, mat.m20, mat.m21, mat.m22 ) );
-        sb.append( "]");
-        return sb.toString();
+        return mat.toString();
     }
 
 
@@ -3407,14 +3388,7 @@ public final class Mat {
 
 
     public static String format( Mat4d mat ) {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "[" );
-        sb.append( String.format( Vec.FORMAT4, mat.m00, mat.m01, mat.m02, mat.m03 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m10, mat.m11, mat.m12, mat.m13 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m20, mat.m21, mat.m22, mat.m23 ) ).append( '\n' );
-        sb.append( String.format( Vec.FORMAT4, mat.m30, mat.m31, mat.m32, mat.m33 ) );
-        sb.append( "]");
-        return sb.toString();
+        return mat.toString();
     }
 
 

@@ -321,7 +321,14 @@ public class Mat4d {
 
     @Override
     public String toString() {
-        return Mat.format( this );
+        StringBuilder sb = new StringBuilder();
+        sb.append( "[" );
+        sb.append( String.format( Vec.FORMAT4, m00, m01, m02, m03 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, m10, m11, m12, m13 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, m20, m21, m22, m23 ) ).append( '\n' );
+        sb.append( String.format( Vec.FORMAT4, m30, m31, m32, m33 ) );
+        sb.append( "]");
+        return sb.toString();
     }
 
 }

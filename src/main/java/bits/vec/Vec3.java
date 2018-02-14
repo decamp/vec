@@ -116,7 +116,7 @@ public class Vec3 {
 
     @Override
     public String toString() {
-        return Vec.format( this );
+        return String.format( Vec.FORMAT3, x, y, z );
     }
 
 }
