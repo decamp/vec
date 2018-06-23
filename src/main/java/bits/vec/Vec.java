@@ -27,6 +27,7 @@ public final class Vec {
 
     //== VEC2 Functions ===========================
 
+    
     public static void put( Vec2 v, Vec2 out ) {
         out.x = v.x;
         out.y = v.y;
@@ -1910,12 +1911,13 @@ public final class Vec {
      *         1 if point intersection ( line crosses plane )
      *         2 if line intersection ( line lies on plane )
      */
-    public static int intersectLinePlane( Vec3d line0,
-                                          Vec3d line1,
-                                          Vec3d planePoint,
-                                          Vec3d planeNorm,
-                                          Vec3d optOut )
-    {
+    public static int intersectLinePlane( 
+        Vec3d line0,
+        Vec3d line1,
+        Vec3d planePoint,
+        Vec3d planeNorm,
+        Vec3d optOut 
+    ) {
         double dx = line1.x - line0.x;
         double dy = line1.y - line0.y;
         double dz = line1.z - line0.z;
@@ -1953,13 +1955,14 @@ public final class Vec {
      * @param optOutB  On return, holds point on line b nearest to line a (optional)
      * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
      */
-    public static boolean intersectLineLine( Vec3d a0,
-                                             Vec3d a1,
-                                             Vec3d b0,
-                                             Vec3d b1,
-                                             Vec3d optOutA,
-                                             Vec3d optOutB )
-    {
+    public static boolean intersectLineLine( 
+        Vec3d a0,
+        Vec3d a1,
+        Vec3d b0,
+        Vec3d b1,
+        Vec3d optOutA,
+        Vec3d optOutB 
+    ) {
         double da0b0b1b0 = (a0.x - b0.x) * (b1.x - b0.x) + (a0.y - b0.y) * (b1.y - b0.y) + (a0.z - b0.z) * (b1.z - b0.z);
         double db1b0a1a0 = (b1.x - b0.x) * (a1.x - a0.x) + (b1.y - b0.y) * (a1.y - a0.y) + (b1.z - b0.z) * (a1.z - a0.z);
         double da0b0a1a0 = (a0.x - b0.x) * (a1.x - a0.x) + (a0.y - b0.y) * (a1.y - a0.y) + (a0.z - b0.z) * (a1.z - a0.z);
@@ -2199,131 +2202,131 @@ public final class Vec {
 
     //=== DOUBLE[2] Functions ======================================
 
-
+    @Deprecated
     public static void put( double x, double y, double[] out ) {
         out[0] = x;
         out[1] = y;
     }
 
-
+    @Deprecated
     public static void put( Vec2 v, double[] out ) {
         out[0] = v.x;
         out[1] = v.y;
     }
 
-
+    @Deprecated
     public static void add2( double[] a, double[] b, double[] out ) {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
     }
 
-
+    @Deprecated
     public static void addTo2( double[] a, double[] out ) {
         out[0] += a[0];
         out[1] += a[1];
     }
 
-
+    @Deprecated
     public static void subtract2( double[] a, double[] b, double[] out ) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
     }
 
-
+    @Deprecated
     public static void subtractFrom2( double[] a, double[] out ) {
         out[0] -= a[0];
         out[1] -= a[1];
     }
 
-
+    @Deprecated
     public static void mult2( double sa, double[] a ) {
         a[0] *= sa;
         a[1] *= sa;
     }
 
-
+    @Deprecated
     public static void mult2( double sa, double[] a, double[] out ) {
         out[0] = sa * a[0];
         out[1] = sa * a[1];
     }
 
-
+    @Deprecated
     public static void multAdd2( double sa, double[] a, double sb, double[] b, double[] out ) {
         out[0] = a[0] * sa + b[0] * sb;
         out[1] = a[1] * sa + b[1] * sb;
     }
 
-
+    @Deprecated
     public static void multAddTo2( double sa, double[] a, double sOut, double[] out ) {
         out[0] = sOut * out[0] + sa * a[0];
         out[1] = sOut * out[1] + sa * a[1];
     }
 
-
+    @Deprecated
     public static void min2( double[]a, double[] b, double[] out ) {
         out[0] = a[0] <= b[0] ? a[0] : b[0];
         out[1] = a[1] <= b[1] ? a[1] : b[1];
     }
 
-
+    @Deprecated
     public static void max2( double[] a, double[] b, double[] out ) {
         out[0] = a[0] >= b[0] ? a[0] : b[0];
         out[1] = a[1] >= b[1] ? a[1] : b[1];
     }
 
-
+    @Deprecated
     public static double len2( double[] a ) {
         return Math.sqrt( lenSquared2( a ) );
     }
 
-
+    @Deprecated
     public static double lenSquared2( double[] a ) {
         return a[0] * a[0] + a[1] * a[1];
     }
 
-
+    @Deprecated
     public static double dist2( double[] a, double[] b ) {
         return Math.sqrt( distSquared2( a, b ) );
     }
 
-
+    @Deprecated
     public static double distSquared2( double[] a, double[] b ) {
         double dx = a[0] - b[0];
         double dy = a[1] - b[1];
         return dx * dx + dy * dy;
     }
 
-
+    @Deprecated
     public static void normalize2( double[] a ) {
         double s = 1f / len2( a );
         a[0] *= s;
         a[1] *= s;
     }
 
-
+    @Deprecated
     public static void normalize2( double[] a, double normLength, double[] out ) {
         double d = normLength / len2( a );
         out[0] = a[0] * d;
         out[1] = a[1] * d;
     }
 
-
+    @Deprecated
     public static double dot2( double[] a, double[] b ) {
         return a[0] * b[0] + a[1] * b[1];
     }
 
-
+    @Deprecated
     public static double dot2( double[] origin, double[] a, double[] b ) {
         return (a[0] - origin[0]) * (b[0] - origin[0]) +
                (a[1] - origin[1]) * (b[1] - origin[1]);
     }
 
-
+    @Deprecated
     public static double cosAng2( double[] a, double[] b ) {
         return dot2( a, b ) / Math.sqrt( lenSquared2( a ) * lenSquared2( b ) );
     }
 
-
+    @Deprecated
     public static double cosAng2( double[] origin, double[] a, double[] b ) {
         double ax = a[0] - origin[0];
         double ay = a[1] - origin[1];
@@ -2334,17 +2337,17 @@ public final class Vec {
         return ( ax*bx + ay*by ) / Math.sqrt( dd );
     }
 
-
+    @Deprecated
     public static double ang2( double[] a, double[] b ) {
         return Math.acos( cosAng2( a, b ) );
     }
 
-
+    @Deprecated
     public static double ang2( double[] origin, double[] a, double[] b ) {
         return Math.acos( cosAng2( origin, a, b ) );
     }
 
-
+    @Deprecated
     public static void lerp2( double[] a, double[] b, double p, double[] out ) {
         double q = 1.0f - p;
         out[0] = q * a[0] + p * b[0];
@@ -2358,6 +2361,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
+    @Deprecated
     public static void reject2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -2375,6 +2379,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
+    @Deprecated
     public static void project2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -2392,6 +2397,7 @@ public final class Vec {
      * @param p  Some point
      * @return Distance between <tt>p</tt> and line that passes through <tt>n1</tt> and <tt>n2</tt>.
      */
+    @Deprecated
     public static double linePointDistance2( double[] n1, double[] n2, double[] p ) {
         double c = (p[0] - n1[0]) * (p[1] - n2[1]) - (p[0] - n2[0]) * (p[1] - n1[1]);
         return c / dist2( n1, n2 );
@@ -2405,6 +2411,7 @@ public final class Vec {
      * @param p Some point
      * @return smallest distance from point to any point on line segment.
      */
+    @Deprecated
     public static double segmentPointDistance2( double[] s1, double[] s2, double[] p ) {
         double u0 =  p[0] - s1[0];
         double u1 =  p[1] - s1[1];
@@ -2440,6 +2447,7 @@ public final class Vec {
      * @param out On return, holds point of intersection if lines are not parallel.
      * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
      */
+    @Deprecated
     public static boolean lineIntersection2( double[] a0, double[] a1, double[] b0, double[] b1, double[] out ) {
         double bx = a1[0] - a0[0];
         double by = a1[1] - a0[1];
@@ -2468,6 +2476,7 @@ public final class Vec {
      * @param out On return, holds point of intersection if exists.
      * @return true if lines intersect at single place.
      */
+    @Deprecated
     public static boolean segmentIntersection2( double[] a0, double[] a1, double[] b0, double[] b1, double[] out ) {
         double bx = a1[0] - a0[0];
         double by = a1[1] - a0[1];
@@ -2495,14 +2504,14 @@ public final class Vec {
         return true;
     }
 
-
+    @Deprecated
     public static boolean isNaN2( double[] vec ) {
         return Double.isNaN( vec[0] ) ||
                Double.isNaN( vec[1] );
 
     }
 
-
+    @Deprecated
     public static String format2( double[] vec ) {
         return String.format( "[ % 7.4f, % 7.4f ]", vec[0], vec[1] );
     }
@@ -2513,92 +2522,92 @@ public final class Vec {
 
     //=== DOUBLE[3] Functions ======================================
 
-
+    @Deprecated
     public static void put( double x, double y, double z, double[] out ) {
         out[0] = x;
         out[1] = y;
         out[2] = z;
     }
 
-
+    @Deprecated
     public static void put( Vec3 v, double[] out ) {
         out[0] = v.x;
         out[1] = v.y;
         out[2] = v.z;
     }
 
-
+    @Deprecated
     public static void add3( double[] a, double[] b, double[] out ) {
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
         out[2] = a[2] + b[2];
     }
 
-
+    @Deprecated
     public static void addTo3( double[] a, double[] out ) {
         out[0] += a[0];
         out[1] += a[1];
         out[2] += a[2];
     }
 
-
+    @Deprecated
     public static void subtract3( double[] a, double[] b, double[] out ) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
         out[2] = a[2] - b[2];
     }
 
-
+    @Deprecated
     public static void subtractFrom3( double[] a, double[] out ) {
         out[0] -= a[0];
         out[1] -= a[1];
         out[2] -= a[2];
     }
 
-
+    @Deprecated
     public static void multAdd3( double sa, double[] a, double sb, double[] b, double[] out ) {
         out[0] = a[0] * sa + b[0] * sb;
         out[1] = a[1] * sa + b[1] * sb;
         out[2] = a[2] * sa + b[2] * sb;
     }
 
-
+    @Deprecated
     public static void multAddTo3( double sa, double[] a, double sOut, double[] out ) {
         out[0] = sOut * out[0] + sa * a[0];
         out[1] = sOut * out[1] + sa * a[1];
         out[2] = sOut * out[2] + sa * a[2];
     }
 
-
+    @Deprecated
     public static void min3( double[]a, double[] b, double[] out ) {
         out[0] = a[0] <= b[0] ? a[0] : b[0];
         out[1] = a[1] <= b[1] ? a[1] : b[1];
         out[2] = a[2] <= b[2] ? a[2] : b[2];
     }
 
-
+    @Deprecated
     public static void max3( double[] a, double[] b, double[] out ) {
         out[0] = a[0] >= b[0] ? a[0] : b[0];
         out[1] = a[1] >= b[1] ? a[1] : b[1];
         out[2] = a[2] >= b[2] ? a[2] : b[2];
     }
 
-
+    @Deprecated
     public static double len3( double[] a ) {
         return Math.sqrt( lenSquared3( a ) );
     }
 
-
+    @Deprecated
     public static double lenSquared3( double[] a ) {
         return a[0] * a[0] + a[1] * a[1] + a[2] * a[2];
     }
 
-
+    @Deprecated
     public static double dist3( double[] a, double[] b ) {
         return Math.sqrt( distSquared3( a, b ) );
     }
 
-
+    @Deprecated
     public static double distSquared3( double[] a, double[] b ) {
         double dx = a[0] - b[0];
         double dy = a[1] - b[1];
@@ -2606,7 +2615,7 @@ public final class Vec {
         return dx * dx + dy * dy + dz * dz;
     }
 
-
+    @Deprecated
     public static void normalize3( double[] a ) {
         double s = 1 / len3( a );
         a[0] *= s;
@@ -2614,7 +2623,7 @@ public final class Vec {
         a[2] *= s;
     }
 
-
+    @Deprecated
     public static void normalize3( double[] a, double normLength, double[] out ) {
         double d = normLength / len3( a );
         out[0] = a[0] * d;
@@ -2622,59 +2631,59 @@ public final class Vec {
         out[2] = a[2] * d;
     }
 
-
+    @Deprecated
     public static void mult3( double sa, double[] a ) {
         a[0] *= sa;
         a[1] *= sa;
         a[2] *= sa;
     }
 
-
+    @Deprecated
     public static void mult3( double sa, double[] a, double[] out ) {
         out[0] = sa * a[0];
         out[1] = sa * a[1];
         out[2] = sa * a[2];
     }
 
-
+    @Deprecated
     public static void cross3( double[] a, int offA, double[] b, int offB, double[] out, int offOut ) {
         out[0+offOut] = a[1+offA] * b[2+offB] - b[1+offB] * a[2+offA];
         out[1+offOut] = a[2+offA] * b[0+offB] - b[2+offB] * a[0+offA];
         out[2+offOut] = a[0+offA] * b[1+offB] - b[0+offB] * a[1+offA];
     }
 
-
+    @Deprecated
     public static void cross3( double[] a, double[] b, double[] out ) {
         out[0] = a[1] * b[2] - b[1] * a[2];
         out[1] = a[2] * b[0] - b[2] * a[0];
         out[2] = a[0] * b[1] - b[0] * a[1];
     }
 
-
+    @Deprecated
     public static void cross3( double[] origin, double[] a, double[] b, double[] out ) {
         out[0] = (a[1] - origin[1]) * (b[2] - origin[2]) - (b[1] - origin[1]) * (a[2] - origin[2]);
         out[1] = (a[2] - origin[2]) * (b[0] - origin[0]) - (b[2] - origin[2]) * (a[0] - origin[0]);
         out[2] = (a[0] - origin[0]) * (b[1] - origin[1]) - (b[0] - origin[0]) * (a[1] - origin[1]);
     }
 
-
+    @Deprecated
     public static double dot3( double[] a, double[] b ) {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
 
-
+    @Deprecated
     public static double dot3( double[] origin, double[] a, double[] b ) {
         return (a[0] - origin[0]) * (b[0] - origin[0]) +
                (a[1] - origin[1]) * (b[1] - origin[1]) +
                (a[2] - origin[2]) * (b[2] - origin[2]);
     }
 
-
+    @Deprecated
     public static double cosAng3( double[] a, double[] b ) {
         return dot3( a, b ) / Math.sqrt( lenSquared3( a ) * lenSquared3( b ) );
     }
 
-
+    @Deprecated
     public static double cosAng3( double[] origin, double[] a, double[] b ) {
         double ax = a[0] - origin[0];
         double ay = a[1] - origin[1];
@@ -2687,17 +2696,17 @@ public final class Vec {
         return ( ax*bx + ay*by + az*bz ) / Math.sqrt( dd );
     }
 
-
+    @Deprecated
     public static double ang3( double[] a, double[] b ) {
         return Math.acos( cosAng3( a, b ) );
     }
 
-
+    @Deprecated
     public static double ang3( double[] origin, double[] a, double[] b ) {
         return Math.acos( cosAng3( origin, a, b ) );
     }
 
-
+    @Deprecated
     public static void lerp3( double[] a, double[] b, double p, double[] out ) {
         double q = 1.0 - p;
         out[0] = q * a[0] + p * b[0];
@@ -2712,6 +2721,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
+    @Deprecated
     public static void reject3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -2730,6 +2740,7 @@ public final class Vec {
      * @param a    Vector to modify.
      * @param ref  Reference vector.
      */
+    @Deprecated
     public static void project3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -2745,6 +2756,7 @@ public final class Vec {
      * Finds signed axis-aligned unit-vector nearest to input vector.
      * For example, the nearest axis to [ 0.8, -1.3, 0.1 ] is [ 0.0, -1.0, 0.0 ].
      */
+    @Deprecated
     public static void nearestAxis3( double x, double y, double z, double[] out ) {
         double ax = x >= 0 ? x : -x;
         double ay = y >= 0 ? y : -y;
@@ -2768,6 +2780,7 @@ public final class Vec {
     /**
      * Picks a unit-length vector that is orthogonal to the input vector.
      */
+    @Deprecated
     public static void chooseOrtho3( double x, double y, double z, double[] out3x1 ) {
         chooseOrtho3( x, y, z, 2, out3x1 );
     }
@@ -2795,6 +2808,7 @@ public final class Vec {
      * @param zeroDim Number {0,1,2} indicating if the output x, y, or z axis should be zero.
      * @param out     Length-3 array to hold output axis.
      */
+    @Deprecated
     public static void chooseOrtho3( double x, double y, double z, int zeroDim, double[] out ) {
         switch( zeroDim ) {
         case 2:
@@ -2862,6 +2876,7 @@ public final class Vec {
      * @param p  Some point
      * @return Distance between <tt>p</tt> and line that passes through <tt>n1</tt> and <tt>n2</tt>.
      */
+    @Deprecated
     public static double lineToPointDistance3( double[] n1, double[] n2, double[] p ) {
         double cx = (p[1] - n1[1]) * (p[2] - n2[2]) - (p[1] - n2[1]) * (p[2] - n1[2]);
         double cy = (p[2] - n1[2]) * (p[0] - n2[0]) - (p[2] - n2[2]) * (p[0] - n1[0]);
@@ -2877,6 +2892,7 @@ public final class Vec {
      * @param p Some point
      * @return smallest distance from point to any point on line segment.
      */
+    @Deprecated
     public static double lineSegmentToPointDistance3( double[] n1, double[] n2, double[] p ) {
         double u0 = p[0] - n1[0];
         double u1 = p[1] - n1[1];
@@ -2921,6 +2937,7 @@ public final class Vec {
      *         1 if point intersection ( line crosses plane )
      *         2 if line intersection ( line lies on plane )
      */
+    @Deprecated
     public static int intersectLinePlane3( double[] line0,
                                            double[] line1,
                                            double[] planePoint,
@@ -2963,6 +2980,7 @@ public final class Vec {
      * @param optOutB  On return, holds point on line b nearest to line a (optional)
      * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
      */
+    @Deprecated
     public static boolean intersectLineLine3( double[] a0,
                                               double[] a1,
                                               double[] b0,
@@ -2995,7 +3013,7 @@ public final class Vec {
         return true;
     }
 
-
+    @Deprecated
     public static boolean isNaN3( double[] vec ) {
         return vec[0] != vec[0] ||
                vec[1] != vec[1] ||
@@ -3003,7 +3021,7 @@ public final class Vec {
 
     }
 
-
+    @Deprecated
     public static String format3( double[] vec ) {
         return String.format( FORMAT3, vec[0], vec[1], vec[2] );
     }
@@ -3012,7 +3030,7 @@ public final class Vec {
 
     //== DOUBLE[4] Functions =======================================================
 
-
+    @Deprecated
     public static void put4( double x, double y, double z, double w, double[] out ) {
         out[0] = x;
         out[1] = y;
@@ -3020,7 +3038,7 @@ public final class Vec {
         out[3] = w;
     }
 
-
+    @Deprecated
     public static void put4( Vec4 v, double[] out ) {
         out[0] = v.x;
         out[1] = v.y;
@@ -3028,7 +3046,7 @@ public final class Vec {
         out[3] = v.w;
     }
 
-
+    @Deprecated
     public static void put4( double[] v, double[] out ) {
         out[0] = v[0];
         out[1] = v[1];
@@ -3036,7 +3054,7 @@ public final class Vec {
         out[3] = v[3];
     }
 
-
+    @Deprecated
     public static void addTo4( double[] a, double[] out ) {
         out[0] += a[0];
         out[1] += a[1];
@@ -3044,7 +3062,7 @@ public final class Vec {
         out[3] += a[3];
     }
 
-
+    @Deprecated
     public static void subtract4( double[] a, double[] b, double[] out ) {
         out[0] = a[0] - b[0];
         out[1] = a[1] - b[1];
@@ -3052,7 +3070,7 @@ public final class Vec {
         out[3] = a[3] - b[3];
     }
 
-
+    @Deprecated
     public static void subtractFrom4( double[] a, double[] out ) {
         out[0] -= a[0];
         out[1] -= a[1];
@@ -3060,7 +3078,7 @@ public final class Vec {
         out[3] -= a[3];
     }
 
-
+    @Deprecated
     public static void multAdd4( double sa, double[] a, double sb, double[] b, double[] out ) {
         out[0] = a[0] * sa + b[0] * sb;
         out[1] = a[1] * sa + b[1] * sb;
@@ -3068,7 +3086,7 @@ public final class Vec {
         out[3] = a[3] * sa + b[3] * sb;
     }
 
-
+    @Deprecated
     public static void multAddTo4( double sa, double[] a, double sOut, double[] out ) {
         out[0] = sOut * out[0] + sa * a[0];
         out[1] = sOut * out[1] + sa * a[1];
@@ -3076,17 +3094,17 @@ public final class Vec {
         out[3] = sOut * out[3] + sa * a[3];
     }
 
-
+    @Deprecated
     public static double len4( double[] a ) {
         return Math.sqrt( lenSquared4( a ) );
     }
 
-
+    @Deprecated
     public static double lenSquared4( double[] a ) {
         return a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3];
     }
 
-
+    @Deprecated
     public static void min4( double[]a, double[] b, double[] out ) {
         out[0] = a[0] <= b[0] ? a[0] : b[0];
         out[1] = a[1] <= b[1] ? a[1] : b[1];
@@ -3094,7 +3112,7 @@ public final class Vec {
         out[3] = a[3] <= b[3] ? a[3] : b[3];
     }
 
-
+    @Deprecated
     public static void max4( double[] a, double[] b, double[] out ) {
         out[0] = a[0] >= b[0] ? a[0] : b[0];
         out[1] = a[1] >= b[1] ? a[1] : b[1];
@@ -3102,12 +3120,12 @@ public final class Vec {
         out[3] = a[3] >= b[3] ? a[3] : b[3];
     }
 
-
+    @Deprecated
     public static double dist4( double[] a, double[] b ) {
         return Math.sqrt( distSquared4( a, b ) );
     }
 
-
+    @Deprecated
     public static double distSquared4( double[] a, double[] b ) {
         double dx = a[0] - b[0];
         double dy = a[1] - b[1];
@@ -3116,7 +3134,7 @@ public final class Vec {
         return dx * dx + dy * dy + dz * dz + dw * dw;
     }
 
-
+    @Deprecated
     public static void normalize4( double[] a ) {
         double s = 1.0 / len4( a );
         a[0] *= s;
@@ -3125,7 +3143,7 @@ public final class Vec {
         a[3] *= s;
     }
 
-
+    @Deprecated
     public static void normalize4( double[] a, double normLength, double[] out ) {
         double d = normLength / len4( a );
         out[0] = a[0] * d;
@@ -3134,7 +3152,7 @@ public final class Vec {
         out[3] = a[3] * d;
     }
 
-
+    @Deprecated
     public static void mult4( double sa, double[] a ) {
         a[0] *= sa;
         a[1] *= sa;
@@ -3142,7 +3160,7 @@ public final class Vec {
         a[3] *= sa;
     }
 
-
+    @Deprecated
     public static void mult4( double sa, double[] a, double[] out ) {
         out[0] = sa * a[0];
         out[1] = sa * a[1];
@@ -3150,12 +3168,12 @@ public final class Vec {
         out[3] = sa * a[3];
     }
 
-
+    @Deprecated
     public static double dot4( double[] a, double[] b ) {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
-
+    @Deprecated
     public static double dot4( double[] origin, double[] a, double[] b ) {
         return ( a[0] - origin[0] ) * ( b[0] - origin[0] ) +
                ( a[1] - origin[1] ) * ( b[1] - origin[1] ) +
@@ -3163,12 +3181,12 @@ public final class Vec {
                ( a[3] - origin[3] ) * ( b[3] - origin[3] );
     }
 
-
+    @Deprecated
     public static double cosAng4( double[] a, double[] b ) {
         return dot4( a, b ) / Math.sqrt( lenSquared4( a ) * lenSquared4( b ) );
     }
 
-
+    @Deprecated
     public static double cosAng4( double[] origin, double[] a, double[] b ) {
         double ax = a[0] - origin[0];
         double ay = a[1] - origin[1];
@@ -3183,17 +3201,17 @@ public final class Vec {
         return ( ax*bx + ay*by + az*bz + aw*bw ) / Math.sqrt( dd );
     }
 
-
+    @Deprecated
     public static double ang4( double[] a, double[] b ) {
         return Math.acos( cosAng4( a, b ) );
     }
 
-
+    @Deprecated
     public static double ang4( double[] origin, double[] a, double[] b ) {
         return Math.acos( cosAng4( origin, a, b ) );
     }
 
-
+    @Deprecated
     public static void lerp4( double[] a, double[] b, double p, double[] out ) {
         double q = 1.0 - p;
         out[0] = q * a[0] + p * b[0];
@@ -3202,7 +3220,7 @@ public final class Vec {
         out[3] = q * a[3] + p * b[3];
     }
 
-
+    @Deprecated
     public static String format4( double[] vec ) {
         return String.format( FORMAT4, vec[0], vec[1], vec[2], vec[3] );
     }
@@ -3219,6 +3237,7 @@ public final class Vec {
      * @deprecated 
      * Use {@link #reject(Vec2, Vec2)}
      */
+    @Deprecated
     public static void makeOrthoTo( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
         if( lenRef < FSQRT_ABS_TOL ) {
@@ -3233,6 +3252,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #project(Vec2, Vec2)}
      */
+    @Deprecated
     public static void makeParallelTo( Vec2 a, Vec2 ref ) {
         float lenRef = ref.x * ref.x + ref.y * ref.y;
         if( lenRef < FSQRT_ABS_TOL ) {
@@ -3248,6 +3268,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #reject(Vec3, Vec3)}
      */
+    @Deprecated
     public static void makeOrthoTo( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
         if( lenRef < FSQRT_ABS_TOL ) {
@@ -3263,6 +3284,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #project(Vec3, Vec3)}
      */
+    @Deprecated
     public static void makeParallelTo( Vec3 a, Vec3 ref ) {
         float lenRef = lenSquared( ref );
         if( lenRef < FSQRT_ABS_TOL ) {
@@ -3278,6 +3300,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #reject2(double[], double[])}
      */
+    @Deprecated
     public static void makeOrthoTo2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -3292,6 +3315,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #project2(double[], double[])}
      */
+    @Deprecated
     public static void makeParallelTo2( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -3306,6 +3330,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #reject3(double[], double[])}
      */
+    @Deprecated
     public static void makeOrthoTo3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_TOL ) {
@@ -3321,6 +3346,7 @@ public final class Vec {
      * @deprecated
      * Use {@link #project3(double[], double[])}
      */
+    @Deprecated
     public static void makeParallelTo3( double[] a, double[] ref ) {
         double lenRef = ref[0] * ref[0] + ref[1] * ref[1] + ref[2] * ref[2];
         if( lenRef < SQRT_ABS_TOL ) {

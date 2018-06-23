@@ -4219,6 +4219,7 @@ public final class Mat {
      * @param basis Basis vector to align to axis. {@code 0 == x-basis, 1 == y-basis, 2 == z-basis}.
      * @param out   Holds modified getRotate4 matrix on output.
      */
+    @Deprecated
     public static void alignBasisVectorToAxis4( double[] mat, int basis, double[] out ) {
         out[12] = mat[basis*4  ];
         out[13] = mat[basis*4+1];
@@ -4262,6 +4263,7 @@ public final class Mat {
      * @param outMat    Rotation matrix used to rotate4 vector onto cone.  May be {@code null}
      * @return true if any adjustment made, false if output is identical to input
      */
+    @Deprecated
     public static boolean clampToCone4( double[] vec,
                                         double[] coneAxis,
                                         double coneRads,

@@ -10,6 +10,7 @@ package bits.vec;
 /**
  * Methods for transform objects.
  */
+@Deprecated
 public final class Trans {
 
     public static void put( Trans3 a, Trans3 out ) {
