@@ -46,7 +46,6 @@ public class TestFrac {
 
         assertTrue( Frac.mult( -1, 0, 1, 0, c ) );
         assertEquals( new Frac( -1, 0 ), c );
-
     }
 
     @Test
@@ -100,18 +99,12 @@ public class TestFrac {
             j /= roundSet.length;
             
             if( j > 0 ) {
-                // Ran through all permutations.
-                va = rand.nextLong();   
+                va = rand.nextLong();
                 vb = rand.nextInt();
                 vc = rand.nextInt();
                 round = roundSet[ rand.nextInt( roundSet.length ) ];
             }
 
-//            va = 0xC52E13359C2131FAL;
-//            vb = 0x8BE3A300;
-//            vc = 0xE89C9468;
-//            round = 1;
-            
             long actual = Frac.multLong( va, vb, vc, round );
             long expected = bigMult( va, vb, vc, round );
             long err = actual - expected;

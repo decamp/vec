@@ -206,18 +206,28 @@ public class Frac implements Comparable<Frac> {
     }
 
     /**
-     * Equivalent to calling {@code multLong( a, b, c, ROUND_NEAR_INF )}.
+     * Equivalent to calling {@code multLong( val, num, den, ROUND_NEAR_INF )}.
      *
-     * TODO: This method works pretty well, but for very large numbers may give incorrect answer.
+     * Rescale a 64-bit integer with rounding to nearest int, with overflow protection.
      *
-     * Rescale a 64-bit integer with rounding to nearest.
-     * A simple a * b / c isn't possible as it can overflow.
      * @param val Value
      * @param num Numerator
      * @param den Denominator
      */
     public static long multLong( long val, int num, int den ) {
         return multLong( val, num, den, ROUND_NEAR_INF );
+    }
+
+    /**
+     * Equivalent to calling {@code multLong( val, frac.mNum, frac.mDen, ROUND_NEAR_INF )}.
+     *
+     * Rescale a 64-bit integer with rounding to nearest int, with overflow protection.
+     *
+     * @param val Value
+     * @param frac Fraction
+     */
+    public static long multLong( long val, Frac frac ) {
+        return multLong( val, frac.mNum, frac.mDen, ROUND_NEAR_INF );
     }
 
     /**
@@ -309,20 +319,104 @@ public class Frac implements Comparable<Frac> {
     }
 
     /**
+     * Equivalent to calling {@code multLong( val, frac.mNum, frac.mDen, ROUND_NEAR_INF )}.
+     *
+     * Rescale a 64-bit integer with rounding to nearest int, with overflow protection.
+     *
+     * @param val Value
+     * @param frac Fraction
+     */
+    public static long divLong( long val, Frac frac ) {
+        return multLong( val, frac.mDen, frac.mNum, ROUND_NEAR_INF );
+    }
+
+    /**
      * Multiply two rationals.
      *
      * @param aNum Numerator of first rational
      * @param aDen Denominator of first rational.
      * @param bNum Numerator of second rational
      * @param bDen Denominator of second rational.
-     * @param out Receives answer b * c.
+     * @param out Receives answer aNum * bNum / aDen / bDen
      * @return true iff result is exact
      */
     public static boolean mult( int aNum, int aDen, int bNum, int bDen, Frac out ) {
-        return reduce( aNum * (long)bNum,
-                       aDen * (long)bDen,
-                       Integer.MAX_VALUE,
-                       out );
+        return reduce(
+            aNum * (long)bNum,
+            aDen * (long)bDen,
+            Integer.MAX_VALUE,
+            out
+        );
+    }
+
+    /**
+     * Multiply two rationals.
+     *
+     * @param aNum Numerator of first rational
+     * @param aDen Denominator of first rational.
+     * @param b    Fraction
+     * @param out Receives answer aNum * b / aDen;
+     * @return true iff result is exact
+     */
+    public static boolean mult( int aNum, int aDen, Frac b, Frac out ) {
+        return reduce(
+            aNum * (long)b.mNum,
+            aDen * (long)b.mDen,
+            Integer.MAX_VALUE,
+            out
+        );
+    }
+
+    /**
+     * Multiply two rationals.
+     *
+     * @param a    Fraction
+     * @param bNum Numerator of second rational
+     * @param bDen Denominator of second rational.
+     * @param out Receives answer aNum * b / aDen;
+     * @return true iff result is exact
+     */
+    public static boolean mult( Frac a, int bNum, int bDen, Frac out ) {
+        return reduce(
+            a.mNum * (long)bNum,
+            a.mDen * (long)bDen,
+            Integer.MAX_VALUE,
+            out
+        );
+    }
+
+    /**
+     * Multiply two rationals.
+     *
+     * @param a Fraction
+     * @param b Fraction
+     * @param out Receives answer a * b;
+     * @return true iff result is exact
+     */
+    public static boolean mult( Frac a, Frac b, Frac out ) {
+        return reduce(
+            a.mNum * (long)b.mNum,
+            a.mDen * (long)b.mDen,
+            Integer.MAX_VALUE,
+            out
+        );
+    }
+
+    /**
+     * Divide a / b
+     *
+     * @param a Fraction
+     * @param b Fraction
+     * @param out Receives answer a * b;
+     * @return true iff result is exact
+     */
+    public static boolean div( Frac a, Frac b, Frac out ) {
+        return reduce(
+            (long)a.mNum * b.mDen,
+            (long)a.mDen * b.mNum,
+            Integer.MAX_VALUE,
+            out
+        );
     }
 
     /**
