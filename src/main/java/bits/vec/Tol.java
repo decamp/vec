@@ -17,13 +17,22 @@ public final class Tol {
     public static final double ABS_TOL      = 0x0.0000000000001p-1017; // Double.MIN_VALUE * 32.0
     public static final double REL_TOL      = 0x0.0000000000001p4;     // EPS * 32.0
     public static final double SQRT_ABS_TOL = Math.sqrt( ABS_TOL );
+    public static final double SQRT_REL_TOL = Math.sqrt( REL_TOL );
     
     public static final float FEPS          = 0x0.000002p-1f;          // 32-bit machine epsilon
     public static final float FABS_TOL      = 0x0.000002p-121f;        // Float.MIN_VALUE * 32.0f
     public static final float FREL_TOL      = 0x0.000002p4f;           // FEPS * 32.0f
-    public static final float FSQRT_ABS_TOL = (float)Math.sqrt( FABS_TOL ); 
-    
-    
+    public static final float FSQRT_ABS_TOL = (float)Math.sqrt( FABS_TOL );
+    public static final float FSQRT_REL_TOL = (float)Math.sqrt( FREL_TOL );
+
+
+    /**
+     * Equivalent to {@code approxError( a, b, SQRT_REL_TOL, SQRT_ABS_TOL );}
+     */
+    public static boolean near( double a, double b ) {
+        return equal( a, b, SQRT_REL_TOL, SQRT_ABS_TOL );
+    }
+
     /**
      * Equivalent to {@code approxError( a, b, REL_TOL, ABS_TOL );}
      */
@@ -131,7 +140,15 @@ public final class Tol {
         relTol *= ( ref >= 0.0 ? ref : -ref );
         return v < relTol && -v < relTol;
     }
-    
+
+
+    /**
+     * Equivalent to {@code approxError( a, b, FSQRT_REL_TOL, FSQRT_ABS_TOL );}
+     */
+    public static boolean near( float a, float b ) {
+        return equal( a, b, FSQRT_REL_TOL, FSQRT_ABS_TOL );
+    }
+
     /**
      * Equivalent to {@code approxError( a, b, FREL_TOL, FABS_TOL );}
      */

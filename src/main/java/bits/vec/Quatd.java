@@ -59,6 +59,24 @@ public final class Quatd {
     }
 
 
+    public static boolean near( Quatd a, Quatd b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z ) &&
+            Tol.near( a.w, b.w );
+    }
+
+
+    public static boolean near( Quatd a, Quatd b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr ) &&
+            Tol.equal( a.w, b.w, relErr, absErr );
+    }
+
+
     public void set( double x, double y, double z, double w ) {
         this.x = x;
         this.y = y;

@@ -137,7 +137,7 @@ public final class Quat {
         out.w =  a.w * s;
     }
 
-    
+
     public static float len( Quat a ) {
         return (float)Math.sqrt( lenSquared( a ) );
     }
@@ -284,6 +284,24 @@ public final class Quat {
         out.z = ( 2 * ( qx * qz - qw * qy ) )             * vx +
                 ( 2 * ( qy * qz + qw * qx ) )             * vy +
                 ( qw * qw - qx * qx - qy * qy + qz * qz ) * vz;
+    }
+
+
+    public static boolean near( Quat a, Quat b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z ) &&
+            Tol.near( a.w, b.w );
+    }
+
+
+    public static boolean near( Quat a, Quat b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr ) &&
+            Tol.equal( a.w, b.w, relErr, absErr );
     }
 
     /**

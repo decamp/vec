@@ -24,7 +24,7 @@ public final class Vec {
     public static final String FORMAT3 = "[ % 7.4f, % 7.4f, % 7.4f ]";
     public static final String FORMAT4 = "[ % 7.4f, % 7.4f, % 7.4f, % 7.4f ]";
 
-
+    
     //== VEC2 Functions ===========================
 
     
@@ -149,6 +149,20 @@ public final class Vec {
         float dx = a.x - b.x;
         float dy = a.y - b.y;
         return dx * dx + dy * dy;
+    }
+
+
+    public static boolean near( Vec2 a, Vec2 b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y );
+    }
+
+
+    public static boolean near( Vec2 a, Vec2 b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr );
     }
 
 
@@ -538,6 +552,22 @@ public final class Vec {
     }
 
 
+    public static boolean near( Vec3 a, Vec3 b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z );
+    }
+
+
+    public static boolean near( Vec3 a, Vec3 b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr );
+    }
+
+
     public static void normalize( Vec3 a ) {
         float s = 1f / len( a );
         a.x *= s;
@@ -836,12 +866,13 @@ public final class Vec {
      *         1 if point intersection ( line crosses plane )
      *         2 if line intersection ( line lies on plane )
      */
-    public static int intersectLinePlane( Vec3 line0,
-                                          Vec3 line1,
-                                          Vec3 planePoint,
-                                          Vec3 planeNorm,
-                                          Vec3 optOut )
-    {
+    public static int intersectLinePlane( 
+        Vec3 line0,
+        Vec3 line1,
+        Vec3 planePoint,
+        Vec3 planeNorm,
+        Vec3 optOut 
+    ) {
         float dx = line1.x - line0.x;
         float dy = line1.y - line0.y;
         float dz = line1.z - line0.z;
@@ -879,13 +910,14 @@ public final class Vec {
      * @param optOutB  On return, holds point on line b nearest to line a (optional)
      * @return true if lines are not parallel and intersection was found.  False if lines are parallel.
      */
-    public static boolean intersectLineLine( Vec3 a0,
-                                             Vec3 a1,
-                                             Vec3 b0,
-                                             Vec3 b1,
-                                             Vec3 optOutA,
-                                             Vec3 optOutB )
-    {
+    public static boolean intersectLineLine( 
+        Vec3 a0,
+        Vec3 a1,
+        Vec3 b0,
+        Vec3 b1,
+        Vec3 optOutA,
+        Vec3 optOutB 
+    ) {
         float da0b0b1b0 = (a0.x - b0.x) * (b1.x - b0.x) + (a0.y - b0.y) * (b1.y - b0.y) + (a0.z - b0.z) * (b1.z - b0.z);
         float db1b0a1a0 = (b1.x - b0.x) * (a1.x - a0.x) + (b1.y - b0.y) * (a1.y - a0.y) + (b1.z - b0.z) * (a1.z - a0.z);
         float da0b0a1a0 = (a0.x - b0.x) * (a1.x - a0.x) + (a0.y - b0.y) * (a1.y - a0.y) + (a0.z - b0.z) * (a1.z - a0.z);
@@ -918,7 +950,7 @@ public final class Vec {
                vec.z != vec.z;
     }
 
-
+    
     public static String format( Vec3 vec ) {
         return String.format( FORMAT3, vec.x, vec.y, vec.z );
     }
@@ -1112,6 +1144,24 @@ public final class Vec {
     }
 
 
+    public static boolean near( Vec4 a, Vec4 b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z ) &&
+            Tol.near( a.w, b.w );
+    }
+
+
+    public static boolean near( Vec4 a, Vec4 b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr ) &&
+            Tol.equal( a.w, b.w, relErr, absErr );
+    }
+
+
     public static void normalize( Vec4 a ) {
         float s = 1f / len( a );
         a.x *= s;
@@ -1292,6 +1342,20 @@ public final class Vec {
         double dx = a.x - b.x;
         double dy = a.y - b.y;
         return dx * dx + dy * dy;
+    }
+
+
+    public static boolean near( Vec2d a, Vec2d b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y );
+    }
+
+
+    public static boolean near( Vec2d a, Vec2d b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr );
     }
 
 
@@ -1502,6 +1566,7 @@ public final class Vec {
     }
 
 
+
     
     //== VEC3D Functions =======================================================
 
@@ -1610,6 +1675,22 @@ public final class Vec {
         double dy = a.y - b.y;
         double dz = a.z - b.z;
         return dx * dx + dy * dy + dz * dz;
+    }
+
+
+    public static boolean near( Vec3d a, Vec3d b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z );
+    }
+
+
+    public static boolean near( Vec3d a, Vec3d b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr );
     }
 
 
@@ -1997,6 +2078,7 @@ public final class Vec {
 
 
 
+
     //== VEC4D Functions =======================================================
 
 
@@ -2120,6 +2202,24 @@ public final class Vec {
     }
 
 
+    public static boolean near( Vec4d a, Vec4d b ) {
+        return
+            Tol.near( a.x, b.x ) &&
+            Tol.near( a.y, b.y ) &&
+            Tol.near( a.z, b.z ) &&
+            Tol.near( a.w, b.w );
+    }
+
+
+    public static boolean near( Vec4d a, Vec4d b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.x, b.x, relErr, absErr ) &&
+            Tol.equal( a.y, b.y, relErr, absErr ) &&
+            Tol.equal( a.z, b.z, relErr, absErr ) &&
+            Tol.equal( a.w, b.w, relErr, absErr );
+    }
+
+
     public static void normalize( Vec4d a ) {
         double s = 1f / len( a );
         a.x *= s;
@@ -2196,7 +2296,6 @@ public final class Vec {
                vec.z != vec.z ||
                vec.w != vec.w;
     }
-
 
 
 

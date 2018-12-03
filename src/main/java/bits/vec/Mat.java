@@ -173,6 +173,34 @@ public final class Mat {
     }
 
 
+    public static boolean near( Mat3 a, Mat3 b ) {
+        return
+            Tol.near( a.m00, b.m00 ) &&
+            Tol.near( a.m10, b.m10 ) &&
+            Tol.near( a.m20, b.m20 ) &&
+            Tol.near( a.m01, b.m01 ) &&
+            Tol.near( a.m11, b.m11 ) &&
+            Tol.near( a.m21, b.m21 ) &&
+            Tol.near( a.m02, b.m02 ) &&
+            Tol.near( a.m12, b.m12 ) &&
+            Tol.near( a.m22, b.m22 );
+    }
+
+
+    public static boolean near( Mat3 a, Mat3 b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.m00, b.m00, relErr, absErr ) &&
+            Tol.equal( a.m10, b.m10, relErr, absErr ) &&
+            Tol.equal( a.m20, b.m20, relErr, absErr ) &&
+            Tol.equal( a.m01, b.m01, relErr, absErr ) &&
+            Tol.equal( a.m11, b.m11, relErr, absErr ) &&
+            Tol.equal( a.m21, b.m21, relErr, absErr ) &&
+            Tol.equal( a.m02, b.m02, relErr, absErr ) &&
+            Tol.equal( a.m12, b.m12, relErr, absErr ) &&
+            Tol.equal( a.m22, b.m22, relErr, absErr );
+    }
+
+
     public static void getScale( float sx, float sy, float sz, Mat3 out ) {
         out.m00 = sx;
         out.m10 = 0f;
@@ -440,7 +468,6 @@ public final class Mat {
                Float.isNaN( mat.m12 ) ||
                Float.isNaN( mat.m22 );
     }
-
 
 
     @Deprecated
@@ -932,6 +959,48 @@ public final class Mat {
         out.m10 = 0;  out.m11 = 1;  out.m12 = 0;  out.m13 = 0;
         out.m20 = 0;  out.m21 = 0;  out.m22 = 1;  out.m23 = 0;
         out.m30 = 0;  out.m31 = 0;  out.m32 = 0;  out.m33 = 1;
+    }
+
+
+    public static boolean near( Mat4 a, Mat4 b ) {
+        return
+            Tol.near( a.m00, b.m00 ) &&
+            Tol.near( a.m10, b.m10 ) &&
+            Tol.near( a.m20, b.m20 ) &&
+            Tol.near( a.m30, b.m30 ) &&
+            Tol.near( a.m01, b.m01 ) &&
+            Tol.near( a.m11, b.m11 ) &&
+            Tol.near( a.m21, b.m21 ) &&
+            Tol.near( a.m31, b.m31 ) &&
+            Tol.near( a.m02, b.m02 ) &&
+            Tol.near( a.m12, b.m12 ) &&
+            Tol.near( a.m22, b.m22 ) &&
+            Tol.near( a.m32, b.m32 ) &&
+            Tol.near( a.m03, b.m03 ) &&
+            Tol.near( a.m13, b.m13 ) &&
+            Tol.near( a.m23, b.m23 ) &&
+            Tol.near( a.m33, b.m33 );
+    }
+
+
+    public static boolean near( Mat4 a, Mat4 b, float relErr, float absErr ) {
+        return
+            Tol.equal( a.m00, b.m00, relErr, absErr ) &&
+            Tol.equal( a.m10, b.m10, relErr, absErr ) &&
+            Tol.equal( a.m20, b.m20, relErr, absErr ) &&
+            Tol.equal( a.m30, b.m30, relErr, absErr ) &&
+            Tol.equal( a.m01, b.m01, relErr, absErr ) &&
+            Tol.equal( a.m11, b.m11, relErr, absErr ) &&
+            Tol.equal( a.m21, b.m21, relErr, absErr ) &&
+            Tol.equal( a.m31, b.m31, relErr, absErr ) &&
+            Tol.equal( a.m02, b.m02, relErr, absErr ) &&
+            Tol.equal( a.m12, b.m12, relErr, absErr ) &&
+            Tol.equal( a.m22, b.m22, relErr, absErr ) &&
+            Tol.equal( a.m32, b.m32, relErr, absErr ) &&
+            Tol.equal( a.m03, b.m03, relErr, absErr ) &&
+            Tol.equal( a.m13, b.m13, relErr, absErr ) &&
+            Tol.equal( a.m23, b.m23, relErr, absErr ) &&
+            Tol.equal( a.m33, b.m33, relErr, absErr );
     }
 
     /**
@@ -1686,6 +1755,7 @@ public final class Mat {
     }
 
 
+
     @Deprecated
     public static void put( Mat4 mat, Mat4 out ) {
         out.m00 = mat.m00;
@@ -2059,6 +2129,34 @@ public final class Mat {
     }
 
 
+    public static boolean near( Mat3d a, Mat3d b ) {
+        return
+            Tol.near( a.m00, b.m00 ) &&
+            Tol.near( a.m10, b.m10 ) &&
+            Tol.near( a.m20, b.m20 ) &&
+            Tol.near( a.m01, b.m01 ) &&
+            Tol.near( a.m11, b.m11 ) &&
+            Tol.near( a.m21, b.m21 ) &&
+            Tol.near( a.m02, b.m02 ) &&
+            Tol.near( a.m12, b.m12 ) &&
+            Tol.near( a.m22, b.m22 );
+    }
+
+
+    public static boolean near( Mat3d a, Mat3d b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.m00, b.m00, relErr, absErr ) &&
+            Tol.equal( a.m10, b.m10, relErr, absErr ) &&
+            Tol.equal( a.m20, b.m20, relErr, absErr ) &&
+            Tol.equal( a.m01, b.m01, relErr, absErr ) &&
+            Tol.equal( a.m11, b.m11, relErr, absErr ) &&
+            Tol.equal( a.m21, b.m21, relErr, absErr ) &&
+            Tol.equal( a.m02, b.m02, relErr, absErr ) &&
+            Tol.equal( a.m12, b.m12, relErr, absErr ) &&
+            Tol.equal( a.m22, b.m22, relErr, absErr );
+    }
+
+
     public static void getScale( float sx, float sy, float sz, Mat3d out ) {
         out.m00 = sx;
         out.m10 = 0f;
@@ -2326,7 +2424,6 @@ public final class Mat {
                Double.isNaN( mat.m12 ) ||
                Double.isNaN( mat.m22 );
     }
-
 
     
     //=== MAT4D Functions ========================================
@@ -2658,6 +2755,48 @@ public final class Mat {
         out.m10 = 0;  out.m11 = 1;  out.m12 = 0;  out.m13 = 0;
         out.m20 = 0;  out.m21 = 0;  out.m22 = 1;  out.m23 = 0;
         out.m30 = 0;  out.m31 = 0;  out.m32 = 0;  out.m33 = 1;
+    }
+
+
+    public static boolean near( Mat4d a, Mat4d b ) {
+        return
+            Tol.near( a.m00, b.m00 ) &&
+            Tol.near( a.m10, b.m10 ) &&
+            Tol.near( a.m20, b.m20 ) &&
+            Tol.near( a.m30, b.m30 ) &&
+            Tol.near( a.m01, b.m01 ) &&
+            Tol.near( a.m11, b.m11 ) &&
+            Tol.near( a.m21, b.m21 ) &&
+            Tol.near( a.m31, b.m31 ) &&
+            Tol.near( a.m02, b.m02 ) &&
+            Tol.near( a.m12, b.m12 ) &&
+            Tol.near( a.m22, b.m22 ) &&
+            Tol.near( a.m32, b.m32 ) &&
+            Tol.near( a.m03, b.m03 ) &&
+            Tol.near( a.m13, b.m13 ) &&
+            Tol.near( a.m23, b.m23 ) &&
+            Tol.near( a.m33, b.m33 );
+    }
+
+
+    public static boolean near( Mat4d a, Mat4d b, double relErr, double absErr ) {
+        return
+            Tol.equal( a.m00, b.m00, relErr, absErr ) &&
+            Tol.equal( a.m10, b.m10, relErr, absErr ) &&
+            Tol.equal( a.m20, b.m20, relErr, absErr ) &&
+            Tol.equal( a.m30, b.m30, relErr, absErr ) &&
+            Tol.equal( a.m01, b.m01, relErr, absErr ) &&
+            Tol.equal( a.m11, b.m11, relErr, absErr ) &&
+            Tol.equal( a.m21, b.m21, relErr, absErr ) &&
+            Tol.equal( a.m31, b.m31, relErr, absErr ) &&
+            Tol.equal( a.m02, b.m02, relErr, absErr ) &&
+            Tol.equal( a.m12, b.m12, relErr, absErr ) &&
+            Tol.equal( a.m22, b.m22, relErr, absErr ) &&
+            Tol.equal( a.m32, b.m32, relErr, absErr ) &&
+            Tol.equal( a.m03, b.m03, relErr, absErr ) &&
+            Tol.equal( a.m13, b.m13, relErr, absErr ) &&
+            Tol.equal( a.m23, b.m23, relErr, absErr ) &&
+            Tol.equal( a.m33, b.m33, relErr, absErr );
     }
 
     /**
@@ -3410,7 +3549,6 @@ public final class Mat {
                Double.isNaN( mat.m23 ) ||
                Double.isNaN( mat.m33 );
     }
-
 
 
 
