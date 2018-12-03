@@ -478,6 +478,10 @@ public final class Arr {
 
     
     public static float variance( float[] arr, int off, int len, float mean ) {
+        if( len < 1 ) {
+            return 0;
+        }
+
         float sum = 0.0f;
 
         for( int i = off; i < off + len; i++ ) {
@@ -485,11 +489,15 @@ public final class Arr {
             sum += v * v;
         }
 
-        return sum / len;
+        return sum / ( len - 1 );
     }
 
 
     public static double variance( double[] arr, int off, int len, double mean ) {
+        if( len < 1 ) {
+            return 0;
+        }
+
         double sum = 0.0f;
 
         for( int i = off; i < off + len; i++ ) {
@@ -497,7 +505,7 @@ public final class Arr {
             sum += v * v;
         }
 
-        return sum / len;
+        return sum / ( len - 1 );
     }
     
     
