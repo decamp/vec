@@ -13,7 +13,7 @@ import static bits.vec.Tol.*;
 
 
 /**
- * Functions for length-3 vectors.
+ * Functions for vectors.
  *
  * @author Philip DeCamp
  */

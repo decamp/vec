@@ -88,7 +88,7 @@ public final class Mat {
     /**
      * @param mat    Input matrix
      * @param out    Array to hold inverted matrix on return.
-     * @return true if matrix determinant is not near zero and accurate invert was found.
+     * @return true if matrix determinant is not near zero and accurate inversion was found.
      */
     public static boolean invert( Mat3 mat, Mat3 out ) {
         float c00 = mat.m11 * mat.m22 - mat.m21 * mat.m12;
@@ -358,10 +358,10 @@ public final class Mat {
     }
 
     /**
-     * Removes any getTranslation/scaling3/skew or other non-rotation3
+     * Removes any translation/scaling/skew or other non-rotation
      * transformations from a matrix.
      *
-     * @param mat 3x3 homography matrix to turn into strict rotation3 matrix.
+     * @param mat On input, arbitrary homography. On output, strict rotation matrix.
      */
     public static void normalizeRotationMatrix( Mat3 mat ) {
         float d;
@@ -1539,15 +1539,15 @@ public final class Mat {
     }
 
     /**
-     * Removes any getTranslate4/getScale4/skew or other non-getRotate4
+     * Removes any translation/scale/skew or other non-rotation
      * transformations from a matrix.
      *
-     * @param mat 4x4 homography matrix to turn into strict getRotate4 matrix.
+     * @param mat On input, arbitrary homography. On output, strict rotation matrix.
      */
     public static void normalizeRotationMatrix( Mat4 mat ) {
         float d;
 
-        //Kill getTranslate4, scalings.
+        //Kill translation, scalings.
         mat.m30 = 0;
         mat.m31 = 0;
         mat.m32 = 0;
@@ -2314,10 +2314,10 @@ public final class Mat {
     }
 
     /**
-     * Removes any getTranslation/scaling3/skew or other non-rotation3
+     * Removes any translation/scaling/skew or other non-rotation
      * transformations from a matrix.
      *
-     * @param mat 3x3 homography matrix to turn into strict rotation3 matrix.
+     * @param mat On input, arbitrary homography. On output, strict rotation matrix.
      */
     public static void normalizeRotationMatrix( Mat3d mat ) {
         double d;
@@ -3335,10 +3335,10 @@ public final class Mat {
     }
 
     /**
-     * Removes any getTranslate4/getScale4/skew or other non-getRotate4
+     * Removes any transation/scaling/skew or other non-rotation
      * transformations from a matrix.
      *
-     * @param mat 4x4 homography matrix to turn into strict getRotate4 matrix.
+     * @param mat On input, arbitrary homography. On output, strict rotation matrix.
      */
     public static void normalizeRotationMatrix( Mat4d mat ) {
         double d;
@@ -4260,10 +4260,10 @@ public final class Mat {
     }
 
     /**
-     * Removes any getTranslate4/getScale4/skew or other non-getRotate4
+     * Removes any transaltion/scaling/skew or other non-rotation
      * transformations from a matrix.
      *
-     * @param mat 4x4 homography matrix to turn into strict getRotate4 matrix.
+     * @param mat On input, arbitrary homography. On output, strict rotation matrix.
      */
     public static void normalizeRotationMatrix4( double[] mat ) {
         double d;
