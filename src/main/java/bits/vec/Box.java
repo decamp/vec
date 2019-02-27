@@ -306,7 +306,7 @@ public final class Box {
      * Performs linear mapping of some coordinate in a space defined by
      * {@code srcDomain} into the coordinate space defined by {@code dstDomain}.
      */
-    public static void mapPoint( float x, float y, float z, Box2 srcDomain, Box2 dstDomain, Vec2 out ) {
+    public static void mapPoint( float x, float y, Box2 srcDomain, Box2 dstDomain, Vec2 out ) {
         out.x = ( x - srcDomain.x0 ) / ( srcDomain.x1 - srcDomain.x0 ) * ( dstDomain.x1 - dstDomain.x0 ) + dstDomain.x0;
         out.y = ( y - srcDomain.y0 ) / ( srcDomain.y1 - srcDomain.y0 ) * ( dstDomain.y1 - dstDomain.y0 ) + dstDomain.y0;
     }
@@ -1429,6 +1429,15 @@ public final class Box {
      */
     public static void boxToModel3( double x, double y, double z, double[] box, double[] outXYZ, int outOff ) {
         relativeToAbsolute3( x, y, y, box, outXYZ, outOff );
+    }
+
+    /**
+     * @deprecated use version with z parameter.
+     */
+    @Deprecated
+    public static void mapPoint( float x, float y, float z, Box2 srcDomain, Box2 dstDomain, Vec2 out ) {
+        out.x = ( x - srcDomain.x0 ) / ( srcDomain.x1 - srcDomain.x0 ) * ( dstDomain.x1 - dstDomain.x0 ) + dstDomain.x0;
+        out.y = ( y - srcDomain.y0 ) / ( srcDomain.y1 - srcDomain.y0 ) * ( dstDomain.y1 - dstDomain.y0 ) + dstDomain.y0;
     }
 
 
